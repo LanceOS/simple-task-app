@@ -7,9 +7,6 @@ import { Pool } from "pg";
 
 // Import database schemas
 import * as authentication from "./server/schemas/authentication";
-import * as example from "./server/schemas/example";
-import * as relations from "./server/schemas/relations";
-
 // Construct the database connection URL
 const databaseUrl = `postgresql://${PRIVATE_POSTGRES_USER}:${PRIVATE_POSTGRES_PASSWORD}@${PRIVATE_POSTGRES_URL}/${PRIVATE_POSTGRES_DB}`;
 
@@ -39,8 +36,6 @@ testConnection();
 // Aggregate all schema files into a single object
 const schemas = {
     ...authentication,
-    ...example,
-    ...relations
 };
 
 // Initialize and export the Drizzle ORM database client
