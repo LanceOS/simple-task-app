@@ -1,2 +1,22 @@
+@import url('https://fonts.googleapis.com/css2?family=Oxygen:wght@300;400;700&display=swap');
 @import 'tailwindcss';
 @plugin '@tailwindcss/typography';
+
+* {
+	box-sizing: border-box;
+	scroll-behavior: smooth;
+	font-family: 'Oxygen', sans-serif;
+}
+
+p {
+	font-weight: light;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	font-weight: bold;
+}
