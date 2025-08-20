@@ -3,6 +3,8 @@ import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { DrizzleDB } from "./Drizzle.js";
 import * as authentication from "./server/schemas/authentication.js";
 import { PUBLIC_URL } from "$env/static/public";
+import { emailOTP } from "better-auth/plugins";
+import { MailMain } from "./server/utils/MailMan.js";
 
 // Initialize the 'betterAuth' instance
 export const auth = betterAuth({
@@ -22,6 +24,22 @@ export const auth = betterAuth({
             }
         },
     },
+    plugins: [
+        emailOTP({
+            async sendVerificationOTP({ email, otp, type }) {
+                const mailer = MailMain.getMailer('Resend');
+
+                const options = {
+                    to: [email],
+                    subject: 'Sign in with email!',
+                    html: `Your one time passcode is ${otp}`,
+                    type: type
+                }
+
+                await mailer.send(options)
+            }
+        })
+    ],
     emailAndPassword: {
         enabled: true,
         autoSignIn: false,
