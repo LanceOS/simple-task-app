@@ -1,4 +1,4 @@
-import { error } from '@sveltejs/kit';
+import { error, redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import { auth } from '$lib/auth';
 import { GroupManager } from '$lib/server/utils/GroupManager.serverutil';
@@ -13,11 +13,11 @@ export const load: PageServerLoad = async ({ request }) => {
 
 
         if(!user) {
-            return error(401, "User must be signed in!")
+            throw redirect(308, "/signin")
         };
 
-        const joinedGroups = await GroupManager.getJoinedGroups(user.id);
         const ownedGroups = await GroupManager.getUserOwnedGroups(user.id);
+        const joinedGroups = await GroupManager.getJoinedGroups(user.id);
 
         return {
             ownedGroups,

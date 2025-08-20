@@ -1,5 +1,5 @@
 import { DrizzleDB } from '$lib/Drizzle';
-import { eq, inArray } from 'drizzle-orm';
+import { and, eq, ne } from 'drizzle-orm';
 import { taskGroup } from '../schemas/task_group.schema';
 import { groupMember } from '../schemas/group_members.schema';
 
@@ -10,20 +10,36 @@ export const GroupManager = {
 		});
 	},
 	getJoinedGroups: async (userId: string) => {
+		return await DrizzleDB.select({
+			id: taskGroup.id,
+			groupName: taskGroup.groupName,
+			description: taskGroup.description
+		})
+			.from(taskGroup)
+			.innerJoin(groupMember, eq(taskGroup.id, groupMember.parentGroupId))
+			.where(and(eq(groupMember.userId, userId), ne(taskGroup.ownerId, userId)));
+	},
+
+	createNewGroup: async (
+		data: { name: string; description: string },
+		userId: string
+	): Promise<string> => {
 		return await DrizzleDB.transaction(async (tx) => {
-			const groups = await tx.query.groupMember.findMany({
-				where: eq(groupMember.userId, userId)
+			const [newGroup] = await tx
+				.insert(taskGroup)
+				.values({
+					groupName: data.name,
+					description: data.description,
+					ownerId: userId
+				})
+				.returning({ id: taskGroup.id });
+
+			await tx.insert(groupMember).values({
+				parentGroupId: newGroup.id,
+				userId: userId
 			});
 
-			if (groups.length === 0) {
-				return []
-			}
-
-			const idArr = groups.map((group) => group.parentGroupId!);
-
-			return await tx.query.taskGroup.findMany({
-				where: inArray(taskGroup.id, idArr!)
-			});
+			return newGroup.id;
 		});
 	}
 };

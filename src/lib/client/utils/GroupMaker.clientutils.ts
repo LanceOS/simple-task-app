@@ -6,6 +6,8 @@ export const GroupMaker = {
 		try {
 			const response = await FetchHandler.fetch('/groups', 'post', data);
 
+			console.log(response)
+
 			if (response.ok) {
 				Toaster.ejectToast({
 					message: 'Created new task group!',

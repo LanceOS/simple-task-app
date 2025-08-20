@@ -1,26 +1,32 @@
 <script lang="ts">
 	import { GroupMaker } from '$lib/client/utils/GroupMaker.clientutils';
-	import type { PageData } from './$types';
-	const { ownedGroups, joinedGroups }: PageData = $props();
+	import type { PageProps } from './$types';
+	const { data }: PageProps = $props();
+	const { ownedGroups, joinedGroups } = data;
 
 	let createTask: boolean = $state(false);
 
-	const newGroupDetails = {
+	let newGroupDetails: { name: string; description: string } = $state({
 		name: '',
 		description: ''
-	};
+	});
 </script>
 
 <main class="relative space-y-8">
 	<section class="space-y-2">
 		<h1>Your Groups</h1>
+
 		{#if ownedGroups}
-			{#each ownedGroups as owned}
-				<div>
-					<h2>{owned.groupName}</h2>
-					<p>{owned.description}</p>
-				</div>
-			{/each}
+			<div class="space-y-4">
+				{#each ownedGroups as owned}
+					<div class="w-fit border">
+						<a href={`/groups/group/${owned.id}`}>
+							<h2>{owned.groupName}</h2>
+							<p>{owned.description}</p>
+						</a>
+					</div>
+				{/each}
+			</div>
 		{:else}
 			<div class="space-y-4">
 				<h2>You do not have any groups!</h2>
@@ -48,7 +54,7 @@
 				/>
 			</div>
 			<div>
-				<label for="groupDisc">Group Name:</label>
+				<label for="groupDisc">Group Description:</label>
 				<input
 					type="text"
 					name="groupDisc"

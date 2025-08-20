@@ -1,0 +1,2 @@
+ALTER TABLE "task" RENAME COLUMN "parent_group" TO "parent_group_id";--> statement-breakpoint
+ALTER TABLE "task" ADD CONSTRAINT "task_parent_group_id_task_group_id_fk" FOREIGN KEY ("parent_group_id") REFERENCES "public"."task_group"("id") ON DELETE no action ON UPDATE no action;

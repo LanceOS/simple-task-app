@@ -1,3 +1,4 @@
+import type { InferSelectModel } from "drizzle-orm";
 import { pgTable, text, timestamp, boolean } from "drizzle-orm/pg-core";
 
 export const user = pgTable("user", {
@@ -10,6 +11,8 @@ export const user = pgTable("user", {
 	updatedAt: timestamp('updated_at').$defaultFn(() => /* @__PURE__ */ new Date()).notNull(),
 	role: text('role').default("user")
 });
+
+export type UserSchema = InferSelectModel<typeof user>
 
 export const session = pgTable("session", {
 	id: text('id').primaryKey(),

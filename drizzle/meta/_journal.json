@@ -22,6 +22,20 @@
       "when": 1755706805325,
       "tag": "0002_bumpy_killraven",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1755732707760,
+      "tag": "0003_bouncy_marvex",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1755732760392,
+      "tag": "0004_warm_clint_barton",
+      "breakpoints": true
     }
   ]
 }

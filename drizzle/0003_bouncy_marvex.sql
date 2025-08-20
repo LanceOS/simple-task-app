@@ -1,0 +1,1 @@
+ALTER TABLE "task" ADD COLUMN "parent_group" uuid NOT NULL;
