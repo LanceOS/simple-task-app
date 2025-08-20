@@ -1,6 +1,5 @@
 import { ResendMailer } from "../providers/Resend";
 
-
 interface IMailerOptions {
     from?: string;
     to?: string[];
@@ -13,11 +12,7 @@ interface IMailer {
     send: (options: IMailerOptions) => Promise<any> 
 }
 
-
-
-
 type CommProviders = 'Resend';
-
 
 export const MailMain = {
 	getMailer: (provider: CommProviders): IMailer => {

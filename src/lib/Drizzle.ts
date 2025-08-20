@@ -6,7 +6,8 @@ import { drizzle } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";
 
 // Import database schemas
-import * as authentication from "./server/schemas/authentication";
+import * as schema from "./server/schemas/barrel/SchemaBarrel"
+
 // Construct the database connection URL
 const databaseUrl = `postgresql://${PRIVATE_POSTGRES_USER}:${PRIVATE_POSTGRES_PASSWORD}@${PRIVATE_POSTGRES_URL}/${PRIVATE_POSTGRES_DB}`;
 
@@ -33,10 +34,5 @@ const testConnection = async () => {
 // Run the connection test on startup
 testConnection();
 
-// Aggregate all schema files into a single object
-const schemas = {
-    ...authentication,
-};
-
 // Initialize and export the Drizzle ORM database client
-export const DrizzleDB = drizzle(pool, { schema: schemas });
+export const DrizzleDB = drizzle(pool, { schema });

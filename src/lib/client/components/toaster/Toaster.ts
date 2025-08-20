@@ -5,14 +5,11 @@ interface IToast {
     type: "info" | "success" | "error";
 }
 
-
 export const toastStore = writable({
     message: "",
     type: "info",
     visible: false
 })
-
-
 
 export const Toaster = {
     ejectToast: (breadType: IToast) => {

@@ -15,6 +15,13 @@
       "when": 1755637859139,
       "tag": "0001_useful_jigsaw",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1755706805325,
+      "tag": "0002_bumpy_killraven",
+      "breakpoints": true
     }
   ]
 }
