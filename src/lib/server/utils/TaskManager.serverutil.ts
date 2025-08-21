@@ -18,5 +18,11 @@ export const TaskManager = {
             description: data.description,
             parentGroupId: data.groupId
         }).returning({ id: task.id })
-    }
+    },
+
+    getSingleTask: async (taskId: string) => {
+        return await DrizzleDB.query.task.findFirst({
+            where: eq(task.id, taskId)
+        })
+    },
 }
