@@ -1,7 +1,8 @@
 import { DrizzleDB } from '$lib/Drizzle';
-import { and, eq, ne } from 'drizzle-orm';
+import { and, eq, inArray, ne } from 'drizzle-orm';
 import { taskGroup } from '../schemas/task_group.schema';
 import { groupMember } from '../schemas/group_members.schema';
+import { user } from '../schemas/authentication';
 
 export const GroupManager = {
 	getUserOwnedGroups: async (userId: string) => {
@@ -40,6 +41,29 @@ export const GroupManager = {
 			});
 
 			return newGroup.id;
+		});
+	},
+
+	getGroupMembers: async (groupId: string) => {
+		return await DrizzleDB.transaction(async (tx) => {
+			const members = await tx.query.groupMember.findMany({
+				where: eq(groupMember.parentGroupId, groupId)
+			});
+
+			if (!members || members.length === 0) {
+				return [];
+			}
+
+			const memberIds = members.map((member) => member.userId!);
+
+			return await tx.query.user.findMany({
+				where: inArray(user.id, memberIds),
+				columns: {
+					id: true,
+					name: true,
+					image: true
+				}
+			})
 		});
 	}
 };

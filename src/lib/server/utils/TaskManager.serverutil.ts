@@ -7,7 +7,7 @@ import { task } from "../schemas/task.schema"
 export const TaskManager = {
     getTasks: async (groupId: string) => {
         return await DrizzleDB.query.task.findMany({
-            where: eq(task.parentGroupId)
+            where: eq(task.parentGroupId, groupId)
         })
     }
 }
