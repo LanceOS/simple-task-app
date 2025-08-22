@@ -7,14 +7,13 @@ import { GroupManager } from "$lib/server/utils/GroupManager.serverutil";
 
 
 export const load: PageServerLoad = async ({ params, request }) => {
+    const user = GetUser(request);
+
+    if(!user) {
+        throw redirect(308, "/signin")
+    }
     try {
         const groupId = params.group;
-
-        const user = GetUser(request);
-
-        if(!user) {
-            throw redirect(308, "/signin")
-        }
 
         const tasks = await TaskManager.getTasks(groupId);
         const groupMembers = await GroupManager.getGroupMembers(groupId);

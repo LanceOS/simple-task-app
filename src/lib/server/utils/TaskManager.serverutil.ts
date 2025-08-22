@@ -40,5 +40,13 @@ export const TaskManager = {
                 }
             }
         })
+    },
+
+
+    assignUserToTask: async (taskId: string, userId: string) => {
+        return await DrizzleDB.insert(taskAssignee).values({
+            parentTaskId: taskId,
+            assigneeId: userId
+        })
     }
 }

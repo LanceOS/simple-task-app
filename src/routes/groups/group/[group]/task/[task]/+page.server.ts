@@ -1,34 +1,32 @@
-import { error } from "console";
-import type { PageServerLoad } from "./$types";
-import { GetUser } from "$lib/server/helpers/UserCheck.helper";
-import { redirect } from "@sveltejs/kit";
-import { TaskManager } from "$lib/server/utils/TaskManager.serverutil";
-import { GroupManager } from "$lib/server/utils/GroupManager.serverutil";
-
-
+import { error } from 'console';
+import type { PageServerLoad } from './$types';
+import { GetUser } from '$lib/server/helpers/UserCheck.helper';
+import { redirect } from '@sveltejs/kit';
+import { TaskManager } from '$lib/server/utils/TaskManager.serverutil';
+import { GroupManager } from '$lib/server/utils/GroupManager.serverutil';
 
 export const load: PageServerLoad = async ({ params, request }) => {
-    try {
-        const taskId = params.task
-        const groupId = params.group
-        
-        const user = GetUser(request)
-        
-        if(!user) {
-            throw redirect(308, "/signin")
-        }
+	const user = await GetUser(request);
 
-        const task = await TaskManager.getSingleTask(taskId)
-        const assignees = await TaskManager.getAssignees(taskId)
-        const groupMembers = await GroupManager.getGroupMembers(groupId)
+	if (!user) {
+		throw redirect(308, '/signin');
+	}
+	try {
+		const taskId = params.task;
+		const groupId = params.group;
 
-        return {
-            task,
-            assignees,
-            groupMembers
-        }
-    }
-    catch(err: any) {
-        return error(500, err.message)
-    }
-}
+		const task = await TaskManager.getSingleTask(taskId);
+		const assignees = await TaskManager.getAssignees(taskId);
+		const groupMembers = await GroupManager.getGroupMembers(groupId);
+		const isUserAdmin = await GroupManager.isCurrentUserAdmin(user.id!, groupId)
+
+		return {
+			task,
+			assignees,
+			groupMembers,
+			isUserAdmin
+		};
+	} catch (err: any) {
+		return error(500, err.message);
+	}
+};

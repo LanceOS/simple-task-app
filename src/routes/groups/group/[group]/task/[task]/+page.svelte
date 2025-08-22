@@ -2,7 +2,7 @@
 	import type { PageProps } from './$types';
 
 	const { data }: PageProps = $props();
-	const { task, assignees, groupMembers } = data;
+	const { task, assignees, groupMembers, isUserAdmin } = data;
 </script>
 
 <main>
@@ -21,14 +21,17 @@
 			<h2>No groups members are assigned to this task!</h2>
 		{/if}
 	</section>
-	<section>
-		<h2>Assign members to this task!</h2>
-		{#if groupMembers}
-			{#each groupMembers as member}
-				<div>
-					<p>{member.name}</p>
-				</div>
-			{/each}
-		{/if}
-	</section>
+	{#if isUserAdmin}
+		<section>
+			<h2>Assign members to this task!</h2>
+			<p>Group Members:</p>
+			{#if groupMembers}
+				{#each groupMembers as member}
+					<div>
+						<p>{member.user.name}</p>
+					</div>
+				{/each}
+			{/if}
+		</section>
+	{/if}
 </main>

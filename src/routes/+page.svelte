@@ -3,20 +3,18 @@
 	const session = authClient.useSession();
 </script>
 
-<main class="h-screen bg-gray-50 flex flex-col gap-20 items-center justify-center px-4">
-	<section class="text-center max-w-2xl">
-		<h1 class="text-4xl sm:text-5xl font-extrabold text-gray-900 mb-4">
-			Greater Task
-		</h1>
-		<p class="text-lg sm:text-xl text-gray-600 mb-8">
+<main class="flex max-h-screen flex-col items-center gap-20 py-24 px-4">
+	<section class="max-w-2xl text-center">
+		<h1 class="mb-4 text-4xl font-extrabold text-gray-900 sm:text-5xl">Greater Task</h1>
+		<p class="mb-8 text-lg text-gray-600 sm:text-xl">
 			A simple, collaborative task tracking app for groups of any size.
 		</p>
 
-		<div class="flex gap-4 justify-center">
+		<div class="flex justify-center gap-4">
 			<a
-				class="px-6 py-3 rounded-2xl bg-indigo-600 text-white font-medium shadow-md hover:bg-indigo-700 transition"
-                href="/signin"
-                aria-label="Get started by signin in!"
+				class="rounded-2xl bg-indigo-600 px-6 py-3 font-medium text-white shadow-md transition hover:bg-indigo-700"
+				href="/signin"
+				aria-label="Get started by signin in!"
 			>
 				Get Started
 			</a>
@@ -24,30 +22,29 @@
 	</section>
 
 	<section class="max-w-4xl text-center">
-		<h2 class="text-2xl sm:text-3xl font-semibold text-gray-900 mb-4">
-			How does it work?
-		</h2>
-		<p class="text-gray-600 text-lg leading-relaxed mb-12">
-			Create groups for yourself or others with <span class="font-semibold text-indigo-600">Greater Task</span>.
-			In these groups, you can create and share tasks that everyone can tackle together.
+		<h2 class="mb-4 text-2xl font-semibold text-gray-900 sm:text-3xl">How does it work?</h2>
+		<p class="mb-12 text-lg leading-relaxed text-gray-600">
+			Create groups for yourself or others with <span class="font-semibold text-indigo-600"
+				>Greater Task</span
+			>. In these groups, you can create and share tasks that everyone can tackle together.
 		</p>
 
-		<div class="grid sm:grid-cols-3 gap-8">
-			<div class="bg-white p-6 rounded-2xl shadow hover:shadow-lg transition">
-				<h3 class="text-xl font-semibold text-gray-800 mb-2">1. Create a Group</h3>
-				<p class="text-gray-600 text-sm">
+		<div class="grid gap-8 sm:grid-cols-3">
+			<div class="rounded-2xl bg-white p-6 shadow transition hover:shadow-lg">
+				<h3 class="mb-2 text-xl font-semibold text-gray-800">1. Create a Group</h3>
+				<p class="text-sm text-gray-600">
 					Set up private or public groups tailored to your team, friends, or community.
 				</p>
 			</div>
-			<div class="bg-white p-6 rounded-2xl shadow hover:shadow-lg transition">
-				<h3 class="text-xl font-semibold text-gray-800 mb-2">2. Add Tasks</h3>
-				<p class="text-gray-600 text-sm">
+			<div class="rounded-2xl bg-white p-6 shadow transition hover:shadow-lg">
+				<h3 class="mb-2 text-xl font-semibold text-gray-800">2. Add Tasks</h3>
+				<p class="text-sm text-gray-600">
 					Quickly create tasks, assign responsibilities, and set deadlines.
 				</p>
 			</div>
-			<div class="bg-white p-6 rounded-2xl shadow hover:shadow-lg transition">
-				<h3 class="text-xl font-semibold text-gray-800 mb-2">3. Collaborate</h3>
-				<p class="text-gray-600 text-sm">
+			<div class="rounded-2xl bg-white p-6 shadow transition hover:shadow-lg">
+				<h3 class="mb-2 text-xl font-semibold text-gray-800">3. Collaborate</h3>
+				<p class="text-sm text-gray-600">
 					Everyone in the group can contribute and track progress together.
 				</p>
 			</div>

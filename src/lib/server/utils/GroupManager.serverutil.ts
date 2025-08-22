@@ -45,25 +45,29 @@ export const GroupManager = {
 	},
 
 	getGroupMembers: async (groupId: string) => {
-		return await DrizzleDB.transaction(async (tx) => {
-			const members = await tx.query.groupMember.findMany({
-				where: eq(groupMember.parentGroupId, groupId)
-			});
-
-			if (!members || members.length === 0) {
-				return [];
-			}
-
-			const memberIds = members.map((member) => member.userId!);
-
-			return await tx.query.user.findMany({
-				where: inArray(user.id, memberIds),
-				columns: {
-					id: true,
-					name: true,
-					image: true
+		return await DrizzleDB.query.groupMember.findMany({
+			where: eq(groupMember.parentGroupId, groupId),
+			with: {
+				user: {
+					columns: {
+						id: true,
+						name: true,
+						image: true
+					}
 				}
-			})
+			},
+			columns: {
+				isAdmin: true
+			}
 		});
+	},
+
+	isCurrentUserAdmin: async (userId: string, groupId: string) => {
+		return await DrizzleDB.query.groupMember.findFirst({
+			where: and(eq(groupMember.parentGroupId, groupId), eq(groupMember.userId, userId)),
+			columns: {
+				isAdmin: true
+			}
+		})
 	}
 };

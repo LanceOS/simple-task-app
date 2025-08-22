@@ -48,7 +48,7 @@
 				>
 			</div>
 		{:else}
-			<h1>You have no tasks!</h1>
+			<h2>You have no tasks!</h2>
 			<p>Get started by creating a new one!</p>
 			<button
 				type="button"
@@ -59,7 +59,7 @@
 	</section>
 	{#if createWindow}
 		<form class="space-y-2">
-			<h2>Create New Task</h2>
+			<h1>Create New Task</h1>
 			<div>
 				<label for="taskName">Task Name:</label>
 				<input type="text" name="taskName" id="taskName" class="border" bind:value={newTask.name} />
@@ -80,11 +80,11 @@
 		</form>
 	{/if}
 	<section class="space-y-2">
-		<h2>Members</h2>
+		<h1>Members</h1>
 		<div>
 			{#each groupMembers as member}
 				<div>
-					<h2>{member.name}</h2>
+					<h2>{member.user.name}</h2>
 				</div>
 			{/each}
 		</div>
