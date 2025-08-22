@@ -11,7 +11,7 @@
 </script>
 
 {#if route !== '/onboarding'}
-	<header class="bg-white shadow-sm fixed w-full top-0 z-50">
+	<header class="bg-white shadow-sm sticky w-full top-0 z-50">
 		<nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
 			<!-- Left: Logo -->
 			<div class="flex items-center space-x-2">
@@ -20,7 +20,6 @@
 				</a>
 			</div>
 
-			<!-- Center: Nav Links -->
 			<div class="hidden md:flex space-x-8">
 				<a
 					href="/"
@@ -36,18 +35,8 @@
 				>
 					Task Groups
 				</a>
-				{#if $session?.data?.user}
-					<a
-						href={`/profile/${$session?.data?.user.id}`}
-						class="text-gray-700 hover:text-indigo-600 font-medium transition"
-						aria-label="Profile"
-					>
-						Profile
-					</a>
-				{/if}
 			</div>
 
-			<!-- Right: Auth Button -->
 			<div>
 				{#if route !== '/signin'}
 					{#if $session?.data?.user}

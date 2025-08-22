@@ -3,12 +3,14 @@ import type { PageServerLoad } from "./$types";
 import { GetUser } from "$lib/server/helpers/UserCheck.helper";
 import { redirect } from "@sveltejs/kit";
 import { TaskManager } from "$lib/server/utils/TaskManager.serverutil";
+import { GroupManager } from "$lib/server/utils/GroupManager.serverutil";
 
 
 
 export const load: PageServerLoad = async ({ params, request }) => {
     try {
         const taskId = params.task
+        const groupId = params.group
         
         const user = GetUser(request)
         
@@ -17,9 +19,13 @@ export const load: PageServerLoad = async ({ params, request }) => {
         }
 
         const task = await TaskManager.getSingleTask(taskId)
+        const assignees = await TaskManager.getAssignees(taskId)
+        const groupMembers = await GroupManager.getGroupMembers(groupId)
 
         return {
-            task
+            task,
+            assignees,
+            groupMembers
         }
     }
     catch(err: any) {

@@ -59,7 +59,7 @@
 	</section>
 	{#if createWindow}
 		<form class="space-y-2">
-			<h1>Create New Task</h1>
+			<h2>Create New Task</h2>
 			<div>
 				<label for="taskName">Task Name:</label>
 				<input type="text" name="taskName" id="taskName" class="border" bind:value={newTask.name} />
@@ -80,7 +80,7 @@
 		</form>
 	{/if}
 	<section class="space-y-2">
-		<h1>Members</h1>
+		<h2>Members</h2>
 		<div>
 			{#each groupMembers as member}
 				<div>

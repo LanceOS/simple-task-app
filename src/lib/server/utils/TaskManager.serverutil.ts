@@ -2,6 +2,7 @@ import { DrizzleDB } from "$lib/Drizzle"
 import { eq } from "drizzle-orm"
 import { task } from "../schemas/task.schema"
 import type { INewTask } from "$lib/@types/Tasks.types"
+import { taskAssignee } from "../schemas/task_assignee.schema"
 
 
 
@@ -25,4 +26,19 @@ export const TaskManager = {
             where: eq(task.id, taskId)
         })
     },
+
+    getAssignees: async (taskId: string) => {
+        return await DrizzleDB.query.taskAssignee.findMany({
+            where: eq(taskAssignee.parentTaskId, taskId),
+            with: {
+                assignee: {
+                    columns: {
+                        id: true,
+                        name: true,
+                        image: true
+                    }
+                }
+            }
+        })
+    }
 }

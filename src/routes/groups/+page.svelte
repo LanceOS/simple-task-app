@@ -71,18 +71,18 @@
 		</form>
 	{/if}
 	<section>
-		<h1>Joined Groups</h1>
+		<h2>Joined Groups</h2>
 		<div>
 			{#if joinedGroups}
 				{#each joinedGroups as joined}
 					<div>
-						<h2>{joined.groupName}</h2>
+						<h3>{joined.groupName}</h3>
 						<p>{joined.description}</p>
 					</div>
 				{/each}
 			{:else}
 				<div>
-					<h2>You are not part of groups.</h2>
+					<h3>You are not part of groups.</h3>
 				</div>
 			{/if}
 		</div>

@@ -43,6 +43,13 @@
       "when": 1755740862390,
       "tag": "0005_demonic_boomerang",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1755820393202,
+      "tag": "0006_silky_secret_warriors",
+      "breakpoints": true
     }
   ]
 }
