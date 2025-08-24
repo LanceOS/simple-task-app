@@ -20,7 +20,7 @@
 			<div class="space-y-4">
 				{#each ownedGroups as owned}
 					<div class="w-fit border">
-						<a href={`/groups/group/${owned.id}`}>
+						<a href={`/groups/${owned.id}`} aria-label={`Go to ${owned.groupName}`}>
 							<h2>{owned.groupName}</h2>
 							<p>{owned.description}</p>
 						</a>
