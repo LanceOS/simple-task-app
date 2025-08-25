@@ -1,5 +1,5 @@
 import { DrizzleDB } from '$lib/Drizzle';
-import { and, eq, inArray, ne } from 'drizzle-orm';
+import { and, eq, exists, inArray, ne, sql } from 'drizzle-orm';
 import { taskGroup } from '../schemas/task_group.schema';
 import { groupMember } from '../schemas/group_members.schema';
 import { user } from '../schemas/authentication';
@@ -59,7 +59,7 @@ export const GroupManager = {
 			columns: {
 				isAdmin: true,
 				createdAt: true,
-				parentGroupId: true,
+				parentGroupId: true
 			}
 		});
 	},
@@ -70,6 +70,15 @@ export const GroupManager = {
 			columns: {
 				isAdmin: true
 			}
-		})
+		});
+	},
+
+	isUserMember: async (userId: string, groupId: string) => {
+		const result = await DrizzleDB.query.groupMember.findFirst({
+			where: and(eq(groupMember.userId, userId), eq(groupMember.parentGroupId, groupId)),
+			columns: { id: true }
+		});
+
+		return !!result
 	}
 };

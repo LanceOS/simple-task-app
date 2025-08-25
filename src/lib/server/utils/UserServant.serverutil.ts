@@ -14,4 +14,13 @@ export const UserServant = {
 	// 		where: eq(user.id, userId)
 	// 	})
 	// }
+
+	findUserByEmail: async (email: string) => {
+		return await DrizzleDB.query.user.findFirst({
+			where: eq(user.email, email),
+			columns: {
+				id: true,
+			}
+		})
+	}
 };
