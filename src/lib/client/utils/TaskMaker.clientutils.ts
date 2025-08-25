@@ -15,7 +15,7 @@ export const TaskMaker = {
                 return;
             }
 
-            const response = await FetchHandler.fetch(`/groups/group/${data.groupId}`, "post", data)
+            const response = await FetchHandler.fetch(`/groups/${data.groupId}/create_task`, "post", data)
 
             const res = await response.json()
             console.log(res)

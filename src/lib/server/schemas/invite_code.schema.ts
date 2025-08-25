@@ -1,8 +1,10 @@
-import { integer, pgTable } from "drizzle-orm/pg-core";
+import { pgTable, text, uuid } from "drizzle-orm/pg-core";
 import { base } from "./structures/SchemaBase.schema";
+import { taskGroup } from "./task_group.schema";
 
 
 export const inviteCode = pgTable("invite_code", {
-    code: integer("code").notNull(),
+    code: text("code").notNull(),
+    parentGroupId: uuid("parent_group_id").references(() => taskGroup.id).notNull(),
     ...base("code")
 })

@@ -28,16 +28,15 @@
 			<div class="flex gap-4">
 				{#each tasks as task}
 					<div>
-						<a href={`/groups/group/${groupId}/task/${task.id}`} class="flex gap-2 items-center">
-                            <div>
-
-                                <h2>{task.taskName}</h2>
-                                <p>{task.description}</p>
-                            </div>
-                            <div>
-                                <p>{task.completed}</p>
-                                <p>{task.createdAt.toLocaleDateString()}</p>
-                            </div>
+						<a href={`/groups/group/${groupId}/task/${task.id}`} class="flex items-center gap-2">
+							<div>
+								<h2>{task.taskName}</h2>
+								<p>{task.description}</p>
+							</div>
+							<div>
+								<p>{task.completed}</p>
+								<p>{task.createdAt.toLocaleDateString()}</p>
+							</div>
 						</a>
 					</div>
 				{/each}
@@ -79,12 +78,28 @@
 			>
 		</form>
 	{/if}
+	<section>
+		<form class="flex w-96 flex-col gap-2">
+			<label for="addMem">Add Members:</label>
+			<div class="border p-2 flex items-center justify-between rounded-md gap-2">
+				<input
+					type="tel"
+					name="addMem"
+					id="addMem"
+					class="rounded-md p-2 w-full"
+					placeholder="example@gmail.com"
+				/>
+				<button type="button" class="w-fit cursor-pointer rounded-md border px-4 py-2">Add</button>
+			</div>
+		</form>
+	</section>
 	<section class="space-y-2">
 		<h1>Members</h1>
 		<div>
 			{#each groupMembers as member}
 				<div>
 					<h2>{member.user.name}</h2>
+					<p>Joined: {member.createdAt.toLocaleDateString()}</p>
 				</div>
 			{/each}
 		</div>

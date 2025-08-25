@@ -57,7 +57,9 @@ export const GroupManager = {
 				}
 			},
 			columns: {
-				isAdmin: true
+				isAdmin: true,
+				createdAt: true,
+				parentGroupId: true,
 			}
 		});
 	},
