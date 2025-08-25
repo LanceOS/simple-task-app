@@ -16,7 +16,7 @@
 	<section class="space-y-2">
 		<h1>Your Groups</h1>
 
-		{#if ownedGroups}
+		{#if ownedGroups.length > 0}
 			<div class="space-y-4">
 				{#each ownedGroups as owned}
 					<div class="w-fit border">
@@ -26,6 +26,14 @@
 						</a>
 					</div>
 				{/each}
+
+				<button
+					type="button"
+					aria-label="Create new task group"
+					class="cursor-pointer rounded-md border px-4 py-2"
+					onclick={() => (createTask = !createTask)}
+					>Create Task Group
+				</button>
 			</div>
 		{:else}
 			<div class="space-y-4">
