@@ -1,5 +1,5 @@
 import { PUBLIC_LOKI_PUSH } from '$env/static/public';
-import { Journalist } from '../utils/Journalist.serverutil';
+import { Journalist } from '../services/Journalist.serverutil';
 
 export const Loki = {
 	createLog: async (job: string, level: string, message: string) => {

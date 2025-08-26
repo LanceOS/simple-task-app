@@ -2,8 +2,8 @@ import { error } from 'console';
 import type { PageServerLoad } from './$types';
 import { GetUser } from '$lib/server/helpers/UserCheck.helper';
 import { redirect } from '@sveltejs/kit';
-import { TaskManager } from '$lib/server/utils/TaskManager.serverutil';
-import { GroupManager } from '$lib/server/utils/GroupManager.serverutil';
+import { TaskManager } from '$lib/server/services/Tasker.serverutil';
+import { GroupManager } from '$lib/server/services/Group.serverutil';
 
 export const load: PageServerLoad = async ({ params, request }) => {
 	const user = await GetUser(request);

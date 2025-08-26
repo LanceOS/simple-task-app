@@ -1,11 +1,11 @@
 import { PRIVATE_EMAIL } from '$env/static/private';
 import { ResponseHandler } from '$lib/server/helpers/ResponseHandler.helper';
 import { GetUser } from '$lib/server/helpers/UserCheck.helper.js';
-import { GroupManager } from '$lib/server/utils/GroupManager.serverutil.js';
-import { InviteManager } from '$lib/server/utils/InviteManager.serverutil.js';
-import { Journalist } from '$lib/server/utils/Journalist.serverutil.js';
-import { mailerStrategy } from '$lib/server/utils/MailMan.js';
-import { UserServant } from '$lib/server/utils/UserServant.serverutil.js';
+import { GroupManager } from '$lib/server/services/Group.serverutil.js';
+import { InviteManager } from '$lib/server/services/Inviter.serverutil.js';
+import { Journalist } from '$lib/server/services/Journalist.serverutil.js';
+import { mailerStrategy } from '$lib/server/services/MailMan.js';
+import { UserServant } from '$lib/server/services/User.serverutil.js';
 
 export const POST = async ({ request }) => {
 	try {

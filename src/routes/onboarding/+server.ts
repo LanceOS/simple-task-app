@@ -1,6 +1,6 @@
 import { auth } from '$lib/auth';
 import { ResponseHandler } from '$lib/server/helpers/ResponseHandler.helper';
-import { UserServant } from '$lib/server/utils/UserServant.serverutil.js';
+import { UserServant } from '$lib/server/services/User.serverutil.js';
 
 
 export const POST = async ({ request }) => {

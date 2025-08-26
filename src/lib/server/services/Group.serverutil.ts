@@ -1,17 +1,19 @@
 import { DrizzleDB } from '$lib/Drizzle';
-import { and, eq, exists, inArray, ne, sql } from 'drizzle-orm';
+import { and, eq, ne } from 'drizzle-orm';
 import { taskGroup } from '../schemas/task_group.schema';
 import { groupMember } from '../schemas/group_members.schema';
-import { user } from '../schemas/authentication';
 
-export const GroupManager = {
-	getUserOwnedGroups: async (userId: string) => {
-		return await DrizzleDB.query.taskGroup.findMany({
+export class GroupRespository {
+	private db = DrizzleDB;
+
+
+	async findManyByOwnerId (userId: string) {
+		return await this.db.query.taskGroup.findMany({
 			where: eq(taskGroup.ownerId, userId)
 		});
-	},
-	getJoinedGroups: async (userId: string) => {
-		return await DrizzleDB.select({
+	}
+	async findJoinedGroups (userId: string) {
+		return await this.db.select({
 			id: taskGroup.id,
 			groupName: taskGroup.groupName,
 			description: taskGroup.description
@@ -19,13 +21,13 @@ export const GroupManager = {
 			.from(taskGroup)
 			.innerJoin(groupMember, eq(taskGroup.id, groupMember.parentGroupId))
 			.where(and(eq(groupMember.userId, userId), ne(taskGroup.ownerId, userId)));
-	},
+	}
 
-	createNewGroup: async (
+	async create(
 		data: { name: string; description: string },
 		userId: string
-	): Promise<string> => {
-		return await DrizzleDB.transaction(async (tx) => {
+	): Promise<string> {
+		return await this.db.transaction(async (tx) => {
 			const [newGroup] = await tx
 				.insert(taskGroup)
 				.values({
@@ -42,10 +44,10 @@ export const GroupManager = {
 
 			return newGroup.id;
 		});
-	},
+	}
 
-	getGroupMembers: async (groupId: string) => {
-		return await DrizzleDB.query.groupMember.findMany({
+	async getGroupMembers (groupId: string) {
+		return await this.db.query.groupMember.findMany({
 			where: eq(groupMember.parentGroupId, groupId),
 			with: {
 				user: {
@@ -62,23 +64,23 @@ export const GroupManager = {
 				parentGroupId: true
 			}
 		});
-	},
+	}
 
-	isCurrentUserAdmin: async (userId: string, groupId: string) => {
-		return await DrizzleDB.query.groupMember.findFirst({
+	async isCurrentUserAdmin(userId: string, groupId: string) {
+		return await this.db.query.groupMember.findFirst({
 			where: and(eq(groupMember.parentGroupId, groupId), eq(groupMember.userId, userId)),
 			columns: {
 				isAdmin: true
 			}
 		});
-	},
+	}
 
-	isUserMember: async (userId: string, groupId: string) => {
-		const result = await DrizzleDB.query.groupMember.findFirst({
+	async isUserMember (userId: string, groupId: string) {
+		const result = await this.db.query.groupMember.findFirst({
 			where: and(eq(groupMember.userId, userId), eq(groupMember.parentGroupId, groupId)),
 			columns: { id: true }
 		});
 
-		return !!result
+		return !!result;
 	}
 };

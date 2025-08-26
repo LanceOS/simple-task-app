@@ -1,6 +1,6 @@
 import { error, redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import { GroupManager } from '$lib/server/utils/GroupManager.serverutil';
+import { GroupManager } from '$lib/server/services/Group.serverutil';
 import { GetUser } from '$lib/server/helpers/UserCheck.helper';
 
 export const load: PageServerLoad = async ({ request }) => {

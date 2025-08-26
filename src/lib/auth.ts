@@ -4,7 +4,7 @@ import { DrizzleDB } from './Drizzle.js';
 import * as authentication from './server/schemas/authentication.js';
 import { PUBLIC_URL } from '$env/static/public';
 import { emailOTP } from 'better-auth/plugins';
-import { mailServiceResend } from './server/utils/MailMan.js';
+import { mailServiceResend } from './server/services/MailMan.js';
 
 // Initialize the 'betterAuth' instance
 export const auth = betterAuth({
