@@ -2,6 +2,7 @@ import { pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
 import { base } from './structures/SchemaBase.schema';
 import { taskGroup } from './task_group.schema';
 import { user } from './authentication';
+import type { InferSelectModel } from 'drizzle-orm';
 
 export const inviteCode = pgTable('invite_code', {
 	code: text('code').notNull(),
@@ -12,3 +13,6 @@ export const inviteCode = pgTable('invite_code', {
 	expiresAt: timestamp('expires_at').$default(() => new Date(Date.now() + 1000 * 60 * 60 * 24)).notNull(),
 	...base('code')
 });
+
+
+export type InviteSchema = InferSelectModel<typeof inviteCode>

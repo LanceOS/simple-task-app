@@ -1,4 +1,4 @@
-import { FetchHandler } from "../functions/FetchHandler.helper"
+import { FetchHandler } from "../functions/HttpService"
 import { Toaster } from "../components/toaster/Toaster"
 import type { INewTask } from "$lib/@types/Tasks.types";
 import { goto } from "$app/navigation";

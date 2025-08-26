@@ -1,7 +1,7 @@
 import { ResendMailer } from "../providers/Resend";
 
 export interface IMailerOptions {
-	from: "noreply@lancehemphill.com";
+	from: string;
 	to: string[];
 	subject: string;
 	html: string;

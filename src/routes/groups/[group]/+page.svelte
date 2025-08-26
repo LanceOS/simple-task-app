@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/state';
+	import { Inviter } from '$lib/client/utils/Inviter.clientutil';
 	import { TaskMaker } from '$lib/client/utils/TaskMaker.clientutils';
 	import type { PageProps } from './$types';
 
@@ -16,9 +17,15 @@
 		groupId: groupId
 	});
 
+	let inviteeEmail: string = $state('')
+
 	const createTask = async () => {
-		TaskMaker.createTask(newTask);
+		await TaskMaker.createTask(newTask);
 	};
+
+	const addMember = async () => {
+		await Inviter.sendUserInvite(groupId, inviteeEmail)
+	}
 </script>
 
 <main class="space-y-8">
@@ -88,8 +95,9 @@
 					id="addMem"
 					class="rounded-md p-2 w-full"
 					placeholder="example@gmail.com"
+					bind:value={inviteeEmail}
 				/>
-				<button type="button" class="w-fit cursor-pointer rounded-md border px-4 py-2">Add</button>
+				<button type="button" class="w-fit cursor-pointer rounded-md border px-4 py-2" onclick={addMember}>Add</button>
 			</div>
 		</form>
 	</section>

@@ -1,4 +1,4 @@
-import { FetchHandler } from '$lib/client/functions/FetchHandler.helper';
+import { FetchHandler } from '$lib/client/functions/HttpService';
 import { Toaster } from '../components/toaster/Toaster';
 
 export const GroupMaker = {
