@@ -1,6 +1,7 @@
 import { boolean, pgTable, text, uuid } from "drizzle-orm/pg-core";
 import { base } from "./structures/SchemaBase.schema";
 import { taskGroup } from "./task_group.schema";
+import type { InferSelectModel } from "drizzle-orm";
 
 
 
@@ -11,3 +12,6 @@ export const task = pgTable("task", {
     parentGroupId: uuid("parent_group_id").references(() => taskGroup.id).notNull(),
     ...base("task")
 })
+
+
+export type ITask = InferSelectModel<typeof task>

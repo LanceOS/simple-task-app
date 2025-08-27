@@ -1,52 +1,30 @@
-import { DrizzleDB } from "$lib/Drizzle"
-import { eq } from "drizzle-orm"
-import { task } from "../schemas/task.schema"
-import type { INewTask } from "$lib/@types/Tasks.types"
-import { taskAssignee } from "../schemas/task_assignee.schema"
+import type { CreateTaskPayload } from "$lib/@types/Groups.types";
+import type { TaskRepository } from "../repositories/Task.repository";
+import type { ITask } from "../schemas/task.schema";
+import type { ITaskAssignee } from "../schemas/task_assignee.schema";
 
 
 
-export const TaskManager = {
-    getTasks: async (groupId: string) => {
-        return await DrizzleDB.query.task.findMany({
-            where: eq(task.parentGroupId, groupId)
-        })
-    },
+export class TaskService {
+    constructor(private taskRepository: TaskRepository) {}
+        
+    async createTask(data: CreateTaskPayload): Promise<string> {
+        return await this.taskRepository.create(data);
+    }
 
-    createTask: async (data: INewTask) => {
-        return await DrizzleDB.insert(task).values({
-            taskName: data.name,
-            description: data.description,
-            parentGroupId: data.groupId
-        }).returning({ id: task.id })
-    },
+    async getAllTasks(groupId: string): Promise<ITask[]> {
+        return await this.taskRepository.findTasks(groupId)
+    }
 
-    getSingleTask: async (taskId: string) => {
-        return await DrizzleDB.query.task.findFirst({
-            where: eq(task.id, taskId)
-        })
-    },
+    async getTask(taskId: string): Promise<ITask | undefined> {
+        return await this.taskRepository.findSingleTask(taskId)
+    }
 
-    getAssignees: async (taskId: string) => {
-        return await DrizzleDB.query.taskAssignee.findMany({
-            where: eq(taskAssignee.parentTaskId, taskId),
-            with: {
-                assignee: {
-                    columns: {
-                        id: true,
-                        name: true,
-                        image: true
-                    }
-                }
-            }
-        })
-    },
+    async getAssignees(taskId: string): Promise<ITaskAssignee[]> {
+        return await this.taskRepository.findAssignees(taskId)
+    }
 
-
-    assignUserToTask: async (taskId: string, userId: string) => {
-        return await DrizzleDB.insert(taskAssignee).values({
-            parentTaskId: taskId,
-            assigneeId: userId
-        })
+    async assignUserToTask(taskId: string, userId: string): Promise<string> {
+        return await this.taskRepository.assignUserToTask(taskId, userId)
     }
 }
