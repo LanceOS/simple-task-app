@@ -1,42 +1,40 @@
-import type { CreateTaskPayload } from "$lib/@types/Groups.types";
-import { TaskRepository } from "../repositories/Task.repository";
-import type { ITask } from "../schemas/task.schema";
-import type { ITaskAssignee } from "../schemas/task_assignee.schema";
-
-
+import type { AssignedMembers, CreateTaskPayload } from '$lib/@types/Groups.types';
+import { TaskRepository } from '../repositories/Task.repository';
+import type { ITask } from '../schemas/task.schema';
 
 export class TaskService {
-    private static instance: TaskService;
+	private static instance: TaskService;
 
-    constructor(private taskRepository: TaskRepository) {}
+	constructor(private taskRepository: TaskRepository) {}
 
-    public static getInstance(taskRepository: TaskRepository) {
-        if(!TaskService.instance) {
-            TaskService.instance = new TaskService(taskRepository)
-        }
-        return TaskService.instance;
-    }
-        
-    async createTask(data: CreateTaskPayload): Promise<string> {
-        return await this.taskRepository.create(data);
-    }
+	public static getInstance(taskRepository: TaskRepository) {
+		if (!TaskService.instance) {
+			TaskService.instance = new TaskService(taskRepository);
+		}
+		return TaskService.instance;
+	}
 
-    async getAllTasks(groupId: string): Promise<ITask[]> {
-        return await this.taskRepository.findTasks(groupId)
-    }
+	async createTask(data: CreateTaskPayload): Promise<string> {
+		return await this.taskRepository.create(data);
+	}
 
-    async getTask(taskId: string): Promise<ITask | undefined> {
-        return await this.taskRepository.findSingleTask(taskId)
-    }
+	async getAllTasks(groupId: string): Promise<ITask[]> {
+		return await this.taskRepository.findTasks(groupId);
+	}
 
-    async getAssignees(taskId: string): Promise<ITaskAssignee[]> {
-        return await this.taskRepository.findAssignees(taskId)
-    }
+	async getTask(taskId: string): Promise<ITask | undefined> {
+		return await this.taskRepository.findSingleTask(taskId);
+	}
 
-    async assignUserToTask(taskId: string, userId: string): Promise<string> {
-        return await this.taskRepository.assignUserToTask(taskId, userId)
-    }
+	async getAssignees(
+		taskId: string
+	): Promise<AssignedMembers<{ id: string; name: string; image: string | null }>[]> {
+		return await this.taskRepository.findAssignees(taskId);
+	}
+
+	async assignUserToTask(taskId: string, userId: string): Promise<string> {
+		return await this.taskRepository.assignUserToTask(taskId, userId);
+	}
 }
 
-
-export const taskService = TaskService.getInstance(new TaskRepository())
+export const taskService = TaskService.getInstance(new TaskRepository());

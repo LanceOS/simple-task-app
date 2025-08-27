@@ -1,6 +1,5 @@
-import type { CreateGroupPayload, JoinedGroupsResponse } from '$lib/@types/Groups.types';
+import type { CreateGroupPayload, JoinedGroupsResponse, Members } from '$lib/@types/Groups.types';
 import { GroupRepository } from '../repositories/Group.repository';
-import type { IGroupMember } from '../schemas/group_members.schema';
 import type { IGroups } from '../schemas/task_group.schema';
 
 export class GroupService {
@@ -41,8 +40,16 @@ export class GroupService {
 		return newGroup.id
 	}
 
-	async getMembers(groupId: string): Promise<IGroupMember[]> {
+	async getAllMembers(groupId: string): Promise<Members<{ id: string, name: string, image: string | null }>[]> {
 		return this.groupRepository.findGroupMembers(groupId)
+	}
+
+	async isMemberAdmin(groupId: string, userId: string): Promise<boolean> {
+		return await this.groupRepository.isCurrentUserAdmin(groupId, userId);
+	}
+
+	async isMember(groupId: string, userId: string): Promise<boolean> {
+		return await this.groupRepository.isUserMember(groupId, userId)
 	}
 }
 
