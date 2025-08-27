@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
 	import { authClient } from '$lib/auth-client';
 
@@ -7,6 +8,7 @@
 
 	const signOut = () => {
 		authClient.signOut();
+		goto("/")
 	};
 </script>
 

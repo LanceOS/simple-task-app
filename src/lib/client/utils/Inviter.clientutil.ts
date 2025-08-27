@@ -32,7 +32,7 @@ export const Inviter = {
 			return response;
 		} catch (error: any) {
 			Toaster.ejectToast({
-				message: 'Failed to invite user!',
+				message: error.message || 'Failed to invite user!',
 				type: 'error'
 			});
 

@@ -13,7 +13,7 @@ export const POST = async ({ request }) => {
         }
 		const response = await groupService.createNewGroup(body, user.id);
 
-        return ResponseHandler.jsonResponse({ message: `Successfully created new group!: ${response}` }, 200)
+        return ResponseHandler.jsonResponse(response, 200)
 	} catch (error: any) {
 		return ResponseHandler.jsonResponse(500, error.message);
 	}

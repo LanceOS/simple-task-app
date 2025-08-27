@@ -20,10 +20,9 @@ export const POST = async ({ request }) => {
 			parentGroupId: isCodeValid.parentGroupId
 		});
 
-		return ResponseHandler.jsonResponse('Successfully joined group!', 200);
+		return ResponseHandler.jsonResponse(isCodeValid.parentGroupId, 200);
 	} catch (error: any) {
 		if (error instanceof HttpError) {
-            console.log(error.message, error.status)
 			return ResponseHandler.jsonResponse(error.message, error.status);
 		}
 

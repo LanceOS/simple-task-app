@@ -7,5 +7,5 @@
 </script>
 
 <Toast />
-<!-- <Nav /> -->
+<Nav />
 {@render children()}
