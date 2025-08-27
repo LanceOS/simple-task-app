@@ -1,6 +1,6 @@
 import { ResponseHandler } from '$lib/server/helpers/ResponseHandler.helper'
 import { GetUser } from '$lib/server/helpers/UserCheck.helper.js'
-import { TaskManager } from '$lib/server/services/Tasker.serverutil.js'
+import { taskService } from '$lib/server/services/Tasker.serverutil.js';
 
 
 
@@ -14,7 +14,7 @@ export const POST = async ({ request }) => {
             return ResponseHandler.jsonResponse("User must be signed in to appoint tasks!", 401)
         }
 
-        const newAssignee = TaskManager.assignUserToTask(body.taskId, body.userId);
+        const newAssignee = taskService.assignUserToTask(body.taskId, body.userId);
 
         return ResponseHandler.jsonResponse(newAssignee, 200)
     }

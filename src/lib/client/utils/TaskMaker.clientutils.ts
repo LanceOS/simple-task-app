@@ -1,7 +1,9 @@
 import { Toaster } from "../components/toaster/Toaster"
 import { goto } from "$app/navigation";
 import type { CreateTaskPayload } from "$lib/@types/Groups.types";
+import { HttpService } from "../functions/HttpService";
 
+const http = HttpService.getInstance();
 
 export const TaskMaker = {
     createTask: async (data: CreateTaskPayload) => {
@@ -14,7 +16,7 @@ export const TaskMaker = {
                 return;
             }
 
-            const response = await FetchHandler.fetch(`/groups/${data.groupId}/create_task`, "post", data)
+            const response = await http.post<Response, typeof data>(`groups/${data.groupId}/create_task`, data)
 
             const res = await response.json()
             console.log(res)
@@ -24,7 +26,7 @@ export const TaskMaker = {
                     message: "Created Task!",
                     type: "success"
                 })
-                goto(`/groups/group/${data.groupId}/task/${res.id}`)           
+                goto(`/groups/${data.groupId}/task/${res.id}`)           
                 return response
             }
         }

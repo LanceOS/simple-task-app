@@ -35,7 +35,7 @@
 			<div class="flex gap-4">
 				{#each tasks as task}
 					<div>
-						<a href={`/groups/group/${groupId}/task/${task.id}`} class="flex items-center gap-2">
+						<a href={`/groups/${groupId}/task/${task.id}`} class="flex items-center gap-2">
 							<div>
 								<h2>{task.taskName}</h2>
 								<p>{task.description}</p>

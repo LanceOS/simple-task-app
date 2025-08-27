@@ -7,7 +7,7 @@ const http = HttpService.getInstance();
 export const GroupMaker = {
 	createGroupCall: async (data: { name: string; description: string }): Promise<ApiResponse> => {
 		try {
-			const response = await http.post<ApiResponse, typeof data>('/groups', data);
+			const response = await http.post<ApiResponse, typeof data>('groups', data);
 			Toaster.ejectToast({
 				message: 'Created new task group!',
 				type: 'success'

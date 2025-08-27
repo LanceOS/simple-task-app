@@ -8,12 +8,6 @@ export const UserServant = {
 			name: name
 		}).where(eq(user.id, userId));
 	},
-	
-	// getUserStats: async (userId: string) => {
-	// 	return await DrizzleDB.query.user.findFirst({
-	// 		where: eq(user.id, userId)
-	// 	})
-	// }
 
 	findUserByEmail: async (email: string) => {
 		return await DrizzleDB.query.user.findFirst({

@@ -1,15 +1,24 @@
-import { DrizzleDB } from "$lib/Drizzle"
-import { nanoid } from "nanoid"
-import { inviteCode } from "../schemas/invite_code.schema"
+import { InviteRepository } from "../repositories/Invite.repository";
 
 
 
-export const InviteManager = {
-    inviteUserToGroup: async (groupId: string, userId: string) => {
-        return await DrizzleDB.insert(inviteCode).values({
-            code: nanoid(),
-            parentGroupId: groupId,
-            sentTo: userId
-        }).returning({ code: inviteCode.code })
+export class InviteService {
+    private static instance: InviteService;
+
+    constructor(private inviteRepository: InviteRepository) {}
+
+    public static getInstance(inviteRepository: InviteRepository) {
+        if(!InviteService.instance) {
+            InviteService.instance = new InviteService(inviteRepository)
+        }
+
+        return InviteService.instance;
+    }
+
+    async sendInviteCode(groupId: string, email: string): Promise<string> {
+        return await this.inviteRepository.inviteUserToGroup(groupId, email)
     }
 }
+
+
+export const inviteService = InviteService.getInstance(new InviteRepository())

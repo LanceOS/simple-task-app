@@ -1,8 +1,8 @@
 import { PRIVATE_EMAIL } from '$env/static/private';
 import { ResponseHandler } from '$lib/server/helpers/ResponseHandler.helper';
 import { GetUser } from '$lib/server/helpers/UserCheck.helper.js';
-import { GroupManager } from '$lib/server/services/Group.serverutil.js';
-import { InviteManager } from '$lib/server/services/Inviter.serverutil.js';
+import { groupService } from '$lib/server/services/Group.serverutil.js';
+import { inviteService } from '$lib/server/services/Inviter.serverutil.js';
 import { Journalist } from '$lib/server/services/Journalist.serverutil.js';
 import { mailerStrategy } from '$lib/server/services/MailMan.js';
 import { UserServant } from '$lib/server/services/User.serverutil.js';
@@ -22,13 +22,13 @@ export const POST = async ({ request }) => {
 
 		const userExists = await UserServant.findUserByEmail(body.email);
 		if (userExists) {
-			const isInvitedUserMember = await GroupManager.isUserMember(body.groupId, userExists.id);
+			const isInvitedUserMember = await groupService.isMember(body.groupId, userExists.id);
 			if (isInvitedUserMember) {
 				return ResponseHandler.jsonResponse({ message: 'This user is already a member!'}, 400);
 			}
 		}
 
-		const createCode = await InviteManager.inviteUserToGroup(body.groupId, body.email);
+		const createCode = await inviteService.sendInviteCode(body.groupId, body.email);
 
 		const options = {
 			from: PRIVATE_EMAIL,

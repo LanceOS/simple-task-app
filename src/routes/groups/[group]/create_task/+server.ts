@@ -1,6 +1,6 @@
 import { ResponseHandler } from '$lib/server/helpers/ResponseHandler.helper'
 import { GetUser } from '$lib/server/helpers/UserCheck.helper.js';
-import { TaskManager } from '$lib/server/services/Tasker.serverutil.js';
+import { taskService } from '$lib/server/services/Tasker.serverutil.js';
 
 
 export const POST = async ({ request }) => {
@@ -13,7 +13,7 @@ export const POST = async ({ request }) => {
             return ResponseHandler.jsonResponse("User must be signed in!", 401)
         }
 
-        const [response] = await TaskManager.createTask(body);
+        const [response] = await taskService.createTask(body);
 
         return ResponseHandler.jsonResponse(response, 200)
     }

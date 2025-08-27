@@ -18,7 +18,7 @@ export const load: PageServerLoad = async ({ params, request }) => {
         const groupId = params.group;
 
         const tasks = await taskService.getAllTasks(groupId)
-        const groupMembers = await groupService.getMembers(groupId);
+        const groupMembers = await groupService.getAllMembers(groupId);
 
         return {
             tasks,
