@@ -11,20 +11,25 @@ export const POST = async ({ request }) => {
 	try {
 		const body = await request.json();
 
+		console.log(body);
+
 		if (!body.email || !body.groupId) {
 			return ResponseHandler.jsonResponse({ message: 'Missing required data!' }, 400);
 		}
 
 		const invitingUser = await GetUser(request);
-		if (!invitingUser) {
-			return ResponseHandler.jsonResponse({ message: 'User must be signed in to invite another member!'}, 401);
-		}
 
+		if (!invitingUser) {
+			return ResponseHandler.jsonResponse(
+				{ message: 'User must be signed in to invite another member!' },
+				401
+			);
+		}
 		const userExists = await UserServant.findUserByEmail(body.email);
-		if (userExists) {
+		if (userExists?.id) {
 			const isInvitedUserMember = await groupService.isMember(body.groupId, userExists.id);
 			if (isInvitedUserMember) {
-				return ResponseHandler.jsonResponse({ message: 'This user is already a member!'}, 400);
+				return ResponseHandler.jsonResponse({ message: 'This user is already a member!' }, 400);
 			}
 		}
 
@@ -37,8 +42,7 @@ export const POST = async ({ request }) => {
 			html: `<p>You have been invited to a group on GreaterTask! Your invite code is: ${createCode}</p>`
 		};
 
-		await mailerStrategy.send(options)
-		
+		await mailerStrategy.send(options);
 
 		await Journalist.write({
 			action: 'Group Invite',
@@ -50,8 +54,11 @@ export const POST = async ({ request }) => {
 			}
 		});
 
-		return ResponseHandler.jsonResponse({ message: 'Successfully invited user to your group!'}, 200);
+		return ResponseHandler.jsonResponse(
+			{ message: 'Successfully invited user to your group!' },
+			200
+		);
 	} catch (error: any) {
-		return ResponseHandler.jsonResponse(error.message, 500);
+		return ResponseHandler.jsonResponse({ message: error.message }, 500);
 	}
 };

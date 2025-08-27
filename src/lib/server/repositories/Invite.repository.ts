@@ -1,5 +1,5 @@
 import { DrizzleDB } from '$lib/Drizzle';
-import { nanoid } from 'nanoid';
+import { nanoid } from 'nanoid/non-secure';
 import { inviteCode } from '../schemas/invite_code.schema';
 
 export class InviteRepository {

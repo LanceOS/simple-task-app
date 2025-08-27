@@ -23,7 +23,6 @@ export class ResendMailerStrategy implements IMailer {
 		if (!options.to || !options.subject || !options.html) {
 			throw new Error('Missing required email fields: to, subject, or html.');
 		}
-
 		try {
 			const { error } = await this.resendClient.emails.create({
 				from: options.from,

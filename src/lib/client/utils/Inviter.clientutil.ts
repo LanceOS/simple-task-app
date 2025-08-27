@@ -20,7 +20,7 @@ export const Inviter = {
 
 		try {
 			const response = await http.post<ApiResponse, typeof data>(
-				`/groups/${groupId}/invite_user`,
+				`groups/${groupId}/invite_user`,
 				data
 			);
 

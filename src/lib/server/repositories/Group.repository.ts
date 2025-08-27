@@ -59,7 +59,7 @@ export class GroupRepository {
 		return !!member?.isAdmin
 	}
 
-	async isUserMember(userId: string, groupId: string): Promise<boolean> {
+	async isUserMember(groupId: string, userId: string): Promise<boolean> {
 		const result = await this.db.query.groupMember.findFirst({
 			where: and(eq(groupMember.userId, userId), eq(groupMember.parentGroupId, groupId)),
 			columns: { id: true }
