@@ -1,5 +1,5 @@
 export interface CreateGroupPayload {
-    groupName: string;
+    name: string;
     description: string;
     ownerId: string;
 }
@@ -19,6 +19,6 @@ export interface AddMemberParams {
 
 export interface JoinedGroupsResponse {
     id: string;
-    groupName: string;
+    name: string;
     description: string;
 }

@@ -1,7 +1,7 @@
 import { error, redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import { GroupManager } from '$lib/server/services/Group.serverutil';
 import { GetUser } from '$lib/server/helpers/UserCheck.helper';
+import { groupService } from '$lib/server/services/Group.serverutil';
 
 export const load: PageServerLoad = async ({ request }) => {
 	const user = await GetUser(request);
@@ -10,8 +10,8 @@ export const load: PageServerLoad = async ({ request }) => {
 		throw redirect(308, '/signin');
 	}
 	try {
-		const ownedGroups = await GroupManager.getUserOwnedGroups(user.id);
-		const joinedGroups = await GroupManager.getJoinedGroups(user.id);
+		const ownedGroups = await groupService.getUserOwnedGroups(user.id);
+		const joinedGroups = await groupService.getJoinedGroups(user.id);
 
 		return {
 			ownedGroups,

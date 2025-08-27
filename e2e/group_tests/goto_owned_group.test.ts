@@ -5,7 +5,7 @@
 // 		const json = [
 // 			{
 // 				id: 10,
-// 				groupName: 'Test Group',
+// 				name: 'Test Group',
 // 				description: 'This is a test',
 // 				ownerId: 10,
 // 				type: 'task_group',

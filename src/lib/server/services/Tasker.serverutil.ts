@@ -1,12 +1,21 @@
 import type { CreateTaskPayload } from "$lib/@types/Groups.types";
-import type { TaskRepository } from "../repositories/Task.repository";
+import { TaskRepository } from "../repositories/Task.repository";
 import type { ITask } from "../schemas/task.schema";
 import type { ITaskAssignee } from "../schemas/task_assignee.schema";
 
 
 
 export class TaskService {
+    private static instance: TaskService;
+
     constructor(private taskRepository: TaskRepository) {}
+
+    public static getInstance(taskRepository: TaskRepository) {
+        if(!TaskService.instance) {
+            TaskService.instance = new TaskService(taskRepository)
+        }
+        return TaskService.instance;
+    }
         
     async createTask(data: CreateTaskPayload): Promise<string> {
         return await this.taskRepository.create(data);
@@ -28,3 +37,6 @@ export class TaskService {
         return await this.taskRepository.assignUserToTask(taskId, userId)
     }
 }
+
+
+export const taskService = TaskService.getInstance(new TaskRepository())

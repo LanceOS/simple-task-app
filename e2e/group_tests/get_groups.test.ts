@@ -5,7 +5,7 @@ test('test_group_data_propagation', async ({ page }) => {
 		const json = [
 			{
 				id: 10,
-				groupName: 'Test Group',
+				name: 'Test Group',
 				description: 'This is a test',
 				ownerId: 10,
 				type: 'task_group',
@@ -15,7 +15,7 @@ test('test_group_data_propagation', async ({ page }) => {
 			},
 			{
 				id: 11,
-				groupName: 'Test Group 2',
+				name: 'Test Group 2',
 				description: 'This is a test 2',
 				ownerId: 10,
 				type: 'task_group',

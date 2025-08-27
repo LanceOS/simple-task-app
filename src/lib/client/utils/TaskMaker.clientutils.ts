@@ -1,11 +1,10 @@
-import { FetchHandler } from "../functions/HttpService"
 import { Toaster } from "../components/toaster/Toaster"
-import type { INewTask } from "$lib/@types/Groups.types";
 import { goto } from "$app/navigation";
+import type { CreateTaskPayload } from "$lib/@types/Groups.types";
 
 
 export const TaskMaker = {
-    createTask: async (data: INewTask) => {
+    createTask: async (data: CreateTaskPayload) => {
         try {
             if(!data.groupId || !data.name || !data.description) {
                 Toaster.ejectToast({

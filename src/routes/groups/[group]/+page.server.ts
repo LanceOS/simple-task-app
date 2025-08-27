@@ -1,8 +1,8 @@
 import { error, redirect } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
 import { GetUser } from "$lib/server/helpers/UserCheck.helper";
-import { TaskManager } from "$lib/server/services/Tasker.serverutil";
-import { GroupManager } from "$lib/server/services/Group.serverutil";
+import { groupService } from "$lib/server/services/Group.serverutil";
+import { taskService } from "$lib/server/services/Tasker.serverutil";
 
 
 
@@ -12,11 +12,13 @@ export const load: PageServerLoad = async ({ params, request }) => {
     if(!user) {
         throw redirect(308, "/signin")
     }
+
+
     try {
         const groupId = params.group;
 
-        const tasks = await TaskManager.getTasks(groupId);
-        const groupMembers = await GroupManager.getGroupMembers(groupId);
+        const tasks = await taskService.getAllTasks(groupId)
+        const groupMembers = await groupService.getMembers(groupId);
 
         return {
             tasks,

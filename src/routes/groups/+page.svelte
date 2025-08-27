@@ -20,8 +20,8 @@
 			<div class="space-y-4">
 				{#each ownedGroups as owned}
 					<div class="w-fit border">
-						<a href={`/groups/${owned.id}`} aria-label={`Go to ${owned.groupName}`}>
-							<h2>{owned.groupName}</h2>
+						<a href={`/groups/${owned.id}`} aria-label={`Go to ${owned.name}`}>
+							<h2>{owned.name}</h2>
 							<p>{owned.description}</p>
 						</a>
 					</div>
@@ -52,11 +52,11 @@
 		<form class="space-y-2">
 			<h3>Create New Task Group</h3>
 			<div>
-				<label for="groupName">Group Name:</label>
+				<label for="name">Group Name:</label>
 				<input
 					type="text"
-					name="groupName"
-					id="groupName"
+					name="name"
+					id="name"
 					class="border"
 					bind:value={newGroupDetails.name}
 				/>
@@ -84,7 +84,7 @@
 			{#if joinedGroups}
 				{#each joinedGroups as joined}
 					<div>
-						<h3>{joined.groupName}</h3>
+						<h3>{joined.name}</h3>
 						<p>{joined.description}</p>
 					</div>
 				{/each}

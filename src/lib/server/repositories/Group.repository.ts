@@ -1,10 +1,10 @@
 import { DrizzleDB } from '$lib/Drizzle';
 import { and, eq, ne } from 'drizzle-orm';
-import { taskGroup } from '../schemas/task_group.schema';
-import { groupMember } from '../schemas/group_members.schema';
+import { taskGroup, type IGroups } from '../schemas/task_group.schema';
+import { groupMember, type IGroupMember } from '../schemas/group_members.schema';
 import type { AddMemberParams, CreateGroupPayload, JoinedGroupsResponse } from '$lib/@types/Groups.types';
 
-export class GroupRespository {
+export class GroupRepository {
 	private db = DrizzleDB;
 
 	async findGroupsByOwnerId(userId: string) {
@@ -16,7 +16,7 @@ export class GroupRespository {
 		return await this.db
 			.select({
 				id: taskGroup.id,
-				groupName: taskGroup.groupName,
+				name: taskGroup.name,
 				description: taskGroup.description
 			})
 			.from(taskGroup)
@@ -24,16 +24,16 @@ export class GroupRespository {
 			.where(and(eq(groupMember.userId, userId), ne(taskGroup.ownerId, userId)));
 	}
 
-	async create(groupData: CreateGroupPayload): Promise<string> {
+	async create(groupData: CreateGroupPayload): Promise<IGroups> {
 		const [group] = await this.db.insert(taskGroup).values(groupData).returning();
-		return group.id
+		return group
 	}
 
 	async addMember(memberData: AddMemberParams): Promise<void> {
 		await this.db.insert(groupMember).values(memberData);
 	}
 
-	async findGroupMembers(groupId: string) {
+	async findGroupMembers(groupId: string): Promise<IGroupMember[]> {
 		return await this.db.query.groupMember.findMany({
 			where: eq(groupMember.parentGroupId, groupId),
 			with: {
@@ -44,11 +44,6 @@ export class GroupRespository {
 						image: true
 					}
 				}
-			},
-			columns: {
-				isAdmin: true,
-				createdAt: true,
-				parentGroupId: true
 			}
 		});
 	}
