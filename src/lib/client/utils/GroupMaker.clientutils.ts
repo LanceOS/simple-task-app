@@ -18,10 +18,21 @@ export const GroupMaker = {
 				type: 'error'
 			});
 
-			return {
-				ok: false,
-				message: error.message || 'Failed to create new group!'
-			};
+			return error.message;
+		}
+	},
+
+	joinGroup: async (code: string): Promise<Response> => {
+		try {
+			const response = await http.post<Response, typeof code>('groups/join_group', code);
+			return response;
+		} catch (error: any) {
+			Toaster.ejectToast({
+				message: error.message || "Failed to join group!",
+				type: 'error'
+			});
+
+			return error.message;
 		}
 	}
 };

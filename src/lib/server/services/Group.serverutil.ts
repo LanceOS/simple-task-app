@@ -1,4 +1,4 @@
-import type { CreateGroupPayload, JoinedGroupsResponse, Members } from '$lib/@types/Groups.types';
+import type { CreateGroupPayload, CreateMemberPayload, JoinedGroupsResponse, Members } from '$lib/@types/Groups.types';
 import { GroupRepository } from '../repositories/Group.repository';
 import type { IGroups } from '../schemas/task_group.schema';
 
@@ -50,6 +50,10 @@ export class GroupService {
 
 	async isMember(groupId: string, userId: string): Promise<boolean> {
 		return await this.groupRepository.isUserMember(groupId, userId)
+	}
+
+	async addGroupMember(memberData: CreateMemberPayload): Promise<void> {
+		return await this.groupRepository.addMember(memberData)
 	}
 }
 

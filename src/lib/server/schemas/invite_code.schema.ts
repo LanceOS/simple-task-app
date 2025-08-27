@@ -15,4 +15,4 @@ export const inviteCode = pgTable('invite_code', {
 });
 
 
-export type InviteSchema = InferSelectModel<typeof inviteCode>
+export type IInviteSchema = InferSelectModel<typeof inviteCode>

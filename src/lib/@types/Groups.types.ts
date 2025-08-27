@@ -13,7 +13,7 @@ export interface CreateTaskPayload {
     groupId: string;
 }
 
-export interface AddMemberParams {
+export interface CreateMemberPayload {
     userId: string;
     parentGroupId: string;
     isAdmin?: boolean;

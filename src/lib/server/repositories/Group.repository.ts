@@ -1,8 +1,8 @@
 import { DrizzleDB } from '$lib/Drizzle';
 import { and, eq, ne } from 'drizzle-orm';
 import { taskGroup, type IGroups } from '../schemas/task_group.schema';
-import { groupMember, type IGroupMember } from '../schemas/group_members.schema';
-import type { AddMemberParams, CreateGroupPayload, JoinedGroupsResponse, Members } from '$lib/@types/Groups.types';
+import { groupMember } from '../schemas/group_members.schema';
+import type { CreateGroupPayload, CreateMemberPayload, JoinedGroupsResponse, Members } from '$lib/@types/Groups.types';
 
 export class GroupRepository {
 	private db = DrizzleDB;
@@ -29,7 +29,7 @@ export class GroupRepository {
 		return group
 	}
 
-	async addMember(memberData: AddMemberParams): Promise<void> {
+	async addMember(memberData: CreateMemberPayload): Promise<void> {
 		await this.db.insert(groupMember).values(memberData);
 	}
 

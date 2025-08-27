@@ -1,14 +1,32 @@
-import { ResponseHandler } from '$lib/server/helpers/ResponseHandler.helper'
-
-
+import { HttpError, ResponseHandler } from '$lib/server/helpers/ResponseHandler.helper';
+import { GetUser } from '$lib/server/helpers/UserCheck.helper.js';
+import { groupService } from '$lib/server/services/Group.serverutil.js';
+import { inviteService } from '$lib/server/services/Inviter.serverutil.js';
 
 export const POST = async ({ request }) => {
-    try {
-        const body = await request.json();
+	try {
+		const body = await request.json();
 
-        
-    }
-    catch(error: any) {
+		const user = await GetUser(request);
+
+		if (!user) {
+			return ResponseHandler.jsonResponse('User must be signed in to join group!', 403);
+		}
+
+		const isCodeValid = await inviteService.getValidCode(user.email, body);
+
+		await groupService.addGroupMember({
+			userId: user.id,
+			parentGroupId: isCodeValid.parentGroupId
+		});
+
+		return ResponseHandler.jsonResponse('Successfully joined group!', 200);
+	} catch (error: any) {
+		if (error instanceof HttpError) {
+            console.log(error.message, error.status)
+			return ResponseHandler.jsonResponse(error.message, error.status);
+		}
+
         return ResponseHandler.jsonResponse("Failed to join group!", 500)
-    }
-}
+	}
+};

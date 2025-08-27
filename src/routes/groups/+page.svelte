@@ -10,6 +10,8 @@
 		name: '',
 		description: ''
 	});
+
+	let joinCode: string = $state('');
 </script>
 
 <main class="relative space-y-8">
@@ -80,6 +82,14 @@
 	{/if}
 	<section>
 		<h2>Joined Groups</h2>
+		<form class="w-fit">
+			<label for="code">Enter Code:</label>
+			<div class="border p-2 rounded-md flex justify-between items-center gap-4">
+				<input type="text" name="code" id="code" bind:value={joinCode} class="">
+				<button type="button" class="px-4 py-2 rounded-md border cursor-pointer"
+				onclick={async () => await GroupMaker.joinGroup(joinCode)}>Join Group</button>
+			</div>
+		</form>
 		<div>
 			{#if joinedGroups}
 				{#each joinedGroups as joined}

@@ -41,5 +41,5 @@ export const Inviter = {
 				message: error.message || 'Failed to create new group!'
 			};
 		}
-	}
+	},
 };
