@@ -3,16 +3,16 @@
 	const session = authClient.useSession();
 </script>
 
-<main class="flex max-h-screen flex-col items-center gap-20 py-24 px-4">
+<main class="flex max-h-screen h-screen flex-col items-center gap-20 py-24 px-4 bg-base-200">
 	<section class="max-w-2xl text-center">
-		<h1 class="mb-4 text-4xl font-extrabold text-gray-900 sm:text-5xl">Greater Task</h1>
-		<p class="mb-8 text-lg text-gray-600 sm:text-xl">
+		<h1 class="mb-4 text-4xl font-extrabold sm:text-5xl">Greater Task</h1>
+		<p class="mb-8 text-lg sm:text-xl">
 			A simple, collaborative task tracking app for groups of any size.
 		</p>
 
 		<div class="flex justify-center gap-4">
 			<a
-				class="rounded-2xl bg-indigo-600 px-6 py-3 font-medium text-white shadow-md transition hover:bg-indigo-700"
+				class="btn-big primary rounded-lg"
 				href="/signin"
 				aria-label="Get started by signin in!"
 			>

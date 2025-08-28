@@ -2,12 +2,23 @@
 	import { goto } from '$app/navigation';
 	import { authClient } from '$lib/auth-client';
 	import { Toaster } from '$lib/client/components/toaster/Toaster';
+	import Input from '$lib/client/components/ui/Input.svelte';
+	import { SignInService } from '$lib/client/services/SigninService.clientutil';
 	import Icon from '@iconify/svelte';
+	import { Button } from 'bits-ui';
 
 	let email: string = $state('');
 	let code: string = $state('');
 
-	let otpSent: boolean = $state(false);
+	let signInState: SignInState = $state('idle');
+
+	type SignInState =
+		| 'idle'
+		| 'sending-otp'
+		| 'otp-sent'
+		| 'confirming-code'
+		| 'signed-in'
+		| 'error';
 
 	const sendEmailOTP = async () => {
 		if (!email.includes('@')) {
@@ -15,17 +26,16 @@
 				message: 'Must be a valid email!',
 				type: 'error'
 			});
-            return;
+			return;
 		}
 
 		try {
-			authClient.emailOtp.sendVerificationOtp({
-				email: email,
-				type: 'sign-in'
-			});
+			signInState = 'sending-otp';
+			await SignInService.sendEmailOTP(email);
 
-			otpSent = true;
+			signInState = 'otp-sent';
 		} catch (error) {
+			signInState = 'error';
 			Toaster.ejectToast({
 				message: 'Failed to send sign in code!',
 				type: 'error'
@@ -35,16 +45,13 @@
 
 	const confirmCode = () => {
 		try {
-			authClient.signIn.emailOtp({
-				email: email,
-				otp: code
-			});
+			SignInService.confirmCode(email, code);
 
-            Toaster.ejectToast({
-                message: "Signed In!",
-                type: "success"
-            })
-            goto("/")
+			Toaster.ejectToast({
+				message: 'Signed In!',
+				type: 'success'
+			});
+			goto('/');
 		} catch (error) {
 			Toaster.ejectToast({
 				message: 'Failed to sign in with provided code!',
@@ -54,37 +61,36 @@
 	};
 </script>
 
-<main class="relative mx-auto flex h-screen max-w-5xl items-center justify-center px-4">
-	{#if otpSent}
-		<div class="absolute mx-auto my-auto border-2 bg-white h-72 w-72 p-12 space-y-4">
-            <div>
-                <p>Enter Code:</p>
-                <input type="text" name="otpCode" id="otpCode" class="border" bind:value={code} >
-            </div>
-            <button type="button" class="border px-4 py-2" onclick={confirmCode}>Confirm</button>
-        </div>
-	{/if}
-	<form class="h-fit w-fit space-y-8 rounded-md border p-8">
-		<h1 class="text-3xl sm:text-5xl">Sign In</h1>
-		<div>
-			<label for="email">Email:</label>
-			<input
-				type="text"
-				name="email"
-				id="email"
-				aria-label="Please enter your email"
-				class="border"
-				bind:value={email}
-			/>
+<main class="flex">
+	<div class="bg-neutral flex h-screen w-full flex-col items-center justify-center gap-4 text-center">
+		<h1 class="text-6xl">Welcome to<br />Greater Task</h1>
+		<p class="text-2xl">The easy to use collaboration tool for everyone!</p>
+		<Icon icon="simple-icons:task" class="text-7xl" />
+	</div>
+	{#if signInState === 'otp-sent'}
+		<div class="bg-neutral absolute flex h-screen w-screen items-center justify-center opacity-50">
+			<form class="card">
+				<div>
+					<p>Enter Code:</p>
+					<input type="text" name="otpCode" id="otpCode" class="border" bind:value={code} />
+				</div>
+				<button type="button" class="border px-4 py-2" onclick={confirmCode}>Confirm</button>
+			</form>
 		</div>
-		<button
-			type="button"
-			aria-label="Confirm Sign In"
-			onclick={sendEmailOTP}
-			class="flex cursor-pointer items-center gap-2 rounded-md border px-4 py-2"
-		>
-			<Icon icon="ic:baseline-email" />
-			Confirm
-		</button>
-	</form>
+	{/if}
+	<div class="flex h-screen w-full items-center justify-center">
+		<form>
+			<h1 class="text-3xl sm:text-5xl">Sign In</h1>
+			<Input bind:input={email} title="Email:" />
+			<Button.Root
+				type="button"
+				aria-label="Confirm Sign In"
+				onclick={sendEmailOTP}
+				class="flex neutral cursor-pointer active:translate-y-[1px] items-center gap-2 rounded-md border px-4 py-2 font-bold duration-200 hover:scale-[0.98]"
+			>
+				<Icon icon="ic:baseline-email" />
+				Confirm
+			</Button.Root>
+		</form>
+	</div>
 </main>
