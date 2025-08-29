@@ -16,16 +16,18 @@
 	--color-base-content: oklch(21% 0.006 285.885);
 
 	--color-primary: oklch(54% 0.245 262.881);
+	--color-primary-dark: oklch(43.431% 0.19223 262.763);
 	--color-primary-content: oklch(93% 0.034 272.788);
 
 	--color-secondary: oklch(66% 0.295 322.15);
+	--color-secondary-dark: oklch(56.078% 0.22805 322.682);
 	--color-secondary-content: oklch(94% 0.028 342.258);
 
 	--color-accent: oklch(77% 0.152 181.912);
 	--color-accent-content: oklch(38% 0.063 188.416);
 
 	--color-neutral: oklch(14% 0.005 285.823);
-	--color-neutral-light: oklch(18.309% 0.00406 285.925);
+	--color-neutral-dark: oklch(0% 0 0);
 	--color-neutral-content: oklch(92% 0.004 286.32);
 
 	--color-info: oklch(74% 0.16 232.661);
@@ -75,6 +77,11 @@ h6 {
 	background-color: var(--color-base-300);
 }
 
+.bg-primary {
+	background-color: var(--color-primary);
+	color: var(--color-primary-content);
+}
+
 .bg-neutral {
 	background-color: var(--color-neutral);
 	color: var(--color-neutral-content);
@@ -97,8 +104,18 @@ h6 {
 	color: var(--color-primary-content);
 }
 
+.primary:hover {
+	background-color: var(--color-primary-dark);
+	color: var(--color-primary-content);
+}
+
 .secondary {
 	background-color: var(--color-secondary);
+	color: var(--color-secondary-content);
+}
+
+.secondary:hover {
+	background-color: var(--color-secondary-dark);
 	color: var(--color-secondary-content);
 }
 
@@ -113,7 +130,7 @@ h6 {
 }
 
 .neutral:hover {
-	background-color: var(--color-neutral-light);
+	background-color: var(--color-neutral-dark);
 	color: var(--color-neutral-content);
 }
 
@@ -133,6 +150,6 @@ h6 {
 }
 
 .error {
-	background-color: var(--color-warning);
-	color: var(--color-warning-content);
+	background-color: var(--color-error);
+	color: var(--color-error-content);
 }

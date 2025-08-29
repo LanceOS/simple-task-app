@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { GroupMaker } from '$lib/client/utils/GroupMaker.clientutils';
+	import { GroupMaker } from '$lib/client/services/GroupMaker.clientutils';
 	import type { PageProps } from './$types';
 	const { data }: PageProps = $props();
 	const { ownedGroups, joinedGroups } = data;

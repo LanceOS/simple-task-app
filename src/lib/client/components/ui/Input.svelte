@@ -7,5 +7,5 @@
 
 <div class="flex flex-col gap-2">
     <label for={title} class="text-xl font-bold">{title}</label>
-    <input type="text" name={title} id={title} bind:value={input} class="text-lg p-2" />
+    <input type="text" name={title} id={title} bind:value={input} class="text-lg p-2 border rounded-md focus:outline-0" />
 </div>

@@ -2,7 +2,8 @@
 	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
 	import { authClient } from '$lib/auth-client';
-	import { Button, NavigationMenu } from 'bits-ui';
+	import { NavigationMenu } from 'bits-ui';
+	import Button from '../ui/Button.svelte';
 
 	const session = authClient.useSession();
 	const route = page.url.pathname;
@@ -14,38 +15,38 @@
 </script>
 
 {#if route !== '/onboarding'}
-	<NavigationMenu.Root
-		orientation="vertical"
-		class="fixed w-full p-4"
-	>
-		<NavigationMenu.List class="flex items-center justify-end gap-8 max-w-7xl mx-auto">
-				<NavigationMenu.Item>
-					<NavigationMenu.Link class="underline-offset-4 duration-200 underline hover:underline-offset-8 font-bold text-lg">
-						<a href="/" aria-label="Navigate Home">Home</a>
-					</NavigationMenu.Link>
-				</NavigationMenu.Item>
+	<NavigationMenu.Root orientation="vertical" class="fixed w-full p-4">
+		<NavigationMenu.List class="mx-auto flex max-w-7xl items-center justify-end gap-8">
+			<NavigationMenu.Item>
+				<NavigationMenu.Link
+					class="text-lg font-bold underline underline-offset-4 duration-200 hover:underline-offset-8"
+				>
+					<a href="/" aria-label="Navigate Home">Home</a>
+				</NavigationMenu.Link>
+			</NavigationMenu.Item>
 
-				<NavigationMenu.Item>
-					<NavigationMenu.Link class="underline-offset-4 duration-200 underline hover:underline-offset-8 font-bold text-lg">
-						<a href="/groups" aria-label="Navigate to Groups">Groups</a>
-					</NavigationMenu.Link>
-				</NavigationMenu.Item>
+			<NavigationMenu.Item>
+				<NavigationMenu.Link
+					class="text-lg font-bold underline underline-offset-4 duration-200 hover:underline-offset-8"
+				>
+					<a href="/groups" aria-label="Navigate to Groups">Groups</a>
+				</NavigationMenu.Link>
+			</NavigationMenu.Item>
 
 			<NavigationMenu.Item>
 				<NavigationMenu.Link class="bg-white">
 					{#if $session?.data?.user}
-						<Button.Root
-							type="button"
-							aria-label="Sign Out"
-							class="cursor-pointer rounded-full bg-blue-500 py-2 text-white font-bold"
-							onclick={signOut}>Sign Out</Button.Root
+						<Button variant="primary" type="button" aria-label="Sign Out" onclick={signOut}
+							>Sign Out</Button
 						>
 					{:else}
-						<Button.Root
-							href="/signin"
+						<Button
+							variant="primary"
+							type="button"
 							aria-label="Sign In"
-							class="btn primary rounded-lg shadow-md">Sign In</Button.Root
-						>
+							onclick={() => goto("/signin")}
+							class="primary shadown-md rounded-lg px-4 py-2 duration-200 hover:scale-[0.98] active:transition-y-[1px]"
+							>Sign In</Button>
 					{/if}
 				</NavigationMenu.Link>
 			</NavigationMenu.Item>
