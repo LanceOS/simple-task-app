@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Button } from 'bits-ui';
 	import type { HTMLButtonAttributes } from 'svelte/elements';
-
+	
 	type Variant = 'neutral' | 'primary' | 'secondary' | 'custom';
 
 	let {
@@ -25,7 +25,8 @@
 		custom: ''
 	} satisfies Record<Variant, string>;
 
-	const combinedClasses = `${variantClasses[variant]} ${className}`;
+	// used "variant as Variant" to keep the svelte compiler from bitching
+	const combinedClasses = `${variantClasses[(variant as Variant)]} ${className}`;
 </script>
 
 <Button.Root class={combinedClasses} {...rest}>

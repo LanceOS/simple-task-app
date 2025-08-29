@@ -92,7 +92,7 @@
 		{:else if signInState === 'idle'}
 			<form class="w-3/4 space-y-8 p-6">
 				<h1 class="w-full text-center text-2xl sm:text-5xl">Sign In</h1>
-				<Input bind:input={email} title="Email:" />
+				<Input bind:input={email} title="Email:" type={"email"}/>
 				<Button
 					variant="primary"
 					type="button"

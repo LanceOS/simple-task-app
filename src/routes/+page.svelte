@@ -3,7 +3,7 @@
 	const session = authClient.useSession();
 </script>
 
-<main class="flex max-h-screen h-screen flex-col items-center gap-20 py-24 px-4 bg-base-200">
+<main class="flex h-screen flex-col items-center gap-20 py-24 px-4">
 	<section class="max-w-2xl text-center">
 		<h1 class="mb-4 text-4xl font-extrabold sm:text-5xl">Greater Task</h1>
 		<p class="mb-8 text-lg sm:text-xl">
