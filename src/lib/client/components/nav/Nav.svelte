@@ -15,7 +15,7 @@
 </script>
 
 {#if route !== '/onboarding'}
-    <nav class="fixed w-full bg-white p-4 sm:bg-transparent z-10">
+    <nav class="fixed w-full bg-white p-4 z-10">
         <ul class="mx-auto flex max-w-7xl items-center justify-end gap-4">
             <li>
                 <a
@@ -55,7 +55,7 @@
 
             <li class="flex items-center">
                 <Button aria-label="Toggle dark mode" variant="custom" class="cursor-pointer">
-                    <Icon icon="line-md:light-dark" class="text-2xl" />
+                    <Icon icon="noto:full-moon" class="text-2xl" />
                 </Button>
             </li>
         </ul>

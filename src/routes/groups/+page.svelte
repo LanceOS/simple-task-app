@@ -3,6 +3,7 @@
 	import Input from '$lib/client/components/ui/Input.svelte';
 	import Textarea from '$lib/client/components/ui/Textarea.svelte';
 	import { GroupMaker } from '$lib/client/services/GroupMaker.clientutils';
+	import Icon from '@iconify/svelte';
 	import type { PageProps } from './$types';
 	const { data }: PageProps = $props();
 	const { ownedGroups, joinedGroups } = data;
@@ -74,16 +75,12 @@
 							class="bg-base-200 block rounded-xl p-6 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
 						>
 							<div class="mb-4">
-								<div
-									class="bg-primary mb-3 flex h-12 w-12 items-center justify-center rounded-lg text-2xl"
-								>
-									👥
-								</div>
+								<Icon icon="noto:busts-in-silhouette" class="text-4xl p-2 mb-4 rounded-md info"/>
 								<h3 class="text-content mb-2 text-xl font-bold">{owned.name}</h3>
 								<p class="text-neutral leading-relaxed">{owned.description}</p>
 							</div>
 							<div class="text-neutral flex items-center text-sm">
-								<span class="bg-success rounded px-2 py-1 text-xs font-medium">Owner</span>
+								<span class="bg-success rounded bg-primary px-2 py-1 text-xs font-medium">Owner</span>
 							</div>
 						</a>
 					{/each}
@@ -142,16 +139,12 @@
 							class="bg-base-200 rounded-xl p-6 shadow-md transition-all duration-300 hover:shadow-xl"
 						>
 							<div class="mb-4">
-								<div
-									class="bg-secondary mb-3 flex h-12 w-12 items-center justify-center rounded-lg text-2xl"
-								>
-									🤝
-								</div>
+								<Icon icon="twemoji:handshake" class="text-3xl"/>
 								<h3 class="text-content mb-2 text-xl font-bold">{joined.name}</h3>
 								<p class="text-neutral leading-relaxed">{joined.description}</p>
 							</div>
 							<div class="text-neutral flex items-center text-sm">
-								<span class="bg-info rounded px-2 py-1 text-xs font-medium">Member</span>
+								<span class="bg-info rounded warning px-2 py-1 text-xs font-medium">Member</span>
 							</div>
 						</div>
 					{/each}

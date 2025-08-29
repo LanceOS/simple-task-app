@@ -69,7 +69,7 @@
 	>
 		<h1 class="text-6xl">Welcome to<br />Greater Task</h1>
 		<p class="text-2xl">The easy to use collaboration tool for everyone!</p>
-		<Icon icon="simple-icons:task" class="text-7xl" />
+		<Icon icon="unjs:fs-memo" class="text-7xl" />
 	</div>
 	<div class="flex h-screen w-full items-center justify-center">
 		{#if signInState === 'otp-sent'}
@@ -84,7 +84,7 @@
 					placeholder="example@gmail.com"
 					class="w-full justify-center text-lg"
 				>
-					<Icon icon="ri:lock-password-fill" />
+					<Icon icon="material-symbols:lock" />
 					Confirm
 				</Button>
 			</form>
@@ -100,12 +100,16 @@
 					placeholder="example@gmail.com"
 					class="w-full justify-center text-lg"
 				>
-					<Icon icon="ic:baseline-email" />
+					<Icon icon="material-symbols:mail" />
 					Confirm
 				</Button>
 			</form>
 		{:else if signInState === 'confirming-code'}
-			<h1 class="text-5xl">Signing In...</h1>
+		<div class="flex items-center gap-4">
+
+			<h1 class="text-5xl">Signing In</h1>
+			<Icon icon="svg-spinners:eclipse" class="text-5xl"/>
+		</div>
 		{/if}
 	</div>
 </main>

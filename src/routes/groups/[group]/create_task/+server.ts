@@ -13,7 +13,7 @@ export const POST = async ({ request }) => {
             return ResponseHandler.jsonResponse("User must be signed in!", 401)
         }
 
-        const [response] = await taskService.createTask(body);
+        const response = await taskService.createTask(body);
 
         return ResponseHandler.jsonResponse(response, 200)
     }
