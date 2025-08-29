@@ -6,7 +6,7 @@ import type { InferSelectModel } from "drizzle-orm";
 
 
 export const taskAssignee = pgTable("task_assignee", {
-    parentTaskId: uuid("parent_task_id").references(() => task.id).notNull(),
+    parentTaskId: uuid("parent_task_id").references(() => task.id, { onDelete: 'cascade' }).notNull(),
     assigneeId: text("assignee_id").references(() => user.id).notNull(),
     ...base("task_assignee")
 })

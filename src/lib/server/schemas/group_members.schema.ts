@@ -6,8 +6,8 @@ import type { InferSelectModel } from "drizzle-orm";
 
 
 export const groupMember = pgTable("group_member", {
-    userId: text("user_id").references(() => user.id).notNull(),
-    parentGroupId: uuid("parent_group_id").references(() => taskGroup.id).notNull(),
+    userId: text("user_id").references(() => user.id, { onDelete: 'cascade' }).notNull(),
+    parentGroupId: uuid("parent_group_id").references(() => taskGroup.id, { onDelete: 'cascade' }).notNull(),
     isAdmin: boolean("is_admin").default(false).notNull(),
     ...base("group_member")
 });
