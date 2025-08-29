@@ -1,6 +1,7 @@
 <script lang="ts">
 	import Button from '$lib/client/components/ui/Button.svelte';
 	import Input from '$lib/client/components/ui/Input.svelte';
+	import Textarea from '$lib/client/components/ui/Textarea.svelte';
 	import { GroupMaker } from '$lib/client/services/GroupMaker.clientutils';
 	import type { PageProps } from './$types';
 	const { data }: PageProps = $props();
@@ -26,14 +27,13 @@
 		<section class="space-y-6">
 			<div class="flex items-center justify-between">
 				<h2 class="text-content text-2xl font-bold">Groups You Own</h2>
-				<button
+				<Button
 					type="button"
 					aria-label="Create new task group"
-					class="primary rounded-lg px-6 py-3 font-semibold transition-all duration-200 hover:shadow-lg"
 					onclick={() => (createTask = !createTask)}
 				>
 					+ Create New Group
-				</button>
+				</Button>
 			</div>
 
 			{#if createTask}
@@ -41,39 +41,26 @@
 					<h3 class="text-content mb-6 text-2xl font-bold">Create New Task Group</h3>
 					<form class="space-y-6">
 						<Input
-							title={'Name:'}
+							title="Name"
 							type="text"
 							placeholder="Enter group name..."
 							bind:input={newGroupDetails.name}
 						/>
-						<div>
-							<label for="groupDisc" class="text-content mb-2 block text-sm font-semibold"
-								>Group Description</label
-							>
-							<textarea
-								name="groupDisc"
-								id="groupDisc"
-								rows="3"
-								class="bg-base-100 border-base-300 focus:ring-primary text-content w-full resize-none rounded-lg border px-4 py-3 focus:ring-2 focus:outline-none"
-								placeholder="Describe your group's purpose..."
-								bind:value={newGroupDetails.description}
-							></textarea>
-						</div>
+						<Textarea title="Group Description" rows={3} bind:input={newGroupDetails.description} placeholder="Describe your group's purpose..."/>
 						<div class="flex gap-4">
-							<button
+							<Button
 								type="button"
-								class="primary rounded-lg px-6 py-3 font-semibold transition-all duration-200"
 								onclick={async () => await GroupMaker.createGroupCall(newGroupDetails)}
 							>
 								Create Group
-							</button>
-							<button
+							</Button>
+							<Button
 								type="button"
-								class="neutral rounded-lg px-6 py-3 font-semibold transition-all duration-200"
+								variant="neutral"
 								onclick={() => (createTask = false)}
 							>
 								Cancel
-							</button>
+							</Button>
 						</div>
 					</form>
 				</section>
@@ -122,11 +109,11 @@
 			<!-- Join Group Form -->
 			<div class="bg-base-200 rounded-xl p-6">
 				<h3 class="text-content mb-4 text-lg font-semibold">Join a New Group</h3>
-				<form class="flex items-end gap-4">
-					<div class="flex-1">
-						<label for="code" class="text-content mb-2 block text-sm font-semibold"
-							>Group Code</label
-						>
+				<form class="flex flex-col">
+					<label for="code" class="text-content mb-2 block text-sm font-semibold"
+						>Group Code</label
+					>
+					<div class="flex-1 flex items-center gap-4">
 						<input
 							type="text"
 							name="code"
@@ -135,14 +122,15 @@
 							class="bg-base-100 border-base-300 focus:ring-primary text-content w-full rounded-lg border px-4 py-3 focus:ring-2 focus:outline-none"
 							placeholder="Enter group code..."
 						/>
+						<Button
+							type="button"
+							variant="secondary"
+							class="w-32"
+							onclick={async () => await GroupMaker.joinGroup(joinCode)}
+						>
+							Join Group
+						</Button>
 					</div>
-					<Button
-						type="button"
-						class="secondary rounded-lg px-6 py-3 font-semibold transition-all duration-200"
-						onclick={async () => await GroupMaker.joinGroup(joinCode)}
-					>
-						Join Group
-					</Button>
 				</form>
 			</div>
 

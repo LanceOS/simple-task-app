@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { HTMLTextareaAttributes } from "svelte/elements";
+	import type { HTMLTextareaAttributes } from 'svelte/elements';
 
 	let {
 		title,
@@ -8,12 +8,13 @@
 	} = $props<
 		{
 			title: string;
+			input: string;
 		} & HTMLTextareaAttributes
 	>();
 </script>
 
 <div>
-	<label for={title} class="text-content mb-2 block text-sm font-semibold">{title}</label>
+	<label for={title} class="text-content text-md mb-2 block font-semibold">{title}</label>
 	<textarea
 		name={title}
 		id={title}

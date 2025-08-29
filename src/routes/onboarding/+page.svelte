@@ -17,7 +17,7 @@
 			<h1 class="text-3xl">Your user have no name!</h1>
 			<p>Please enter your name to continue.</p>
 		</div>
-		<Input title="Name:" type="text" bind:input={newName}/>
+		<Input title="Name" type="text" bind:input={newName}/>
 		<Button variant="primary" onclick={setName} class="w-full justify-center">
 			Confirm
 		</Button>

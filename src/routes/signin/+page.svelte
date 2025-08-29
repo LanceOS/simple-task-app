@@ -3,7 +3,6 @@
 	import { Toaster } from '$lib/client/components/toaster/Toaster';
 	import Button from '$lib/client/components/ui/Button.svelte';
 	import Input from '$lib/client/components/ui/Input.svelte';
-	import OtpInput from '$lib/client/components/ui/OtpInput.svelte';
 	import { SignInService } from '$lib/client/services/SigninService.clientutil';
 	import Icon from '@iconify/svelte';
 
@@ -76,7 +75,7 @@
 		{#if signInState === 'otp-sent'}
 			<form class="w-3/4 lg:w-1/2 space-y-8 p-6">
 				<h1 class="w-full text-center text-2xl sm:text-5xl">Enter Code:</h1>
-				<OtpInput bind:input={code} confirmFn={confirmCode} />
+				<Input title="" bind:input={code}/>
 				<Button
 					variant="primary"
 					type="button"
@@ -92,7 +91,7 @@
 		{:else if signInState === 'idle'}
 			<form class="w-3/4 lg:w-1/2 space-y-8 p-6">
 				<h1 class="w-full text-center text-2xl sm:text-5xl">Sign In</h1>
-				<Input bind:input={email} title="Email:" type={"email"}/>
+				<Input bind:input={email} title="Email" type={"email"}/>
 				<Button
 					variant="primary"
 					type="button"

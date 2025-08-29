@@ -97,8 +97,8 @@
 			<section class="bg-base-200 rounded-xl p-8 shadow-lg">
 				<h3 class="text-2xl font-bold text-content mb-6">Create New Task</h3>
 				<form class="space-y-6">
-					<Input bind:input={newTask.name} title={"Task Name:"} type="text" placeholder="Name your task..."/>
-					<Textarea title="Task Description:" placeholder="Describe your task..." rows={4}/>
+					<Input bind:input={newTask.name} title="Task Name" type="text" placeholder="Name your task..."/>
+					<Textarea title="Task Description" placeholder="Describe your task..." rows={4} bind:input={newTask.description}/>
 					<div class="flex gap-4">
 						<Button
 							type="button"
@@ -135,13 +135,13 @@
 									placeholder="example@gmail.com"
 									bind:value={inviteeEmail}
 								/>
-								<button 
+								<Button 
 									type="button" 
-									class="secondary px-6 py-3 rounded-lg font-semibold transition-all duration-200 whitespace-nowrap"
+									variant="secondary"
 									onclick={addMember}
 								>
 									Send Invite
-								</button>
+								</Button>
 							</div>
 						</div>
 					</form>
