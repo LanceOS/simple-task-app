@@ -10,7 +10,7 @@
 		...rest
 	} = $props<
 		{
-			variant: Variant;
+			variant?: Variant;
 			class?: string;
 		} & HTMLButtonAttributes
 	>();

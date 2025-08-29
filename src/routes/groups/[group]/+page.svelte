@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import { Inviter } from '$lib/client/utils/Inviter.clientutil';
-	import { TaskMaker } from '$lib/client/utils/TaskMaker.clientutils';
+	import { Inviter } from '$lib/client/services/Inviter.clientutil';
+	import { TaskMaker } from '$lib/client/services/TaskMaker.clientutils';
 	import type { PageProps } from './$types';
 
 	const { data }: PageProps = $props();

@@ -74,7 +74,7 @@
 	</div>
 	<div class="flex h-screen w-full items-center justify-center">
 		{#if signInState === 'otp-sent'}
-			<form class="w-3/4 space-y-8 p-6">
+			<form class="w-3/4 lg:w-1/2 space-y-8 p-6">
 				<h1 class="w-full text-center text-2xl sm:text-5xl">Enter Code:</h1>
 				<OtpInput bind:input={code} confirmFn={confirmCode} />
 				<Button
@@ -90,7 +90,7 @@
 				</Button>
 			</form>
 		{:else if signInState === 'idle'}
-			<form class="w-3/4 space-y-8 p-6">
+			<form class="w-3/4 lg:w-1/2 space-y-8 p-6">
 				<h1 class="w-full text-center text-2xl sm:text-5xl">Sign In</h1>
 				<Input bind:input={email} title="Email:" type={"email"}/>
 				<Button
