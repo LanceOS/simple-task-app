@@ -16,7 +16,7 @@
 </script>
 
 {#if route !== '/onboarding'}
-	<NavigationMenu.Root orientation="vertical" class="fixed w-full bg-white p-4 sm:bg-transparent">
+	<NavigationMenu.Root orientation="vertical" class="fixed w-full bg-white p-4 sm:bg-transparent z-10">
 		<NavigationMenu.List class="mx-auto flex max-w-7xl items-center justify-end gap-4">
 			<NavigationMenu.Item>
 				<NavigationMenu.Link
