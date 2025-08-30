@@ -65,9 +65,10 @@ export class HttpService {
 		}) as Promise<T>;
 	}
 
-	public delete(route: string): Promise<void> {
+	public delete<U>(route: string, data: U): Promise<void> {
 		return this.request(route, {
-			method: 'DELETE'
+			method: 'DELETE',
+			body: JSON.stringify(data)
 		}) as Promise<void>;
 	}
 }

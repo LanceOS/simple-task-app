@@ -2,7 +2,7 @@
 	import type { Snippet } from 'svelte';
 	import type { HTMLButtonAttributes } from 'svelte/elements';
 
-	type Variant = 'neutral' | 'primary' | 'secondary' | 'custom';
+	type Variant = 'neutral' | 'primary' | 'secondary' | 'danger' | 'custom';
 	type Sizes = 'big' | 'medium' | 'small' | 'custom';
 
 	let {
@@ -16,7 +16,7 @@
 			variant?: Variant;
 			sizes?: string;
 			class?: string;
-			children: Snippet;
+			children?: Snippet;
 		} & HTMLButtonAttributes
 	>();
 
@@ -27,6 +27,8 @@
 			'flex primary  justify-center cursor-pointer active:translate-y-[1px] items-center gap-2 rounded-md border px-4 py-2 font-bold duration-200 hover:scale-[0.98]',
 		secondary:
 			'flex secondary  justify-center cursor-pointer active:translate-y-[1px] items-center gap-2 rounded-md border px-4 py-2 font-bold duration-200 hover:scale-[0.98]',
+		danger:
+			'flex danger justify-center cursor-pointer active:translate-y-[1px] items-center gap-2 rounded-md border px-4 py-2 font-bold duration-200 hover:scale-[0.98]',
 		custom: ''
 	} satisfies Record<Variant, string>;
 

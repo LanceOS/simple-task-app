@@ -41,6 +41,7 @@
 	--color-warning-content: oklch(41% 0.112 45.904);
 
 	--color-error: oklch(71% 0.194 13.428);
+	--color-error-dark: oklch(60.068% 0.19068 15.635);
 	--color-error-content: oklch(27% 0.105 12.094);
 
 	--radius-selector: 0.5rem;
@@ -86,6 +87,10 @@ h6 {
 .bg-neutral {
 	background-color: var(--color-neutral);
 	color: var(--color-neutral-content);
+}
+
+.border-primary {
+	border: 1px solid var(--color-primary);
 }
 
 .text-content {
@@ -153,4 +158,15 @@ h6 {
 .error {
 	background-color: var(--color-error);
 	color: var(--color-error-content);
+}
+
+.danger {
+	background-color: var(--color-error);
+	color: white;
+	border: none;
+}
+
+.danger:hover {
+	background-color: var(--color-error-dark);
+	color: white
 }

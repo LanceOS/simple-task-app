@@ -5,10 +5,13 @@
 	import { GroupMaker } from '$lib/client/services/GroupMaker.clientutils';
 	import Icon from '@iconify/svelte';
 	import type { PageProps } from './$types';
+	import { onDestroy, onMount } from 'svelte';
+	import { Toaster } from '$lib/client/components/toaster/Toaster';
 	const { data }: PageProps = $props();
 	const { ownedGroups, joinedGroups } = data;
 
 	let createTask: boolean = $state(false);
+	let ownedGroupDeleteButton: boolean = $state(false);
 
 	let newGroupDetails: { name: string; description: string } = $state({
 		name: '',
@@ -16,6 +19,30 @@
 	});
 
 	let joinCode: string = $state('');
+
+	let ownedGroupMap: Map<string, boolean> = $state(new Map());
+
+	const selectOwnedGroup = (groupId: string) => {
+		const isSelected = ownedGroupMap.get(groupId);
+
+		const newMap = new Map(ownedGroupMap);
+
+		newMap.set(groupId, !isSelected);
+
+		ownedGroupMap = newMap;
+		ownedGroupDeleteButton = Array.from(ownedGroupMap.values()).some((value) => value);
+	};
+
+	const deleteGroup = async () => {
+		const arr: string[] = []
+		for(const [key, value] of ownedGroupMap) {
+			if(value === true) {
+				arr.push(key)
+			}
+		}
+
+		await GroupMaker.deleteGroup(arr)
+	};
 </script>
 
 <main class="bg-base-100 min-h-screen px-4 py-24">
@@ -27,7 +54,12 @@
 
 		<section class="space-y-6">
 			<div class="flex items-center justify-between">
-				<h2 class="text-content text-2xl font-bold">Groups You Own</h2>
+				<div class="flex items-center gap-4">
+					<h2 class="text-content text-2xl font-bold">Groups You Own</h2>
+					{#if ownedGroupDeleteButton}
+						<Button onclick={deleteGroup} aria-label="Delete Groups" variant="danger">Delete Group</Button>
+					{/if}
+				</div>
 				<Button
 					type="button"
 					aria-label="Create new task group"
@@ -47,7 +79,12 @@
 							placeholder="Enter group name..."
 							bind:input={newGroupDetails.name}
 						/>
-						<Textarea title="Group Description" rows={3} bind:input={newGroupDetails.description} placeholder="Describe your group's purpose..."/>
+						<Textarea
+							title="Group Description"
+							rows={3}
+							bind:input={newGroupDetails.description}
+							placeholder="Describe your group's purpose..."
+						/>
 						<div class="flex gap-4">
 							<Button
 								type="button"
@@ -58,6 +95,7 @@
 							<Button
 								type="button"
 								variant="neutral"
+								aria-label="Select group"
 								onclick={() => (createTask = false)}
 							>
 								Cancel
@@ -69,20 +107,36 @@
 			{#if ownedGroups.length > 0}
 				<div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
 					{#each ownedGroups as owned}
-						<a
-							href={`/groups/${owned.id}`}
-							aria-label={`Go to ${owned.name}`}
-							class="bg-base-200 block rounded-xl p-6 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+						<div
+							class="bg-base-200 relative block rounded-xl p-6 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
 						>
 							<div class="mb-4">
-								<Icon icon="noto:busts-in-silhouette" class="text-4xl p-2 mb-4 rounded-md info"/>
+								<div class="flex justify-between">
+									<Icon icon="noto:busts-in-silhouette" class="info mb-4 rounded-md p-2 text-4xl" />
+									<div class="relative">
+										<button
+											type="button"
+											aria-label="Select group"
+											class={`h-4 w-4 cursor-pointer border-primary border-2 rounded-full ${ownedGroupMap.get(owned.id) ? 'primary' : ''}`}
+											onclick={() => {
+												selectOwnedGroup(owned.id);
+											}}
+										>
+											<div></div>
+										</button>
+									</div>
+								</div>
 								<h3 class="text-content mb-2 text-xl font-bold">{owned.name}</h3>
 								<p class="text-neutral leading-relaxed">{owned.description}</p>
 							</div>
-							<div class="text-neutral flex items-center text-sm">
-								<span class="bg-success rounded bg-primary px-2 py-1 text-xs font-medium">Owner</span>
-							</div>
-						</a>
+							<a
+								class="primary h-8 rounded-md px-4 py-2 text-sm font-bold duration-200"
+								href={`/groups/${owned.id}`}
+								aria-label={`Go to ${owned.name}`}
+							>
+								View
+							</a>
+						</div>
 					{/each}
 				</div>
 			{:else}
@@ -96,7 +150,6 @@
 			{/if}
 		</section>
 
-
 		<!-- Joined Groups Section -->
 		<section class="space-y-6">
 			<div class="flex items-center justify-between">
@@ -107,10 +160,8 @@
 			<div class="bg-base-200 rounded-xl p-6">
 				<h3 class="text-content mb-4 text-lg font-semibold">Join a New Group</h3>
 				<form class="flex flex-col">
-					<label for="code" class="text-content mb-2 block text-sm font-semibold"
-						>Group Code</label
-					>
-					<div class="flex-1 flex items-center gap-4">
+					<label for="code" class="text-content mb-2 block text-sm font-semibold">Group Code</label>
+					<div class="flex flex-1 items-center gap-4">
 						<input
 							type="text"
 							name="code"
@@ -139,12 +190,12 @@
 							class="bg-base-200 rounded-xl p-6 shadow-md transition-all duration-300 hover:shadow-xl"
 						>
 							<div class="mb-4">
-								<Icon icon="twemoji:handshake" class="text-3xl"/>
+								<Icon icon="twemoji:handshake" class="text-3xl" />
 								<h3 class="text-content mb-2 text-xl font-bold">{joined.name}</h3>
 								<p class="text-neutral leading-relaxed">{joined.description}</p>
 							</div>
 							<div class="text-neutral flex items-center text-sm">
-								<span class="bg-info rounded warning px-2 py-1 text-xs font-medium">Member</span>
+								<span class="bg-info warning rounded px-2 py-1 text-xs font-medium">Member</span>
 							</div>
 						</div>
 					{/each}

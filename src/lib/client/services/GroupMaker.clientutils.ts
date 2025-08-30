@@ -43,5 +43,30 @@ export const GroupMaker = {
 
 			return error.message;
 		}
+	},
+
+	deleteGroup: async (groupIds: string[]): Promise<void> => {
+		if(groupIds.length === 0) {
+			Toaster.ejectToast({
+				message: "Must select a group to delete",
+				type: 'error'
+			})
+		}
+
+		try {
+			await http.delete<typeof groupIds>("groups/delete_group", groupIds)
+
+			Toaster.ejectToast({
+				message: "Successfully deleted group!",
+				type: "success"
+			})
+		}
+		catch(error: any) {
+			Toaster.ejectToast({
+				message: error.message || "Failed to delete group!",
+				type: error
+			});
+			return error.message;
+		}
 	}
 };
