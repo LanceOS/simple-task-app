@@ -2,16 +2,23 @@
 	import Button from '$lib/client/components/ui/Button.svelte';
 	import Input from '$lib/client/components/ui/Input.svelte';
 	import Textarea from '$lib/client/components/ui/Textarea.svelte';
-	import { GroupMaker } from '$lib/client/services/GroupMaker.clientutils';
 	import Icon from '@iconify/svelte';
+	import { GroupClient } from '$lib/client/services/GroupClient.clientutil';
 	import type { PageProps } from './$types';
-	import { onDestroy, onMount } from 'svelte';
+	import { authClient } from '$lib/auth-client';
 	import { Toaster } from '$lib/client/components/toaster/Toaster';
+	import type { IGroups } from '$lib/server/schemas/task_group.schema';
+
 	const { data }: PageProps = $props();
-	const { ownedGroups, joinedGroups } = data;
+	let ownedGroups: IGroups[] = $state(data.ownedGroups);
+	let joinedGroups = $state(data.joinedGroups);
+
+	const session = authClient.useSession();
+	const user = $session.data?.user;
 
 	let createTask: boolean = $state(false);
 	let ownedGroupDeleteButton: boolean = $state(false);
+	let disabledDeletion: boolean = $state(false);
 
 	let newGroupDetails: { name: string; description: string } = $state({
 		name: '',
@@ -22,26 +29,50 @@
 
 	let ownedGroupMap: Map<string, boolean> = $state(new Map());
 
+	// In this function the a new map is being created and then being assigned tot he original map. This is to trigger svelt's reactivity.
 	const selectOwnedGroup = (groupId: string) => {
 		const isSelected = ownedGroupMap.get(groupId);
-
 		const newMap = new Map(ownedGroupMap);
-
 		newMap.set(groupId, !isSelected);
-
 		ownedGroupMap = newMap;
 		ownedGroupDeleteButton = Array.from(ownedGroupMap.values()).some((value) => value);
 	};
 
+	/**
+	 * Loops through the currently saved ids in the ownedGroupsMap
+	 * if a saved group is marked "true" for deletion then it's id is
+	 * saved in an array. Then the array is passed to the delete group endpoint.
+	 */
 	const deleteGroup = async () => {
-		const arr: string[] = []
-		for(const [key, value] of ownedGroupMap) {
-			if(value === true) {
-				arr.push(key)
+		if (!user) {
+			Toaster.ejectToast({
+				message: 'Must be signed in to delete posts!',
+				type: 'info'
+			});
+			return;
+		}
+		disabledDeletion = true;
+		const arr: string[] = [];
+		for (const [key, value] of ownedGroupMap) {
+			const [group] = ownedGroups.filter((group) => group.id === key);
+			if (value === true && group.ownerId === user?.id) {
+				arr.push(key);
 			}
 		}
 
-		await GroupMaker.deleteGroup(arr)
+		await GroupClient.deleteGroup(arr);
+		ownedGroupMap.clear();
+		disabledDeletion = false;
+	};
+
+	const createGroup = async () => {
+		if (!user) {
+			Toaster.ejectToast({
+				message: 'Must be signed in to create a group!',
+				type: 'error'
+			});
+		}
+		await GroupClient.createGroup(newGroupDetails);
 	};
 </script>
 
@@ -52,22 +83,29 @@
 			<p class="text-neutral text-lg">Manage your owned groups and join new ones</p>
 		</div>
 
-		<section class="space-y-6">
-			<div class="flex items-center justify-between">
-				<div class="flex items-center gap-4">
+		<div class="space-y-6">
+			<section class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+				<div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-4">
 					<h2 class="text-content text-2xl font-bold">Groups You Own</h2>
+					<Button
+						type="button"
+						aria-label="Create new task group"
+						onclick={() => (createTask = !createTask)}
+					>
+						+ Create New Group
+					</Button>
 					{#if ownedGroupDeleteButton}
-						<Button onclick={deleteGroup} aria-label="Delete Groups" variant="danger">Delete Group</Button>
+						<Button
+							onclick={deleteGroup}
+							disabled={disabledDeletion}
+							aria-label="Delete Groups"
+							variant="danger"
+						>
+							Delete Group
+						</Button>
 					{/if}
 				</div>
-				<Button
-					type="button"
-					aria-label="Create new task group"
-					onclick={() => (createTask = !createTask)}
-				>
-					+ Create New Group
-				</Button>
-			</div>
+			</section>
 
 			{#if createTask}
 				<section class="bg-base-200 rounded-xl p-8 shadow-lg">
@@ -86,12 +124,7 @@
 							placeholder="Describe your group's purpose..."
 						/>
 						<div class="flex gap-4">
-							<Button
-								type="button"
-								onclick={async () => await GroupMaker.createGroupCall(newGroupDetails)}
-							>
-								Create Group
-							</Button>
+							<Button type="button" onclick={createGroup}>Create Group</Button>
 							<Button
 								type="button"
 								variant="neutral"
@@ -105,40 +138,39 @@
 				</section>
 			{/if}
 			{#if ownedGroups.length > 0}
-				<div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+				<section class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
 					{#each ownedGroups as owned}
 						<div
 							class="bg-base-200 relative block rounded-xl p-6 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
 						>
 							<div class="mb-4">
-								<div class="flex justify-between">
-									<Icon icon="noto:busts-in-silhouette" class="info mb-4 rounded-md p-2 text-4xl" />
-									<div class="relative">
-										<button
-											type="button"
-											aria-label="Select group"
-											class={`h-4 w-4 cursor-pointer border-primary border-2 rounded-full ${ownedGroupMap.get(owned.id) ? 'primary' : ''}`}
-											onclick={() => {
-												selectOwnedGroup(owned.id);
-											}}
-										>
-											<div></div>
-										</button>
-									</div>
-								</div>
+								<Icon icon="noto:busts-in-silhouette" class="info mb-4 rounded-md p-2 text-4xl" />
 								<h3 class="text-content mb-2 text-xl font-bold">{owned.name}</h3>
 								<p class="text-neutral leading-relaxed">{owned.description}</p>
 							</div>
-							<a
-								class="primary h-8 rounded-md px-4 py-2 text-sm font-bold duration-200"
-								href={`/groups/${owned.id}`}
-								aria-label={`Go to ${owned.name}`}
-							>
-								View
-							</a>
+							<div class="flex items-center gap-2">
+								<button
+									type="button"
+									aria-label="Select group"
+									class={`h-full cursor-pointer rounded-md px-4 py-2 text-sm font-bold duration-200
+ 								${ownedGroupMap.get(owned.id) ? 'danger' : 'btn-warning'}`}
+									onclick={() => {
+										selectOwnedGroup(owned.id);
+									}}
+								>
+									{ownedGroupMap.get(owned.id) ? 'Selected' : 'Select'}
+								</button>
+								<a
+									class="primary h-full rounded-md px-4 py-2 text-sm font-bold duration-200"
+									href={`/groups/${owned.id}`}
+									aria-label={`Go to ${owned.name}`}
+								>
+									View
+								</a>
+							</div>
 						</div>
 					{/each}
-				</div>
+				</section>
 			{:else}
 				<div class="bg-base-200 rounded-xl p-12 text-center">
 					<div class="mb-4 text-6xl">📋</div>
@@ -148,7 +180,7 @@
 					</p>
 				</div>
 			{/if}
-		</section>
+		</div>
 
 		<!-- Joined Groups Section -->
 		<section class="space-y-6">
@@ -160,8 +192,10 @@
 			<div class="bg-base-200 rounded-xl p-6">
 				<h3 class="text-content mb-4 text-lg font-semibold">Join a New Group</h3>
 				<form class="flex flex-col">
-					<label for="code" class="text-content mb-2 block text-sm font-semibold">Group Code</label>
-					<div class="flex flex-1 items-center gap-4">
+					<label for="code" class="text-content mb-2 block text-sm font-semibold">
+						Group Code
+					</label>
+					<div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
 						<input
 							type="text"
 							name="code"
@@ -173,8 +207,8 @@
 						<Button
 							type="button"
 							variant="secondary"
-							class="w-32"
-							onclick={async () => await GroupMaker.joinGroup(joinCode)}
+							class="w-full sm:w-32"
+							onclick={async () => await GroupClient.joinGroup(joinCode)}
 						>
 							Join Group
 						</Button>
@@ -202,7 +236,7 @@
 				</div>
 			{:else}
 				<div class="bg-base-200 rounded-xl p-12 text-center">
-					<div class="mb-4 text-6xl">🔍</div>
+					<Icon icon="noto-v1:magnifying-glass-tilted-left" class="mb-6 text-6xl" />
 					<h3 class="text-content mb-2 text-xl font-bold">No Joined Groups</h3>
 					<p class="text-neutral">Enter a group code above to join your first group!</p>
 				</div>

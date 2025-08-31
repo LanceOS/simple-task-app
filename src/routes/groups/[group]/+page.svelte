@@ -44,8 +44,14 @@
 		<section class="space-y-6">
 			<div class="flex items-center justify-between">
 				<div class="flex items-center gap-2">
-					<Button type="button" variant="custom" aria-label="Return to groups." class="rounded-lg hidden sm:flex cursor-pointer h-full p-2 neutral" onclick={() => history.back()}>
-						<Icon icon="grommet-icons:return"/>
+					<Button
+						type="button"
+						variant="custom"
+						aria-label="Return to groups."
+						class="neutral hidden h-full cursor-pointer rounded-lg p-2 sm:flex"
+						onclick={() => history.back()}
+					>
+						<Icon icon="grommet-icons:return" />
 					</Button>
 					<h2 class="text-content text-2xl font-bold">Tasks</h2>
 				</div>
@@ -92,7 +98,7 @@
 				</div>
 			{:else}
 				<div class="bg-base-200 rounded-xl p-12 text-center">
-					<Icon icon="noto:writing-hand" class="text-7xl w-full mb-4"/>
+					<Icon icon="noto:writing-hand" class="mb-4 w-full text-7xl" />
 					<h3 class="text-content mb-2 text-xl font-bold">No Tasks Yet</h3>
 					<p class="text-neutral mb-6">Get started by creating your first task!</p>
 				</div>
@@ -131,10 +137,10 @@
 			<div class="bg-base-200 h-fit rounded-xl p-6">
 				<form class="space-y-4">
 					<div>
-						<label for="addMem" class="text-content mb-2 block text-sm font-semibold"
-							>Email Address</label
-						>
-						<div class="flex gap-3">
+						<label for="addMem" class="text-content mb-2 block text-sm font-semibold">
+							Email Address
+						</label>
+						<div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
 							<input
 								type="email"
 								name="addMem"
@@ -143,7 +149,9 @@
 								placeholder="example@gmail.com"
 								bind:value={inviteeEmail}
 							/>
-							<Button type="button" variant="secondary" onclick={addMember}>Send Invite</Button>
+							<Button type="button" variant="secondary" class="w-full sm:w-40" onclick={addMember}>
+								Send Invite
+							</Button>
 						</div>
 					</div>
 				</form>
@@ -158,7 +166,7 @@
 					<div class="space-y-4">
 						{#each groupMembers as member}
 							<div class="bg-base-100 flex items-center gap-4 rounded-lg p-4">
-								<Icon icon="noto:bust-in-silhouette" class="text-4xl info p-2 rounded-md"/>
+								<Icon icon="noto:bust-in-silhouette" class="info rounded-md p-2 text-4xl" />
 								<div class="flex-1">
 									<h3 class="text-content font-semibold">{member.user.name}</h3>
 									<p class="text-neutral text-sm">Joined {member.createdAt.toLocaleDateString()}</p>

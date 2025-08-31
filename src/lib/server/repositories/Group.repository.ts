@@ -1,5 +1,5 @@
 import { DrizzleDB } from '$lib/Drizzle';
-import { and, eq, ne } from 'drizzle-orm';
+import { and, eq, inArray, ne } from 'drizzle-orm';
 import { taskGroup, type IGroups } from '../schemas/task_group.schema';
 import { groupMember } from '../schemas/group_members.schema';
 import type { CreateGroupPayload, CreateMemberPayload, JoinedGroupsResponse, Members } from '$lib/@types/Groups.types';
@@ -66,5 +66,9 @@ export class GroupRepository {
 		});
 
 		return !!result;
+	}
+
+	async deleteGroup(groupIds: string[], userId: string): Promise<void> {
+		await this.db.delete(taskGroup).where(and(inArray(taskGroup.id, groupIds), eq(taskGroup.ownerId, userId)))
 	}
 }

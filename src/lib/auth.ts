@@ -6,6 +6,7 @@ import { PUBLIC_URL } from '$env/static/public';
 import { emailOTP } from 'better-auth/plugins';
 import { mailServiceResend } from './server/services/MailMan.js';
 
+
 // Initialize the 'betterAuth' instance
 export const auth = betterAuth({
 	database: drizzleAdapter(DrizzleDB, {
@@ -34,7 +35,7 @@ export const auth = betterAuth({
                     html: `Your one time login is ${otp}`,
                 })
 			}
-		})
+		}),
 	],
 	emailAndPassword: {
 		enabled: true,

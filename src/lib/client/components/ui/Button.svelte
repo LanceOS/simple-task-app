@@ -3,12 +3,10 @@
 	import type { HTMLButtonAttributes } from 'svelte/elements';
 
 	type Variant = 'neutral' | 'primary' | 'secondary' | 'danger' | 'custom';
-	type Sizes = 'big' | 'medium' | 'small' | 'custom';
 
 	let {
 		variant = 'primary',
 		class: className = '',
-		size = 'custom',
 		children,
 		...rest
 	} = $props<
@@ -20,27 +18,23 @@
 		} & HTMLButtonAttributes
 	>();
 
+	const baseClasses =
+		'flex items-center justify-center cursor-pointer active:translate-y-[1px] gap-2 rounded-md border font-bold duration-200 ' +
+		'min-h-[44px] min-w-[44px] ' +
+		'px-3 py-2 sm:px-4 sm:py-2 ' +
+		'text-sm sm:text-base ' +
+		'hover:scale-[0.98]';
+
 	const variantClasses = {
-		neutral:
-			'flex neutral  justify-center cursor-pointer active:translate-y-[1px] items-center gap-2 rounded-md border px-4 py-2 font-bold duration-200 hover:scale-[0.98]',
-		primary:
-			'flex primary  justify-center cursor-pointer active:translate-y-[1px] items-center gap-2 rounded-md border px-4 py-2 font-bold duration-200 hover:scale-[0.98]',
-		secondary:
-			'flex secondary  justify-center cursor-pointer active:translate-y-[1px] items-center gap-2 rounded-md border px-4 py-2 font-bold duration-200 hover:scale-[0.98]',
-		danger:
-			'flex danger justify-center cursor-pointer active:translate-y-[1px] items-center gap-2 rounded-md border px-4 py-2 font-bold duration-200 hover:scale-[0.98]',
+		neutral: `${baseClasses} neutral`,
+		primary: `${baseClasses} primary`,
+		secondary: `${baseClasses} secondary`,
+		danger: `${baseClasses} danger`,
 		custom: ''
 	} satisfies Record<Variant, string>;
 
-	const btnSizes = {
-		big: 'h-18',
-		medium: 'h-12',
-		small: 'h-8',
-		custom: ''
-	} satisfies Record<Sizes, string>;
-
 	// used "variant as Variant" to keep the svelte compiler from bitching
-	const combinedClasses = `${variantClasses[variant as Variant]} ${btnSizes[size as Sizes]} ${className}`;
+	const combinedClasses = `${variantClasses[variant as Variant]} ${className}`;
 </script>
 
 <button class={combinedClasses} {...rest}>

@@ -5,8 +5,8 @@ import { HttpService } from '../functions/HttpService';
 
 const http = HttpService.getInstance();
 
-export const GroupMaker = {
-	createGroupCall: async (data: { name: string; description: string }): Promise<ApiResponse> => {
+export const GroupClient = {
+	createGroup: async (data: { name: string; description: string }): Promise<ApiResponse> => {
 		try {
 			const response = await http.post<ApiResponse, typeof data>('groups', data);
 			Toaster.ejectToast({
@@ -64,7 +64,7 @@ export const GroupMaker = {
 		catch(error: any) {
 			Toaster.ejectToast({
 				message: error.message || "Failed to delete group!",
-				type: error
+				type: "error"
 			});
 			return error.message;
 		}

@@ -2,8 +2,9 @@ import { HttpError, ResponseHandler } from '$lib/server/helpers/ResponseHandler.
 import { GetUser } from '$lib/server/helpers/UserCheck.helper.js';
 import { groupService } from '$lib/server/services/Group.serverutil.js';
 import { inviteService } from '$lib/server/services/Inviter.serverutil.js';
+import type { RequestEvent } from '../$types';
 
-export const POST = async ({ request }) => {
+export const POST = async ({ request }: RequestEvent) => {
 	try {
 		const body = await request.json();
 
