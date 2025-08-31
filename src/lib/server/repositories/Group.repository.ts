@@ -7,11 +7,18 @@ import type { CreateGroupPayload, CreateMemberPayload, JoinedGroupsResponse, Mem
 export class GroupRepository {
 	private db = DrizzleDB;
 
+	async findGroupById(groupId: string): Promise<IGroups | undefined> {
+		return await this.db.query.taskGroup.findFirst({
+			where: eq(taskGroup.id, groupId)
+		})
+	}
+
 	async findGroupsByOwnerId(userId: string) {
 		return await this.db.query.taskGroup.findMany({
 			where: eq(taskGroup.ownerId, userId)
 		});
 	}
+	
 	async findJoinedGroups(userId: string): Promise<JoinedGroupsResponse[]> {
 		return await this.db
 			.select({

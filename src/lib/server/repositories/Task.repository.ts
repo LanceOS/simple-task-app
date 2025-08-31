@@ -49,12 +49,12 @@ export class TaskRepository {
 		});
 	}
 
-	async assignUserToTask(taskId: string, userId: string): Promise<string> {
+	async assignUserToTask(taskId: string, memberId: string): Promise<string> {
 		const [newAssignee] = await this.db
 			.insert(taskAssignee)
 			.values({
 				parentTaskId: taskId,
-				assigneeId: userId
+				assigneeId: memberId
 			})
 			.returning();
 		return newAssignee.id;

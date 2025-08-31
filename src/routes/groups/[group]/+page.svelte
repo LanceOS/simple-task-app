@@ -9,7 +9,7 @@
 	import type { PageProps } from './$types';
 
 	const { data }: PageProps = $props();
-	const { tasks, groupMembers } = data;
+	const { tasks, groupMembers, group } = data;
 
 	const groupId = page.params.group;
 
@@ -39,6 +39,44 @@
 			<h1 class="text-content mb-4 text-4xl font-bold">Group Dashboard</h1>
 			<p class="text-neutral text-lg">Manage tasks and collaborate with your team</p>
 		</div>
+
+		<!-- Group Details -->
+		<section class="bg-base-200 rounded-xl p-8 shadow-md text-center space-y-4">
+			<h2 class="text-content text-3xl font-bold">{group.name}</h2>
+			<p class="text-neutral text-lg max-w-2xl mx-auto leading-relaxed">
+				{group.description || 'No description provided for this group.'}
+			</p>
+		</section>
+
+		<!-- Create Task Form -->
+		{#if createWindow}
+			<section class="bg-base-200 rounded-xl p-8 shadow-lg">
+				<h3 class="text-content mb-6 text-2xl font-bold">Create New Task</h3>
+				<form class="space-y-6">
+					<Input
+						bind:input={newTask.name}
+						maxlength={80}
+						title="Task Name"
+						type="text"
+						placeholder="Name your task..."
+					/>
+					<Textarea
+						title="Task Description"
+						placeholder="Describe your task..."
+						rows={4}
+						maxlength={300}
+						bind:input={newTask.description}
+					/>
+					<div class="flex gap-4">
+						<Button type="button" onclick={createTask}>Create Task</Button>
+						<Button variant="neutral" type="button" onclick={() => (createWindow = false)}>
+							Cancel
+						</Button>
+					</div>
+				</form>
+			</section>
+		{/if}
+
 
 		<!-- Tasks Section -->
 		<section class="space-y-6">
@@ -105,33 +143,8 @@
 			{/if}
 		</section>
 
-		<!-- Create Task Form -->
-		{#if createWindow}
-			<section class="bg-base-200 rounded-xl p-8 shadow-lg">
-				<h3 class="text-content mb-6 text-2xl font-bold">Create New Task</h3>
-				<form class="space-y-6">
-					<Input
-						bind:input={newTask.name}
-						title="Task Name"
-						type="text"
-						placeholder="Name your task..."
-					/>
-					<Textarea
-						title="Task Description"
-						placeholder="Describe your task..."
-						rows={4}
-						bind:input={newTask.description}
-					/>
-					<div class="flex gap-4">
-						<Button type="button" onclick={createTask}>Create Task</Button>
-						<Button variant="neutral" type="button" onclick={() => (createWindow = false)}>
-							Cancel
-						</Button>
-					</div>
-				</form>
-			</section>
-		{/if}
 
+		<!-- Invite Members -->
 		<section class="space-y-6">
 			<h2 class="text-content text-2xl font-bold">Invite Members</h2>
 			<div class="bg-base-200 h-fit rounded-xl p-6">
@@ -176,9 +189,9 @@
 						{/each}
 					</div>
 				{:else}
-					<div class="py-8 text-center">
-						<div class="mb-4 text-4xl">👥</div>
-						<h3 class="text-content mb-2 text-lg font-semibold">No Members Yet</h3>
+					<div class="py-8 text-center space-y-2">
+								<Icon icon="noto:busts-in-silhouette" class="info rounded-md p-2 text-4xl" />
+						<h3 class="text-content text-lg font-semibold">No Members Yet</h3>
 						<p class="text-neutral">Invite people to start collaborating!</p>
 					</div>
 				{/if}

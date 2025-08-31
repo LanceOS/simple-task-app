@@ -150,12 +150,14 @@
 						<Input
 							title="Name"
 							type="text"
+							maxlength={80}
 							placeholder="Enter group name..."
 							bind:input={newGroupDetails.name}
 						/>
 						<Textarea
 							title="Group Description"
 							rows={3}
+							maxlength={300}
 							bind:input={newGroupDetails.description}
 							placeholder="Describe your group's purpose..."
 						/>
@@ -179,12 +181,12 @@
 				<section class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
 					{#each ownedGroups as owned}
 						<div
-							class="bg-base-200 relative block rounded-xl p-6 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+							class="bg-base-200 relative flex flex-col justify-between gap-4 rounded-xl p-6 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
 						>
-							<div class="mb-4">
-								<Icon icon="noto:busts-in-silhouette" class="info mb-4 rounded-md p-2 text-4xl" />
-								<h3 class="text-content mb-2 text-xl font-bold">{owned.name}</h3>
-								<p class="text-neutral leading-relaxed">{owned.description}</p>
+							<div class="flex flex-warp break-words gap-2 flex-col">
+								<Icon icon="noto:busts-in-silhouette" class="info rounded-md p-2 text-4xl" />
+								<h3 class="text-content text-xl font-bold">{owned.name}</h3>
+								<p class="text-neutral leading-relaxed">{owned.description.length > 40 ? `${owned.description.slice(0, 40)}...` : owned.description}</p>
 							</div>
 							<div class="flex items-center gap-2">
 								<button
@@ -210,10 +212,10 @@
 					{/each}
 				</section>
 			{:else}
-				<div class="bg-base-200 rounded-xl p-12 text-center">
-					<div class="mb-4 text-6xl">📋</div>
-					<h3 class="text-content mb-2 text-xl font-bold">No Groups Yet</h3>
-					<p class="text-neutral mb-6">
+				<div class="bg-base-200 space-y-4 rounded-xl p-12 text-center">
+					<Icon icon="noto:clipboard" class="text-6xl w-full"/>
+					<h3 class="text-content text-xl font-bold">No Groups Yet</h3>
+					<p class="text-neutral">
 						Create your first group to start collaborating with others!
 					</p>
 				</div>
@@ -280,7 +282,7 @@
 
 								<div>
 									<h3 class="text-content text-xl font-bold">{joined.name}</h3>
-									<p class="text-neutral leading-relaxed">{joined.description}</p>
+								<p class="text-neutral leading-relaxed">{joined.description.length > 40 ? `${joined.description.slice(0, 40)}...` : joined.description}</p>
 								</div>
 
 								<div class="flex items-center gap-2">
@@ -308,9 +310,9 @@
 					{/each}
 				</div>
 			{:else}
-				<div class="bg-base-200 rounded-xl p-12 text-center">
-					<Icon icon="noto-v1:magnifying-glass-tilted-left" class="mb-6 text-6xl" />
-					<h3 class="text-content mb-2 text-xl font-bold">No Joined Groups</h3>
+				<div class="bg-base-200 rounded-xl space-y-4 p-12 text-center">
+					<Icon icon="noto-v1:magnifying-glass-tilted-left" class="w-full text-6xl" />
+					<h3 class="text-content text-xl font-bold">No Joined Groups</h3>
 					<p class="text-neutral">Enter a group code above to join your first group!</p>
 				</div>
 			{/if}

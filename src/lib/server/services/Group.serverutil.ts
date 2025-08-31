@@ -23,6 +23,10 @@ export class GroupService {
 		return this.groupRepository.findGroupsByOwnerId(userId);
 	}
 
+	async getGroupById(groupId: string): Promise<IGroups | undefined> {
+		return this.groupRepository.findGroupById(groupId)
+	}
+
 	async getJoinedGroups(userId: string): Promise<JoinedGroupsResponse[]> {
 		return this.groupRepository.findJoinedGroups(userId);
 	}

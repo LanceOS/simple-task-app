@@ -1,19 +1,33 @@
 <script lang="ts">
-    import type { HTMLInputAttributes } from "svelte/elements"; 
+	import type { HTMLInputAttributes } from 'svelte/elements';
 
-    let { title, input = $bindable(), ...rest } = $props<{
-        title: string,
-        input: string
-    } & HTMLInputAttributes>()
+	let {
+		maxlength,
+		title,
+		input = $bindable(),
+		...rest
+	} = $props<
+		{
+			title: string;
+			input: string;
+			maxlength?: number;
+		} & HTMLInputAttributes
+	>();
 </script>
 
-<div class="flex flex-col gap-2 w-full">
-	<label for={title} class="text-md font-bold">{title}</label>
+<div class="flex w-full flex-col gap-2">
+	<div class="flex w-full items-center justify-between">
+		<label for={title} class="text-md font-bold">{title}</label>
+		{#if maxlength}
+			<p>{input.length}/{maxlength}</p>
+		{/if}
+	</div>
 	<input
 		{...rest}
 		name={title}
 		id={title}
 		bind:value={input}
-		class="bg-base-100 rounded-md border border-[var(--color-neutral)] p-2 text-md focus:outline-0"
+		{maxlength}
+		class="bg-base-100 text-md rounded-md border border-[var(--color-neutral)] p-3 focus:outline-0"
 	/>
 </div>

@@ -32,8 +32,8 @@ export class TaskService {
 		return await this.taskRepository.findAssignees(taskId);
 	}
 
-	async assignUserToTask(taskId: string, userId: string): Promise<string> {
-		return await this.taskRepository.assignUserToTask(taskId, userId);
+	async assignUserToTask(taskId: string, memberId: string): Promise<string> {
+		return await this.taskRepository.assignUserToTask(taskId, memberId);
 	}
 }
 
