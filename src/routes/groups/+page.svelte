@@ -31,6 +31,9 @@
 	let ownedGroupMap: Map<string, boolean> = $state(new Map());
 	let joinedGroupMap: Map<string, boolean> = $state(new Map());
 
+	let confirmingDelete: boolean = $state(false);
+	let confirmingLeave: boolean = $state(false);
+
 	// In this function the a new map is being created and then being assigned tot he original map. This is to trigger svelt's reactivity.
 	const selectOwnedGroup = (groupId: string) => {
 		const isSelected = ownedGroupMap.get(groupId);
@@ -46,7 +49,7 @@
 		newMap.set(groupId, !isSelected);
 		joinedGroupMap = newMap;
 		joinedGroupLeaveButtonVisible = Array.from(joinedGroupMap.values()).some((value) => value);
-		console.log(joinedGroupMap)
+		console.log(joinedGroupMap);
 	};
 
 	/**
@@ -79,11 +82,11 @@
 	};
 
 	const leaveJoinedGroup = async () => {
-		if(!user) {
+		if (!user) {
 			Toaster.ejectToast({
-				message: "Must be signed in to leave a group!",
-				type: "info"
-			})
+				message: 'Must be signed in to leave a group!',
+				type: 'info'
+			});
 			return;
 		}
 		disableActionButtons = true;
@@ -98,7 +101,6 @@
 		joinedGroupMap.clear();
 		joinedGroupLeaveButtonVisible = false;
 		disableActionButtons = false;
-
 	};
 
 	const createGroup = async () => {
@@ -121,25 +123,49 @@
 
 		<div class="space-y-6">
 			<section class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-				<div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-4">
+				<div
+					class="flex w-full flex-col justify-between gap-2 sm:flex-row sm:items-center sm:gap-4"
+				>
 					<h2 class="text-content text-2xl font-bold">Groups You Own</h2>
-					<Button
-						type="button"
-						aria-label="Create new task group"
-						onclick={() => (createTask = !createTask)}
-					>
-						+ Create New Group
-					</Button>
-					{#if ownedGroupDeleteButtonVisible}
+					<div class="flex items-center gap-4">
 						<Button
-							onclick={deleteGroup}
-							disabled={disableActionButtons}
-							aria-label="Delete Groups"
-							variant="danger"
+							type="button"
+							aria-label="Create new task group"
+							onclick={() => (createTask = !createTask)}
 						>
-							Delete Group
+							+ Create New Group
 						</Button>
-					{/if}
+						{#if ownedGroupDeleteButtonVisible}
+							{#if !confirmingDelete}
+								<Button
+									onclick={() => (confirmingDelete = true)}
+									disabled={disableActionButtons}
+									aria-label="Delete Groups"
+									variant="danger"
+								>
+									Delete Group
+								</Button>
+							{:else}
+								<div class="flex gap-3">
+									<Button
+										onclick={deleteGroup}
+										disabled={disableActionButtons}
+										aria-label="Confirm delete groups"
+										variant="danger"
+									>
+										Confirm Delete
+									</Button>
+									<Button
+										onclick={() => (confirmingDelete = false)}
+										aria-label="Cancel delete groups"
+										variant="neutral"
+									>
+										Cancel
+									</Button>
+								</div>
+							{/if}
+						{/if}
+					</div>
 				</div>
 			</section>
 
@@ -183,10 +209,14 @@
 						<div
 							class="bg-base-200 relative flex flex-col justify-between gap-4 rounded-xl p-6 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
 						>
-							<div class="flex flex-warp break-words gap-2 flex-col">
+							<div class="flex-warp flex flex-col gap-2 break-words">
 								<Icon icon="noto:busts-in-silhouette" class="info rounded-md p-2 text-4xl" />
 								<h3 class="text-content text-xl font-bold">{owned.name}</h3>
-								<p class="text-neutral leading-relaxed">{owned.description.length > 40 ? `${owned.description.slice(0, 40)}...` : owned.description}</p>
+								<p class="text-neutral leading-relaxed">
+									{owned.description.length > 40
+										? `${owned.description.slice(0, 40)}...`
+										: owned.description}
+								</p>
 							</div>
 							<div class="flex items-center gap-2">
 								<button
@@ -213,29 +243,49 @@
 				</section>
 			{:else}
 				<div class="bg-base-200 space-y-4 rounded-xl p-12 text-center">
-					<Icon icon="noto:clipboard" class="text-6xl w-full"/>
+					<Icon icon="noto:clipboard" class="w-full text-6xl" />
 					<h3 class="text-content text-xl font-bold">No Groups Yet</h3>
-					<p class="text-neutral">
-						Create your first group to start collaborating with others!
-					</p>
+					<p class="text-neutral">Create your first group to start collaborating with others!</p>
 				</div>
 			{/if}
 		</div>
 
 		<!-- Joined Groups Section -->
 		<section class="space-y-6">
-			<div class="flex items-center gap-4 h-8">
+			<div class="flex h-8 items-center gap-4">
 				<h2 class="text-content text-2xl font-bold">Groups You've Joined</h2>
-				{#if joinedGroupLeaveButtonVisible}
-					<Button
-						onclick={leaveJoinedGroup}
-						disabled={disableActionButtons}
-						aria-label="Leave Groups"
-						variant="danger"
-					>
-						Leave Group
-					</Button>
-				{/if}
+				<div class="flex items-center justify-between gap-4">
+					{#if joinedGroupLeaveButtonVisible}
+						{#if !confirmingLeave}
+							<Button
+								onclick={() => (confirmingLeave = true)}
+								disabled={disableActionButtons}
+								aria-label="Leave Groups"
+								variant="danger"
+							>
+								Leave Group
+							</Button>
+						{:else}
+							<div class="flex gap-3">
+								<Button
+									onclick={leaveJoinedGroup}
+									disabled={disableActionButtons}
+									aria-label="Confirm leave groups"
+									variant="danger"
+								>
+									Confirm Leave
+								</Button>
+								<Button
+									onclick={() => (confirmingLeave = false)}
+									aria-label="Cancel leave groups"
+									variant="neutral"
+								>
+									Cancel
+								</Button>
+							</div>
+						{/if}
+					{/if}
+				</div>
 			</div>
 
 			<!-- Join Group Form -->
@@ -282,7 +332,11 @@
 
 								<div>
 									<h3 class="text-content text-xl font-bold">{joined.name}</h3>
-								<p class="text-neutral leading-relaxed">{joined.description.length > 40 ? `${joined.description.slice(0, 40)}...` : joined.description}</p>
+									<p class="text-neutral leading-relaxed">
+										{joined.description.length > 40
+											? `${joined.description.slice(0, 40)}...`
+											: joined.description}
+									</p>
 								</div>
 
 								<div class="flex items-center gap-2">
@@ -310,7 +364,7 @@
 					{/each}
 				</div>
 			{:else}
-				<div class="bg-base-200 rounded-xl space-y-4 p-12 text-center">
+				<div class="bg-base-200 space-y-4 rounded-xl p-12 text-center">
 					<Icon icon="noto-v1:magnifying-glass-tilted-left" class="w-full text-6xl" />
 					<h3 class="text-content text-xl font-bold">No Joined Groups</h3>
 					<p class="text-neutral">Enter a group code above to join your first group!</p>

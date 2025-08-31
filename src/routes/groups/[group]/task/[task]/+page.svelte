@@ -5,15 +5,22 @@
 
 	const { data }: PageProps = $props();
 	const { task, assignees, groupMembers, isUserAdmin } = data;
+
+	let confirmDelete = $state(false);
+
+	const handleDelete = async () => {
+		// TODO: call your delete API / service
+		console.log("Task deleted:", task.id);
+	};
 </script>
 
 <main class="bg-base-100 min-h-screen px-4 py-24">
 	<div class="mx-auto max-w-7xl space-y-12">
 		<!-- Task Header -->
 		{#if task}
-			<section class="text-center space-y-4">
+			<section class="space-y-4 text-center">
 				<h1 class="text-content text-4xl font-bold">{task.taskName}</h1>
-				<p class="text-neutral max-w-2xl mx-auto leading-relaxed">
+				<p class="text-neutral mx-auto max-w-2xl leading-relaxed">
 					{task.description || 'No description provided for this task.'}
 				</p>
 			</section>
@@ -21,7 +28,31 @@
 
 		<!-- Assignees Section -->
 		<section class="space-y-6">
-			<h2 class="text-content text-2xl font-bold">Assignees</h2>
+			<div class="flex items-center justify-between gap-4">
+				<div class="flex items-center gap-2">
+					<Button
+						type="button"
+						variant="custom"
+						aria-label="Return to groups."
+						class="neutral hidden h-full cursor-pointer rounded-lg p-2 sm:flex"
+						onclick={() => history.back()}
+					>
+						<Icon icon="grommet-icons:return" />
+					</Button>
+					<h2 class="text-content text-2xl font-bold">Assignees</h2>
+				</div>
+
+				<!-- Delete Task Button -->
+				{#if confirmDelete}
+					<div class="flex items-center gap-2">
+						<Button variant="danger" onclick={handleDelete}>Confirm Delete</Button>
+						<Button variant="neutral" onclick={() => (confirmDelete = false)}>Cancel</Button>
+					</div>
+				{:else}
+					<Button variant="danger" onclick={() => (confirmDelete = true)}>Delete Task</Button>
+				{/if}
+			</div>
+
 			<div class="bg-base-200 rounded-xl p-6 shadow-md">
 				{#if assignees && assignees.length > 0}
 					<div class="space-y-4">
@@ -39,8 +70,8 @@
 						{/each}
 					</div>
 				{:else}
-					<div class="text-center py-8">
-						<Icon icon="noto:warning" class="mb-4 mx-auto text-5xl text-neutral" />
+					<div class="py-8 text-center">
+						<Icon icon="noto:warning" class="text-neutral mx-auto mb-4 text-5xl" />
 						<h3 class="text-content mb-2 text-lg font-semibold">No Assignees</h3>
 						<p class="text-neutral">No group members are currently assigned to this task.</p>
 					</div>
@@ -52,7 +83,7 @@
 		{#if isUserAdmin}
 			<section class="space-y-6">
 				<h2 class="text-content text-2xl font-bold">Assign Members</h2>
-				<div class="bg-base-200 rounded-xl p-6 shadow-md space-y-4">
+				<div class="bg-base-200 space-y-4 rounded-xl p-6 shadow-md">
 					{#if groupMembers && groupMembers.length > 0}
 						<div class="grid gap-4 sm:grid-cols-2">
 							{#each groupMembers as member}
