@@ -17,8 +17,6 @@
 	const user = $session.data?.user;
 
 	let createTask: boolean = $state(false);
-	let ownedGroupDeleteButtonVisible: boolean = $state(false);
-	let joinedGroupLeaveButtonVisible: boolean = $state(false);
 	let disableActionButtons: boolean = $state(false);
 
 	let newGroupDetails: { name: string; description: string } = $state({
@@ -27,81 +25,6 @@
 	});
 
 	let joinCode: string = $state('');
-
-	let ownedGroupMap: Map<string, boolean> = $state(new Map());
-	let joinedGroupMap: Map<string, boolean> = $state(new Map());
-
-	let confirmingDelete: boolean = $state(false);
-	let confirmingLeave: boolean = $state(false);
-
-	// In this function the a new map is being created and then being assigned tot he original map. This is to trigger svelt's reactivity.
-	const selectOwnedGroup = (groupId: string) => {
-		const isSelected = ownedGroupMap.get(groupId);
-		const newMap = new Map(ownedGroupMap);
-		newMap.set(groupId, !isSelected);
-		ownedGroupMap = newMap;
-		ownedGroupDeleteButtonVisible = Array.from(ownedGroupMap.values()).some((value) => value);
-	};
-
-	const selectJoinedGroup = (groupId: string) => {
-		const isSelected = joinedGroupMap.get(groupId);
-		const newMap = new Map(joinedGroupMap);
-		newMap.set(groupId, !isSelected);
-		joinedGroupMap = newMap;
-		joinedGroupLeaveButtonVisible = Array.from(joinedGroupMap.values()).some((value) => value);
-		console.log(joinedGroupMap);
-	};
-
-	/**
-	 * Loops through the currently saved ids in the ownedGroupsMap
-	 * if a saved group is marked "true" for deletion then it's id is
-	 * saved in an array. Then the array is passed to the delete group endpoint.
-	 */
-	const deleteGroup = async () => {
-		if (!user) {
-			Toaster.ejectToast({
-				message: 'Must be signed in to delete posts!',
-				type: 'info'
-			});
-			return;
-		}
-		disableActionButtons = true;
-		const arr: string[] = [];
-		for (const [key, value] of ownedGroupMap) {
-			const [group] = ownedGroups.filter((group) => group.id === key);
-			if (value === true && group.ownerId === user?.id) {
-				arr.push(key);
-			}
-		}
-		ownedGroups = ownedGroups.filter((group) => !arr.includes(group.id));
-
-		await GroupClient.deleteGroup(arr);
-		ownedGroupMap.clear();
-		ownedGroupDeleteButtonVisible = false;
-		disableActionButtons = false;
-	};
-
-	const leaveJoinedGroup = async () => {
-		if (!user) {
-			Toaster.ejectToast({
-				message: 'Must be signed in to leave a group!',
-				type: 'info'
-			});
-			return;
-		}
-		disableActionButtons = true;
-		const arr: string[] = [];
-		for (const [key, value] of joinedGroupMap) {
-			if (value === true) {
-				arr.push(key);
-			}
-		}
-		joinedGroups = joinedGroups.filter((group) => !arr.includes(group.id));
-		await GroupClient.leaveGroup(arr);
-		joinedGroupMap.clear();
-		joinedGroupLeaveButtonVisible = false;
-		disableActionButtons = false;
-	};
 
 	const createGroup = async () => {
 		if (!user) {
@@ -135,36 +58,12 @@
 						>
 							+ Create New Group
 						</Button>
-						{#if ownedGroupDeleteButtonVisible}
-							{#if !confirmingDelete}
-								<Button
-									onclick={() => (confirmingDelete = true)}
-									disabled={disableActionButtons}
-									aria-label="Delete Groups"
-									variant="danger"
-								>
-									Delete Group
-								</Button>
-							{:else}
-								<div class="flex gap-3">
-									<Button
-										onclick={deleteGroup}
-										disabled={disableActionButtons}
-										aria-label="Confirm delete groups"
-										variant="danger"
-									>
-										Confirm Delete
-									</Button>
-									<Button
-										onclick={() => (confirmingDelete = false)}
-										aria-label="Cancel delete groups"
-										variant="neutral"
-									>
-										Cancel
-									</Button>
-								</div>
-							{/if}
-						{/if}
+						<a
+							href="/manage_groups"
+							class="secondary flex min-h-[43px] min-w-[44px] items-center rounded-md px-3 py-2 font-bold duration-200 hover:scale-[0.98] sm:px-4 sm:py-2"
+						>
+							Manage Groups
+						</a>
 					</div>
 				</div>
 			</section>
@@ -206,39 +105,19 @@
 			{#if ownedGroups.length > 0}
 				<section class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
 					{#each ownedGroups as owned}
-						<div
-							class="bg-base-200 relative flex flex-col justify-between gap-4 rounded-xl p-6 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+						<a
+							href={`/groups/${owned.id}`}
+							class="bg-base-200 relative flex flex-col justify-between gap-2 rounded-xl p-6 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
 						>
-							<div class="flex-warp flex flex-col gap-2 break-words">
-								<Icon icon="noto:busts-in-silhouette" class="info rounded-md p-2 text-4xl" />
-								<h3 class="text-content text-xl font-bold">{owned.name}</h3>
-								<p class="text-neutral leading-relaxed">
-									{owned.description.length > 40
-										? `${owned.description.slice(0, 40)}...`
-										: owned.description}
-								</p>
-							</div>
-							<div class="flex items-center gap-2">
-								<button
-									type="button"
-									aria-label="Select group"
-									class={`h-full cursor-pointer rounded-md px-4 py-2 text-sm font-bold duration-200
- 								${ownedGroupMap.get(owned.id) ? 'danger' : 'btn-warning'}`}
-									onclick={() => {
-										selectOwnedGroup(owned.id);
-									}}
-								>
-									{ownedGroupMap.get(owned.id) ? 'Selected' : 'Select'}
-								</button>
-								<a
-									class="primary h-full rounded-md px-4 py-2 text-sm font-bold duration-200"
-									href={`/groups/${owned.id}`}
-									aria-label={`Go to ${owned.name}`}
-								>
-									View
-								</a>
-							</div>
-						</div>
+							<Icon icon="noto:busts-in-silhouette" class="info rounded-md p-2 text-4xl" />
+							<h3 class="text-content text-xl font-bold">{owned.name}</h3>
+							<p class="text-neutral leading-relaxed">
+								{owned.description.length > 40
+									? `${owned.description.slice(0, 40)}...`
+									: owned.description}
+							</p>
+							<span class="success w-fit rounded-md px-2 py-1 text-xs"> Owner </span>
+						</a>
 					{/each}
 				</section>
 			{:else}
@@ -254,38 +133,6 @@
 		<section class="space-y-6">
 			<div class="flex h-8 items-center gap-4">
 				<h2 class="text-content text-2xl font-bold">Groups You've Joined</h2>
-				<div class="flex items-center justify-between gap-4">
-					{#if joinedGroupLeaveButtonVisible}
-						{#if !confirmingLeave}
-							<Button
-								onclick={() => (confirmingLeave = true)}
-								disabled={disableActionButtons}
-								aria-label="Leave Groups"
-								variant="danger"
-							>
-								Leave Group
-							</Button>
-						{:else}
-							<div class="flex gap-3">
-								<Button
-									onclick={leaveJoinedGroup}
-									disabled={disableActionButtons}
-									aria-label="Confirm leave groups"
-									variant="danger"
-								>
-									Confirm Leave
-								</Button>
-								<Button
-									onclick={() => (confirmingLeave = false)}
-									aria-label="Cancel leave groups"
-									variant="neutral"
-								>
-									Cancel
-								</Button>
-							</div>
-						{/if}
-					{/if}
-				</div>
 			</div>
 
 			<!-- Join Group Form -->
@@ -321,46 +168,22 @@
 			{#if joinedGroups && joinedGroups.length > 0}
 				<div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
 					{#each joinedGroups as joined}
-						<div
+						<a
+							href={`/groups/${joined.id}`}
 							class="bg-base-200 rounded-xl p-6 shadow-md transition-all duration-300 hover:shadow-xl"
 						>
-							<div class="space-y-4">
-								<div class="flex items-center justify-between">
-									<Icon icon="twemoji:handshake" class="text-4xl" />
-									<span class="warning h-fit rounded px-2 py-1 text-xs font-medium">Member</span>
-								</div>
+							<div class="space-y-2">
+								<Icon icon="twemoji:handshake" class="text-4xl" />
 
-								<div>
-									<h3 class="text-content text-xl font-bold">{joined.name}</h3>
-									<p class="text-neutral leading-relaxed">
-										{joined.description.length > 40
-											? `${joined.description.slice(0, 40)}...`
-											: joined.description}
-									</p>
-								</div>
-
-								<div class="flex items-center gap-2">
-									<button
-										type="button"
-										aria-label="Select group"
-										class={`h-full cursor-pointer rounded-md px-4 py-2 text-sm font-bold duration-200
- 										${joinedGroupMap.get(joined.id) ? 'danger' : 'btn-warning'}`}
-										onclick={() => {
-											selectJoinedGroup(joined.id);
-										}}
-									>
-										{joinedGroupMap.get(joined.id) ? 'Selected' : 'Select'}
-									</button>
-									<a
-										class="primary h-full rounded-md px-4 py-2 text-sm font-bold duration-200"
-										href={`/groups/${joined.id}`}
-										aria-label={`Go to ${joined.name}`}
-									>
-										View
-									</a>
-								</div>
+								<h3 class="text-content text-xl font-bold">{joined.name}</h3>
+								<p class="text-neutral leading-relaxed">
+									{joined.description.length > 40
+										? `${joined.description.slice(0, 40)}...`
+										: joined.description}
+								</p>
+								<span class="warning h-fit rounded px-2 py-1 text-xs font-medium">Member</span>
 							</div>
-						</div>
+						</a>
 					{/each}
 				</div>
 			{:else}
