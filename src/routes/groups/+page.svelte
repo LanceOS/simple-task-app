@@ -46,6 +46,7 @@
 		newMap.set(groupId, !isSelected);
 		joinedGroupMap = newMap;
 		joinedGroupLeaveButtonVisible = Array.from(joinedGroupMap.values()).some((value) => value);
+		console.log(joinedGroupMap)
 	};
 
 	/**
@@ -77,7 +78,28 @@
 		disableActionButtons = false;
 	};
 
-	const leaveJoinedGroup = () => {};
+	const leaveJoinedGroup = async () => {
+		if(!user) {
+			Toaster.ejectToast({
+				message: "Must be signed in to leave a group!",
+				type: "info"
+			})
+			return;
+		}
+		disableActionButtons = true;
+		const arr: string[] = [];
+		for (const [key, value] of joinedGroupMap) {
+			if (value === true) {
+				arr.push(key);
+			}
+		}
+		joinedGroups = joinedGroups.filter((group) => !arr.includes(group.id));
+		await GroupClient.leaveGroup(arr);
+		joinedGroupMap.clear();
+		joinedGroupLeaveButtonVisible = false;
+		disableActionButtons = false;
+
+	};
 
 	const createGroup = async () => {
 		if (!user) {

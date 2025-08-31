@@ -1,16 +1,20 @@
-import type { CreateGroupPayload, CreateMemberPayload, JoinedGroupsResponse, Members } from '$lib/@types/Groups.types';
+import type {
+	CreateGroupPayload,
+	CreateMemberPayload,
+	JoinedGroupsResponse,
+	Members
+} from '$lib/@types/Groups.types';
 import { HttpError } from '../helpers/ResponseHandler.helper';
 import { GroupRepository } from '../repositories/Group.repository';
 import type { IGroups } from '../schemas/task_group.schema';
-import { Journalist } from './Journalist.serverutil';
 
 export class GroupService {
-	private static instance: GroupService
+	private static instance: GroupService;
 	constructor(private groupRepository: GroupRepository) {}
 
 	public static getInstance(groupRepository: GroupRepository): GroupService {
-		if(!GroupService.instance) {
-			GroupService.instance = new GroupService(groupRepository)
+		if (!GroupService.instance) {
+			GroupService.instance = new GroupService(groupRepository);
 		}
 		return GroupService.instance;
 	}
@@ -23,10 +27,7 @@ export class GroupService {
 		return this.groupRepository.findJoinedGroups(userId);
 	}
 
-	async createNewGroup(
-		data: CreateGroupPayload,
-		userId: string
-	): Promise<string> {
+	async createNewGroup(data: CreateGroupPayload, userId: string): Promise<string> {
 		const newGroup = await this.groupRepository.create({
 			name: data.name,
 			description: data.description,
@@ -37,13 +38,15 @@ export class GroupService {
 			parentGroupId: newGroup.id,
 			userId: userId,
 			isAdmin: true
-		})
+		});
 
-		return newGroup.id
+		return newGroup.id;
 	}
 
-	async getAllMembers(groupId: string): Promise<Members<{ id: string, name: string, image: string | null }>[]> {
-		return this.groupRepository.findGroupMembers(groupId)
+	async getAllMembers(
+		groupId: string
+	): Promise<Members<{ id: string; name: string; image: string | null }>[]> {
+		return this.groupRepository.findGroupMembers(groupId);
 	}
 
 	async isMemberAdmin(groupId: string, userId: string): Promise<boolean> {
@@ -51,20 +54,27 @@ export class GroupService {
 	}
 
 	async isMember(groupId: string, userId: string): Promise<boolean> {
-		return await this.groupRepository.isUserMember(groupId, userId)
+		return await this.groupRepository.isUserMember(groupId, userId);
 	}
 
 	async addGroupMember(memberData: CreateMemberPayload): Promise<void> {
-		return await this.groupRepository.addMember(memberData)
+		return await this.groupRepository.addMember(memberData);
 	}
 
-	async deleteGroup(groupIds: string[], userId: string) {
-		if(groupIds.length === 0) {
-			throw new HttpError("No groups provided for deletion!", 400)
+	async removeGroupMember(groupIds: string[], userId: string): Promise<void> {
+		if (groupIds.length === 0) {
+			throw new HttpError('No groups provided for exit!', 400);
+		}
+		await this.groupRepository.removeMember(groupIds, userId);
+	}
+
+	async deleteGroup(groupIds: string[], userId: string): Promise<void> {
+		if (groupIds.length === 0) {
+			throw new HttpError('No groups provided for deletion!', 400);
 		}
 
-		await this.groupRepository.deleteGroup(groupIds, userId)
+		await this.groupRepository.deleteGroup(groupIds, userId);
 	}
 }
 
-export const groupService = GroupService.getInstance(new GroupRepository())
+export const groupService = GroupService.getInstance(new GroupRepository());

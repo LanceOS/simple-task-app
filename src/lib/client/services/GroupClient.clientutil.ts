@@ -51,6 +51,7 @@ export const GroupClient = {
 				message: "Must select a group to delete",
 				type: 'error'
 			})
+			return;
 		}
 
 		try {
@@ -67,6 +68,32 @@ export const GroupClient = {
 				type: "error"
 			});
 			return error.message;
+		}
+	},
+
+	leaveGroup: async (groupIds: string[]): Promise<void> => {
+		if(!groupIds) {
+			Toaster.ejectToast({
+				message: "Must select a group to leave!",
+				type: "error"
+			})
+			return;
+		}
+
+
+		try {
+			await http.delete<typeof groupIds>("groups/leave_group", groupIds);
+
+			Toaster.ejectToast({
+				message: "Successfully left group!",
+				type: "success"
+			})
+		}
+		catch(error: any) {
+			Toaster.ejectToast({
+				message: error.message || "Failed to leave group!",
+				type: "error"
+			})
 		}
 	}
 };

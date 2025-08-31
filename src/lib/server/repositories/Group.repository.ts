@@ -33,6 +33,10 @@ export class GroupRepository {
 		await this.db.insert(groupMember).values(memberData);
 	}
 
+	async removeMember(groupIds: string[], userId: string): Promise<void> {
+		await this.db.delete(groupMember).where(and(inArray(groupMember.parentGroupId, groupIds), eq(groupMember.userId, userId)))
+	}
+
 	async findGroupMembers(groupId: string): Promise<Members<{ id: string, name: string, image: string | null }>[]> {
 		return await this.db.query.groupMember.findMany({
 			where: eq(groupMember.parentGroupId, groupId),
