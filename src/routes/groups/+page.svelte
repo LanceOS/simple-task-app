@@ -17,8 +17,9 @@
 	const user = $session.data?.user;
 
 	let createTask: boolean = $state(false);
-	let ownedGroupDeleteButton: boolean = $state(false);
-	let disabledDeletion: boolean = $state(false);
+	let ownedGroupDeleteButtonVisible: boolean = $state(false);
+	let joinedGroupLeaveButtonVisible: boolean = $state(false);
+	let disableActionButtons: boolean = $state(false);
 
 	let newGroupDetails: { name: string; description: string } = $state({
 		name: '',
@@ -28,6 +29,7 @@
 	let joinCode: string = $state('');
 
 	let ownedGroupMap: Map<string, boolean> = $state(new Map());
+	let joinedGroupMap: Map<string, boolean> = $state(new Map());
 
 	// In this function the a new map is being created and then being assigned tot he original map. This is to trigger svelt's reactivity.
 	const selectOwnedGroup = (groupId: string) => {
@@ -35,7 +37,15 @@
 		const newMap = new Map(ownedGroupMap);
 		newMap.set(groupId, !isSelected);
 		ownedGroupMap = newMap;
-		ownedGroupDeleteButton = Array.from(ownedGroupMap.values()).some((value) => value);
+		ownedGroupDeleteButtonVisible = Array.from(ownedGroupMap.values()).some((value) => value);
+	};
+
+	const selectJoinedGroup = (groupId: string) => {
+		const isSelected = joinedGroupMap.get(groupId);
+		const newMap = new Map(joinedGroupMap);
+		newMap.set(groupId, !isSelected);
+		joinedGroupMap = newMap;
+		joinedGroupLeaveButtonVisible = Array.from(joinedGroupMap.values()).some((value) => value);
 	};
 
 	/**
@@ -51,7 +61,7 @@
 			});
 			return;
 		}
-		disabledDeletion = true;
+		disableActionButtons = true;
 		const arr: string[] = [];
 		for (const [key, value] of ownedGroupMap) {
 			const [group] = ownedGroups.filter((group) => group.id === key);
@@ -63,9 +73,11 @@
 
 		await GroupClient.deleteGroup(arr);
 		ownedGroupMap.clear();
-		ownedGroupDeleteButton = false;
-		disabledDeletion = false;
+		ownedGroupDeleteButtonVisible = false;
+		disableActionButtons = false;
 	};
+
+	const leaveJoinedGroup = () => {};
 
 	const createGroup = async () => {
 		if (!user) {
@@ -96,10 +108,10 @@
 					>
 						+ Create New Group
 					</Button>
-					{#if ownedGroupDeleteButton}
+					{#if ownedGroupDeleteButtonVisible}
 						<Button
 							onclick={deleteGroup}
-							disabled={disabledDeletion}
+							disabled={disableActionButtons}
 							aria-label="Delete Groups"
 							variant="danger"
 						>
@@ -126,7 +138,9 @@
 							placeholder="Describe your group's purpose..."
 						/>
 						<div class="flex gap-4">
-							<Button type="button" onclick={createGroup}>Create Group</Button>
+							<Button type="button" onclick={createGroup} disabled={disableActionButtons}
+								>Create Group</Button
+							>
 							<Button
 								type="button"
 								variant="neutral"
@@ -186,8 +200,18 @@
 
 		<!-- Joined Groups Section -->
 		<section class="space-y-6">
-			<div class="flex items-center justify-between">
+			<div class="flex items-center gap-4 h-8">
 				<h2 class="text-content text-2xl font-bold">Groups You've Joined</h2>
+				{#if joinedGroupLeaveButtonVisible}
+					<Button
+						onclick={leaveJoinedGroup}
+						disabled={disableActionButtons}
+						aria-label="Leave Groups"
+						variant="danger"
+					>
+						Leave Group
+					</Button>
+				{/if}
 			</div>
 
 			<!-- Join Group Form -->
@@ -210,6 +234,7 @@
 							type="button"
 							variant="secondary"
 							class="w-full sm:w-32"
+							disabled={disableActionButtons}
 							onclick={async () => await GroupClient.joinGroup(joinCode)}
 						>
 							Join Group
@@ -225,13 +250,37 @@
 						<div
 							class="bg-base-200 rounded-xl p-6 shadow-md transition-all duration-300 hover:shadow-xl"
 						>
-							<div class="mb-4">
-								<Icon icon="twemoji:handshake" class="text-3xl" />
-								<h3 class="text-content mb-2 text-xl font-bold">{joined.name}</h3>
-								<p class="text-neutral leading-relaxed">{joined.description}</p>
-							</div>
-							<div class="text-neutral flex items-center text-sm">
-								<span class="bg-info warning rounded px-2 py-1 text-xs font-medium">Member</span>
+							<div class="space-y-4">
+								<div class="flex items-center justify-between">
+									<Icon icon="twemoji:handshake" class="text-4xl" />
+									<span class="warning h-fit rounded px-2 py-1 text-xs font-medium">Member</span>
+								</div>
+
+								<div>
+									<h3 class="text-content text-xl font-bold">{joined.name}</h3>
+									<p class="text-neutral leading-relaxed">{joined.description}</p>
+								</div>
+
+								<div class="flex items-center gap-2">
+									<button
+										type="button"
+										aria-label="Select group"
+										class={`h-full cursor-pointer rounded-md px-4 py-2 text-sm font-bold duration-200
+ 										${joinedGroupMap.get(joined.id) ? 'danger' : 'btn-warning'}`}
+										onclick={() => {
+											selectJoinedGroup(joined.id);
+										}}
+									>
+										{joinedGroupMap.get(joined.id) ? 'Selected' : 'Select'}
+									</button>
+									<a
+										class="primary h-full rounded-md px-4 py-2 text-sm font-bold duration-200"
+										href={`/groups/${joined.id}`}
+										aria-label={`Go to ${joined.name}`}
+									>
+										View
+									</a>
+								</div>
 							</div>
 						</div>
 					{/each}
