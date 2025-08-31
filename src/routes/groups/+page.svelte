@@ -59,9 +59,11 @@
 				arr.push(key);
 			}
 		}
+		ownedGroups = ownedGroups.filter((group) => !arr.includes(group.id));
 
 		await GroupClient.deleteGroup(arr);
 		ownedGroupMap.clear();
+		ownedGroupDeleteButton = false;
 		disabledDeletion = false;
 	};
 
