@@ -35,6 +35,10 @@ export class TaskService {
 	async assignUserToTask(taskId: string, memberId: string): Promise<string> {
 		return await this.taskRepository.assignUserToTask(taskId, memberId);
 	}
+
+	async unassignUserFromTask(taskId: string, memberId: string): Promise<void> {
+		await this.taskRepository.unassignUserFromTask(taskId, memberId)
+	}
 }
 
 export const taskService = TaskService.getInstance(new TaskRepository());

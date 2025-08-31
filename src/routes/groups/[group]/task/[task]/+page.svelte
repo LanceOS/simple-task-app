@@ -2,15 +2,42 @@
 	import type { PageProps } from './$types';
 	import Button from '$lib/client/components/ui/Button.svelte';
 	import Icon from '@iconify/svelte';
+	import { Toaster } from '$lib/client/components/toaster/Toaster';
+	import { page } from '$app/state';
+	import { TaskMaker } from '$lib/client/services/TaskMaker.clientutils';
+
+	const groupId = page.params.group;
 
 	const { data }: PageProps = $props();
 	const { task, assignees, groupMembers, isUserAdmin } = data;
 
 	let confirmDelete = $state(false);
 
+	const assignMember = async (memberId: string) => {
+		if (!task || !memberId || !groupId) {
+			Toaster.ejectToast({
+				message: 'Task not provided for deletion!',
+				type: 'error'
+			});
+			return;
+		}
+		await TaskMaker.assignMemberToTask(memberId, task?.id, groupId);
+	};
+
+	const unassignMember = async (memberId: string) => {
+
+	}
+
 	const handleDelete = async () => {
-		// TODO: call your delete API / service
-		console.log("Task deleted:", task.id);
+		if (!task) {
+			Toaster.ejectToast({
+				message: 'Task not provided for deletion!',
+				type: 'error'
+			});
+			return;
+		}
+
+		console.log('Task deleted:', task.id);
 	};
 </script>
 
@@ -92,7 +119,9 @@
 										<Icon icon="noto:bust-in-silhouette" class="info rounded-md p-2 text-3xl" />
 										<p class="text-content font-medium">{member.user.name}</p>
 									</div>
-									<Button variant="secondary">Assign</Button>
+									<Button variant="secondary" onclick={() => assignMember(member.userId)}
+										>Assign</Button
+									>
 								</div>
 							{/each}
 						</div>

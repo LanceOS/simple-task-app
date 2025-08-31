@@ -1,5 +1,5 @@
 import { DrizzleDB } from '$lib/Drizzle';
-import { eq } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
 import { task, type ITask } from '../schemas/task.schema';
 import { taskAssignee } from '../schemas/task_assignee.schema';
 import type { AssignedMembers, CreateTaskPayload } from '$lib/@types/Groups.types';
@@ -58,5 +58,9 @@ export class TaskRepository {
 			})
 			.returning();
 		return newAssignee.id;
+	}
+
+	async unassignUserFromTask(taskId: string, memberId: string): Promise<void> {
+		await this.db.delete(taskAssignee).where(and(eq(taskAssignee.parentTaskId, taskId), eq(taskAssignee.assigneeId, memberId)))
 	}
 }
