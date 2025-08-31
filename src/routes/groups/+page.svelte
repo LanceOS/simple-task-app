@@ -113,7 +113,7 @@
 </script>
 
 <main class="bg-base-100 min-h-screen px-4 py-24">
-	<div class="mx-auto max-w-6xl space-y-12">
+	<div class="mx-auto max-w-7xl space-y-12">
 		<div class="mb-12 text-center">
 			<h1 class="text-content mb-4 text-4xl font-bold">Your Groups</h1>
 			<p class="text-neutral text-lg">Manage your owned groups and join new ones</p>
