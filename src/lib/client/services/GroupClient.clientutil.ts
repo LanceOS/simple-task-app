@@ -5,16 +5,19 @@ import { HttpService } from '../functions/HttpService';
 
 const http = HttpService.getInstance();
 
-export const GroupClient = {
-	createGroup: async (data: { name: string; description: string }): Promise<ApiResponse> => {
+export class GroupClient {
+	public static async createGroup(data: {
+		name: string;
+		description: string;
+	}): Promise<ApiResponse> {
 		try {
 			const response = await http.post<ApiResponse, typeof data>('groups/create_group', data);
 			Toaster.ejectToast({
 				message: 'Created new task group!',
 				type: 'success'
 			});
-			goto(`/groups/${response.message}`)
-			return response
+			goto(`/groups/${response.message}`);
+			return response;
 		} catch (error: any) {
 			Toaster.ejectToast({
 				message: 'Failed to create new group!',
@@ -23,77 +26,39 @@ export const GroupClient = {
 
 			return error.message;
 		}
-	},
+	}
 
-	joinGroup: async (code: string): Promise<ApiResponse> => {
+	public static async joinGroup(code: string): Promise<ApiResponse> {
 		try {
 			const response = await http.post<ApiResponse, typeof code>('groups/join_group', code);
 			Toaster.ejectToast({
-				message: "Successfully joined group!",
+				message: 'Successfully joined group!',
 				type: 'success'
 			});
 
-			goto(`/groups/${response.message}`)
+			goto(`/groups/${response.message}`);
 			return response;
 		} catch (error: any) {
 			Toaster.ejectToast({
-				message: error.message || "Failed to join group!",
+				message: error.message || 'Failed to join group!',
 				type: 'error'
 			});
 
 			return error.message;
-		}
-	},
-
-	deleteGroup: async (groupIds: string[]): Promise<void> => {
-		if(groupIds.length === 0) {
-			Toaster.ejectToast({
-				message: "Must select a group to delete",
-				type: 'error'
-			})
-			return;
-		}
-
-		try {
-			await http.delete<typeof groupIds>("groups/delete_group", groupIds)
-
-			Toaster.ejectToast({
-				message: "Successfully deleted group!",
-				type: "success"
-			})
-		}
-		catch(error: any) {
-			Toaster.ejectToast({
-				message: error.message || "Failed to delete group!",
-				type: "error"
-			});
-			return error.message;
-		}
-	},
-
-	leaveGroup: async (groupIds: string[]): Promise<void> => {
-		if(!groupIds) {
-			Toaster.ejectToast({
-				message: "Must select a group to leave!",
-				type: "error"
-			})
-			return;
-		}
-
-
-		try {
-			await http.delete<typeof groupIds>("groups/leave_group", groupIds);
-
-			Toaster.ejectToast({
-				message: "Successfully left group!",
-				type: "success"
-			})
-		}
-		catch(error: any) {
-			Toaster.ejectToast({
-				message: error.message || "Failed to leave group!",
-				type: "error"
-			})
 		}
 	}
-};
+
+	public static async deleteGroup(groupIds: string[]): Promise<void> {
+		if (groupIds.length === 0) {
+			throw new Error('Must have group IDs to delete!');
+		}
+		await http.delete<typeof groupIds>('groups/delete_group', groupIds);
+	}
+
+	public static async leaveGroups(groupIds: string[]): Promise<void> {
+		if (!groupIds || groupIds.length === 0) {
+			throw new Error('Must provide group IDs to leave!');
+		}
+		await http.delete<typeof groupIds>('groups/leave_group', groupIds);
+	}
+}

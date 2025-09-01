@@ -34,7 +34,7 @@ export class TaskRepository {
 
 	async findAssignees(
 		taskId: string
-	): Promise<AssignedMembers<{ id: string; name: string; image: string | null }>[]> {
+	): Promise<AssignedMembers[]> {
 		return await this.db.query.taskAssignee.findMany({
 			where: eq(taskAssignee.parentTaskId, taskId),
 			with: {

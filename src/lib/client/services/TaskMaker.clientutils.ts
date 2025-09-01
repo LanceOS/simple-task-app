@@ -47,7 +47,7 @@ export const TaskMaker = {
 				data
 			);
 			Toaster.ejectToast({
-				message: 'Created Task!',
+				message: 'Assigned member to task!',
 				type: 'success'
 			});
 		} catch (error: any) {

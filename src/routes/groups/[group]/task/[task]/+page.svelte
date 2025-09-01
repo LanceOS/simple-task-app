@@ -9,7 +9,8 @@
 	const groupId = page.params.group;
 
 	const { data }: PageProps = $props();
-	const { task, assignees, groupMembers, isUserAdmin } = data;
+	let { task, assignees, isUserAdmin } = data;
+	let groupMembers = $state(data.groupMembers)
 
 	let confirmDelete = $state(false);
 

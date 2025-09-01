@@ -18,12 +18,15 @@ export const load: PageServerLoad = async ({ params, request }) => {
 		const task = await taskService.getTask(taskId);
 		const assignees = await taskService.getAssignees(taskId);
 		const groupMembers = await groupService.getAllMembers(groupId);
-		const isUserAdmin = await groupService.isMemberAdmin(user.id!, groupId)
+		const isUserAdmin = await groupService.isMemberAdmin(user.id!, groupId);
+
+		const assigneeIds = new Set(assignees.map((a) => a.assigneeId));
+		const filteredMemberArray = groupMembers.filter((member) => !assigneeIds.has(member.userId));
 
 		return {
 			task,
 			assignees,
-			groupMembers,
+			groupMembers: filteredMemberArray,
 			isUserAdmin
 		};
 	} catch (err: any) {

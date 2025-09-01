@@ -72,3 +72,6 @@ export class HttpService {
 		}) as Promise<void>;
 	}
 }
+
+export const http = HttpService.getInstance();
+

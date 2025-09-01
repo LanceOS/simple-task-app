@@ -49,7 +49,7 @@ export class GroupService {
 
 	async getAllMembers(
 		groupId: string
-	): Promise<Members<{ id: string; name: string; image: string | null }>[]> {
+	): Promise<Members[]> {
 		return this.groupRepository.findGroupMembers(groupId);
 	}
 

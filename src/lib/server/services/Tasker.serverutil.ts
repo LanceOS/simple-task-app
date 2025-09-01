@@ -1,4 +1,4 @@
-import type { AssignedMembers, CreateTaskPayload } from '$lib/@types/Groups.types';
+import type { AssignedMembers, CreateTaskPayload, EssentialUserData } from '$lib/@types/Groups.types';
 import { TaskRepository } from '../repositories/Task.repository';
 import type { ITask } from '../schemas/task.schema';
 
@@ -28,7 +28,7 @@ export class TaskService {
 
 	async getAssignees(
 		taskId: string
-	): Promise<AssignedMembers<{ id: string; name: string; image: string | null }>[]> {
+	): Promise<AssignedMembers[]> {
 		return await this.taskRepository.findAssignees(taskId);
 	}
 

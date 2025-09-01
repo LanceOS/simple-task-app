@@ -7,6 +7,7 @@
 	import type { IGroups } from '$lib/server/schemas/task_group.schema';
 	import Icon from '@iconify/svelte';
 	import type { PageProps } from './$types';
+	import { http } from '$lib/client/functions/HttpService';
 
 	const { data }: PageProps = $props();
 	let ownedGroups: IGroups[] = $state(data.ownedGroups);
@@ -65,12 +66,23 @@
 				arr.push(key);
 			}
 		}
-		ownedGroups = ownedGroups.filter((group) => !arr.includes(group.id));
+		try {
+			await GroupClient.deleteGroup(arr);
+			ownedGroups = ownedGroups.filter((group) => !arr.includes(group.id));
+			ownedGroupMap.clear();
+			ownedGroupDeleteButtonVisible = false;
+			disableActionButtons = false;
 
-		await GroupClient.deleteGroup(arr);
-		ownedGroupMap.clear();
-		ownedGroupDeleteButtonVisible = false;
-		disableActionButtons = false;
+			Toaster.ejectToast({
+				message: 'Successfully deleted group!',
+				type: 'success'
+			});
+		} catch (error: any) {
+			Toaster.ejectToast({
+				message: error.message || 'Failed to delete group!',
+				type: 'error'
+			});
+		}
 	};
 
 	const leaveJoinedGroup = async () => {
@@ -88,11 +100,23 @@
 				arr.push(key);
 			}
 		}
-		joinedGroups = joinedGroups.filter((group) => !arr.includes(group.id));
-		await GroupClient.leaveGroup(arr);
-		joinedGroupMap.clear();
-		joinedGroupLeaveButtonVisible = false;
-		disableActionButtons = false;
+		try {
+			await GroupClient.leaveGroups(arr);
+			joinedGroups = joinedGroups.filter((group) => !arr.includes(group.id));
+			joinedGroupMap.clear();
+			joinedGroupLeaveButtonVisible = false;
+			disableActionButtons = false;
+
+			Toaster.ejectToast({
+				message: 'Successfully left group!',
+				type: 'success'
+			});
+		} catch (error: any) {
+			Toaster.ejectToast({
+				message: error.message || 'Failed to leave group!',
+				type: 'error'
+			});
+		}
 	};
 </script>
 
@@ -102,15 +126,15 @@
 		<section class="space-y-4 text-center">
 			<h1 class="text-content text-4xl font-bold">Manage Your Groups</h1>
 			<p class="text-neutral mx-auto max-w-2xl">
-				Select groups you own to delete, or groups you’ve joined to leave. 
-				Be careful—these actions cannot be undone.
+				Select groups you own to delete, or groups you’ve joined to leave. Be careful—these actions
+				cannot be undone.
 			</p>
 		</section>
 
 		<!-- Owned Groups -->
 		<section class="space-y-6">
 			<h2 class="text-content text-2xl font-bold">Owned Groups</h2>
-			<div class="bg-base-200 rounded-xl p-6 shadow-md space-y-4">
+			<div class="bg-base-200 space-y-4 rounded-xl p-6 shadow-md">
 				{#if ownedGroups.length > 0}
 					{#each ownedGroups as owned}
 						<div class="bg-base-100 flex items-center justify-between rounded-lg p-4">
@@ -141,7 +165,7 @@
 
 					<!-- Delete Button (only visible when at least one selected) -->
 					{#if ownedGroupDeleteButtonVisible}
-						<div class="pt-4 flex justify-end">
+						<div class="flex justify-end pt-4">
 							{#if !confirmingDelete}
 								<Button
 									onclick={() => (confirmingDelete = true)}
@@ -152,17 +176,10 @@
 								</Button>
 							{:else}
 								<div class="flex gap-3">
-									<Button
-										onclick={deleteGroup}
-										disabled={disableActionButtons}
-										variant="danger"
-									>
+									<Button onclick={deleteGroup} disabled={disableActionButtons} variant="danger">
 										Confirm Delete
 									</Button>
-									<Button
-										onclick={() => (confirmingDelete = false)}
-										variant="neutral"
-									>
+									<Button onclick={() => (confirmingDelete = false)} variant="neutral">
 										Cancel
 									</Button>
 								</div>
@@ -178,7 +195,7 @@
 		<!-- Joined Groups -->
 		<section class="space-y-6">
 			<h2 class="text-content text-2xl font-bold">Joined Groups</h2>
-			<div class="bg-base-200 rounded-xl p-6 shadow-md space-y-4">
+			<div class="bg-base-200 space-y-4 rounded-xl p-6 shadow-md">
 				{#if joinedGroups.length > 0}
 					{#each joinedGroups as joined}
 						<div class="bg-base-100 flex items-center justify-between rounded-lg p-4">
@@ -209,7 +226,7 @@
 
 					<!-- Leave Button (only visible when at least one selected) -->
 					{#if joinedGroupLeaveButtonVisible}
-						<div class="pt-4 flex justify-end">
+						<div class="flex justify-end pt-4">
 							{#if !confirmingLeave}
 								<Button
 									onclick={() => (confirmingLeave = true)}
@@ -227,10 +244,7 @@
 									>
 										Confirm Leave
 									</Button>
-									<Button
-										onclick={() => (confirmingLeave = false)}
-										variant="neutral"
-									>
+									<Button onclick={() => (confirmingLeave = false)} variant="neutral">
 										Cancel
 									</Button>
 								</div>
@@ -244,4 +258,3 @@
 		</section>
 	</div>
 </main>
-
