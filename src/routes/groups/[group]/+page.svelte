@@ -4,9 +4,11 @@
 	import Input from '$lib/client/components/ui/Input.svelte';
 	import Textarea from '$lib/client/components/ui/Textarea.svelte';
 	import { Inviter } from '$lib/client/services/Inviter.clientutil';
-	import { TaskMaker } from '$lib/client/services/TaskMaker.clientutils';
+	import { TaskClientService } from '$lib/client/services/TaskClientService';
 	import Icon from '@iconify/svelte';
 	import type { PageProps } from './$types';
+	import { Toaster } from '$lib/client/components/toaster/Toaster';
+	import { goto } from '$app/navigation';
 
 	const { data }: PageProps = $props();
 	const { tasks, groupMembers, group } = data;
@@ -24,11 +26,35 @@
 	let inviteeEmail: string = $state('');
 
 	const createTask = async () => {
-		await TaskMaker.createTask(newTask);
+		try {
+			const response = await TaskClientService.createTask(newTask);
+			Toaster.ejectToast({
+				message: 'Created Task!',
+				type: 'success'
+			});
+
+			goto(`/groups/${groupId}/task/${response.message}`);
+		} catch (error: any) {
+			Toaster.ejectToast({
+				message: error.message || 'Failed to create new task!',
+				type: 'error'
+			});
+		}
 	};
 
 	const addMember = async () => {
-		await Inviter.sendUserInvite(groupId, inviteeEmail);
+		try {
+			await Inviter.sendUserInvite(groupId, inviteeEmail);
+			Toaster.ejectToast({
+				message: 'Invite sent!',
+				type: 'success'
+			});
+		} catch (error: any) {
+			Toaster.ejectToast({
+				message: error.message || 'Failed to invite user!',
+				type: 'error'
+			});
+		}
 	};
 </script>
 
@@ -41,9 +67,9 @@
 		</div>
 
 		<!-- Group Details -->
-		<section class="bg-base-200 rounded-xl p-8 shadow-md text-center space-y-4">
+		<section class="bg-base-200 space-y-4 rounded-xl p-8 text-center shadow-md">
 			<h2 class="text-content text-3xl font-bold">{group.name}</h2>
-			<p class="text-neutral text-lg max-w-2xl mx-auto leading-relaxed">
+			<p class="text-neutral mx-auto max-w-2xl text-lg leading-relaxed">
 				{group.description || 'No description provided for this group.'}
 			</p>
 		</section>
@@ -76,7 +102,6 @@
 				</form>
 			</section>
 		{/if}
-
 
 		<!-- Tasks Section -->
 		<section class="space-y-6">
@@ -143,7 +168,6 @@
 			{/if}
 		</section>
 
-
 		<!-- Invite Members -->
 		<section class="space-y-6">
 			<h2 class="text-content text-2xl font-bold">Invite Members</h2>
@@ -189,8 +213,8 @@
 						{/each}
 					</div>
 				{:else}
-					<div class="py-8 text-center space-y-2">
-								<Icon icon="noto:busts-in-silhouette" class="info rounded-md p-2 text-4xl" />
+					<div class="space-y-2 py-8 text-center">
+						<Icon icon="noto:busts-in-silhouette" class="info rounded-md p-2 text-4xl" />
 						<h3 class="text-content text-lg font-semibold">No Members Yet</h3>
 						<p class="text-neutral">Invite people to start collaborating!</p>
 					</div>

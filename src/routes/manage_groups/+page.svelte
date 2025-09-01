@@ -153,7 +153,7 @@
 								<button
 									type="button"
 									aria-label="Select group"
-									class={`rounded-md px-4 py-2 text-sm font-bold duration-200
+									class={`rounded-md px-4 py-2 text-sm font-bold duration-200 cursor-pointer
 										${ownedGroupMap.get(owned.id) ? 'danger' : 'btn-warning'}`}
 									onclick={() => selectOwnedGroup(owned.id)}
 								>

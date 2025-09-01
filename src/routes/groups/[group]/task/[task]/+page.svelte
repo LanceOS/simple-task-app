@@ -4,30 +4,41 @@
 	import Icon from '@iconify/svelte';
 	import { Toaster } from '$lib/client/components/toaster/Toaster';
 	import { page } from '$app/state';
-	import { TaskMaker } from '$lib/client/services/TaskMaker.clientutils';
+	import { TaskClientService } from '$lib/client/services/TaskClientService';
+	import { goto } from '$app/navigation';
 
 	const groupId = page.params.group;
 
 	const { data }: PageProps = $props();
 	let { task, assignees, isUserAdmin } = data;
-	let groupMembers = $state(data.groupMembers)
+	let groupMembers = $state(data.groupMembers);
 
 	let confirmDelete = $state(false);
 
 	const assignMember = async (memberId: string) => {
-		if (!task || !memberId || !groupId) {
+		if (!task || !groupId || !memberId) {
 			Toaster.ejectToast({
-				message: 'Task not provided for deletion!',
+				message: 'Missing required data for assigning user!',
 				type: 'error'
 			});
 			return;
 		}
-		await TaskMaker.assignMemberToTask(memberId, task?.id, groupId);
+
+		try {
+			await TaskClientService.assignMemberToTask(memberId, task.id, groupId);
+			Toaster.ejectToast({
+				message: 'Assigned member to task!',
+				type: 'success'
+			});
+		} catch (error: any) {
+			Toaster.ejectToast({
+				message: error.message || 'Failed to assign member to task!',
+				type: 'error'
+			});
+		}
 	};
 
-	const unassignMember = async (memberId: string) => {
-
-	}
+	const unassignMember = async (memberId: string) => {};
 
 	const handleDelete = async () => {
 		if (!task) {
@@ -38,7 +49,20 @@
 			return;
 		}
 
-		console.log('Task deleted:', task.id);
+		try {
+			await TaskClientService.deleteCurrentTask(task.id, groupId);
+			Toaster.ejectToast({
+				message: "Successfully delete task!",
+				type: "success"
+			});
+			goto(`/groups/${groupId}`)
+		}
+		catch(error: any) {
+			Toaster.ejectToast({
+				message: error.message || "Failed to delete task!",
+				type: "error"
+			})
+		}
 	};
 </script>
 

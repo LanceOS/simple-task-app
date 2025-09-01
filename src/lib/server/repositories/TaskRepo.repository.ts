@@ -63,4 +63,8 @@ export class TaskRepository {
 	async unassignUserFromTask(taskId: string, memberId: string): Promise<void> {
 		await this.db.delete(taskAssignee).where(and(eq(taskAssignee.parentTaskId, taskId), eq(taskAssignee.assigneeId, memberId)))
 	}
+
+	async deleteTask(taskId: string) {
+		await this.db.delete(task).where(eq(task.id, taskId))
+	}
 }

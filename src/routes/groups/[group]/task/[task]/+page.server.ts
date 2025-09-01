@@ -23,6 +23,10 @@ export const load: PageServerLoad = async ({ params, request }) => {
 		const assigneeIds = new Set(assignees.map((a) => a.assigneeId));
 		const filteredMemberArray = groupMembers.filter((member) => !assigneeIds.has(member.userId));
 
+		if(task === undefined) {
+			return error(500, "Failed to find task")
+		}
+
 		return {
 			task,
 			assignees,

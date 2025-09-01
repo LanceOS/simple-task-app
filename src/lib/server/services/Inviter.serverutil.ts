@@ -1,5 +1,5 @@
 import { HttpError } from '../helpers/ResponseHandler.helper';
-import { InviteRepository } from '../repositories/Invite.repository';
+import { InviteRepository } from '../repositories/InviteRepo.repository';
 import type { IInviteSchema } from '../schemas/invite_code.schema';
 
 export class InviteService {

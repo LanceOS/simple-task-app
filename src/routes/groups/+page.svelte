@@ -5,16 +5,13 @@
 	import Icon from '@iconify/svelte';
 	import { GroupClient } from '$lib/client/services/GroupClient.clientutil';
 	import type { PageProps } from './$types';
-	import { authClient } from '$lib/auth-client';
 	import { Toaster } from '$lib/client/components/toaster/Toaster';
 	import type { IGroups } from '$lib/server/schemas/task_group.schema';
+	import { goto } from '$app/navigation';
 
 	const { data }: PageProps = $props();
 	let ownedGroups: IGroups[] = $state(data.ownedGroups);
 	let joinedGroups = $state(data.joinedGroups);
-
-	const session = authClient.useSession();
-	const user = $session.data?.user;
 
 	let createTask: boolean = $state(false);
 	let disableActionButtons: boolean = $state(false);
@@ -27,13 +24,35 @@
 	let joinCode: string = $state('');
 
 	const createGroup = async () => {
-		if (!user) {
+		try {
+			const response = await GroupClient.createGroup(newGroupDetails);
 			Toaster.ejectToast({
-				message: 'Must be signed in to create a group!',
+				message: 'Created new task group!',
+				type: 'success'
+			});
+			goto(`/groups/${response.message}`);
+		} catch (error: any) {
+			Toaster.ejectToast({
+				message: error.message || 'Failed to create new group!',
 				type: 'error'
 			});
 		}
-		await GroupClient.createGroup(newGroupDetails);
+	};
+
+	const joinGroup = async () => {
+		try {
+			const response = await GroupClient.joinGroup(joinCode);
+			Toaster.ejectToast({
+				message: 'Successfully joined group!',
+				type: 'success'
+			});
+			goto(`/groups/${response.message}`);
+		} catch (error: any) {
+			Toaster.ejectToast({
+				message: error.message || 'Failed to join group!',
+				type: 'error'
+			});
+		}
 	};
 </script>
 
@@ -156,7 +175,7 @@
 							variant="secondary"
 							class="w-full sm:w-32"
 							disabled={disableActionButtons}
-							onclick={async () => await GroupClient.joinGroup(joinCode)}
+							onclick={joinGroup}
 						>
 							Join Group
 						</Button>

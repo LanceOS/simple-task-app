@@ -1,5 +1,5 @@
 import type { AssignedMembers, CreateTaskPayload, EssentialUserData } from '$lib/@types/Groups.types';
-import { TaskRepository } from '../repositories/Task.repository';
+import { TaskRepository } from '../repositories/TaskRepo.repository';
 import type { ITask } from '../schemas/task.schema';
 
 export class TaskService {
@@ -38,6 +38,10 @@ export class TaskService {
 
 	async unassignUserFromTask(taskId: string, memberId: string): Promise<void> {
 		await this.taskRepository.unassignUserFromTask(taskId, memberId)
+	}
+
+	async deleteTask(taskId: string) {
+		await this.taskRepository.deleteTask(taskId)
 	}
 }
 

@@ -1,19 +1,21 @@
-import { DrizzleDB } from "$lib/Drizzle"
-import { journal } from "../schemas/journal.schema"
+import type { Journalist } from "$lib/@types/Journal.types";
+import { JournalRepository } from "../repositories/JournalRepo.repository";
 
 
-interface Journalist {
-    action: string,
-    description: string,
-    metadata: Record<string, any>;
-}
 
-export const Journalist = {
-    write: async ({action, description, metadata}: Journalist) => {
-        return await DrizzleDB.insert(journal).values({
-            action,
-            description,
-            metadata
-        })
+export class JournalService {
+    private static instance: JournalService;
+    constructor(private journalRepository: JournalRepository) {}
+
+    public static getInstance(journalRepository: JournalRepository) {
+        if(!JournalService.instance) {
+            JournalService.instance = new JournalService(journalRepository)
+        }
+    }
+
+    async writeJournal(data: Journalist): Promise<void> {
+        await this.journalRepository.createJournal(data)
     }
 }
+
+export const journalService = JournalService.getInstance(new JournalRepository())

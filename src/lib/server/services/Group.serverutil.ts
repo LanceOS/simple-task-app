@@ -5,7 +5,7 @@ import type {
 	Members
 } from '$lib/@types/Groups.types';
 import { HttpError } from '../helpers/ResponseHandler.helper';
-import { GroupRepository } from '../repositories/Group.repository';
+import { GroupRepository } from '../repositories/GroupRepo.repository';
 import type { IGroups } from '../schemas/task_group.schema';
 
 export class GroupService {
