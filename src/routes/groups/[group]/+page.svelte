@@ -11,13 +11,13 @@
 	import { goto } from '$app/navigation';
 
 	const { data }: PageProps = $props();
-	const { tasks, groupMembers, group } = data;
+	const { tasks, groupMembers, group, isUserAdmin } = data;
 
 	const groupId = page.params.group;
 
 	let createWindow: boolean = $state(false);
 
-	let loading: boolean = $state(false)
+	let loading: boolean = $state(false);
 
 	const newTask = $state({
 		name: '',
@@ -28,6 +28,13 @@
 	let inviteeEmail: string = $state('');
 
 	const createTask = async () => {
+		if (!isUserAdmin) {
+			Toaster.ejectToast({
+				message: 'Member must be owner or admin to create a group task!',
+				type: 'error'
+			});
+			return;
+		}
 		loading = true;
 		try {
 			const response = await TaskClientService.createTask(newTask);
@@ -42,8 +49,7 @@
 				message: error.message || 'Failed to create new task!',
 				type: 'error'
 			});
-		}
-		finally {
+		} finally {
 			loading = false;
 		}
 	};
@@ -56,14 +62,13 @@
 				message: 'Invite sent!',
 				type: 'success'
 			});
-			inviteeEmail = ""
+			inviteeEmail = '';
 		} catch (error: any) {
 			Toaster.ejectToast({
 				message: error.message || 'Failed to invite user!',
 				type: 'error'
 			});
-		}
-		finally {
+		} finally {
 			loading = false;
 		}
 	};
@@ -123,15 +128,17 @@
 						variant="custom"
 						aria-label="Return to groups."
 						class="neutral hidden h-full cursor-pointer rounded-lg p-2 sm:flex"
-						onclick={() => goto("/groups")}
+						onclick={() => goto('/groups')}
 					>
 						<Icon icon="grommet-icons:return" />
 					</Button>
 					<h2 class="text-content text-2xl font-bold">Tasks</h2>
 				</div>
-				<Button type="button" onclick={() => (createWindow = !createWindow)}>
-					+ Create New Task
-				</Button>
+				{#if isUserAdmin}
+					<Button type="button" onclick={() => (createWindow = !createWindow)}>
+						+ Create New Task
+					</Button>
+				{/if}
 			</div>
 
 			{#if tasks.length > 0}
@@ -179,32 +186,40 @@
 			{/if}
 		</section>
 
-		<!-- Invite Members -->
-		<section class="space-y-6">
-			<h2 class="text-content text-2xl font-bold">Invite Members</h2>
-			<div class="bg-base-200 h-fit rounded-xl p-6">
-				<form class="space-y-4">
-					<div>
-						<label for="addMem" class="text-content mb-2 block text-sm font-semibold">
-							Email Address
-						</label>
-						<div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
-							<input
-								type="email"
-								name="addMem"
-								id="addMem"
-								class="bg-base-100 border-base-300 focus:ring-primary text-content flex-1 rounded-lg border px-4 py-3 focus:ring-2 focus:outline-none"
-								placeholder="example@gmail.com"
-								bind:value={inviteeEmail}
-							/>
-							<Button type="button" variant="secondary" class="w-full sm:w-40" onclick={addMember} disabled={loading}>
-								Send Invite
-							</Button>
+		{#if isUserAdmin}
+			<!-- Invite Members -->
+			<section class="space-y-6">
+				<h2 class="text-content text-2xl font-bold">Invite Members</h2>
+				<div class="bg-base-200 h-fit rounded-xl p-6">
+					<form class="space-y-4">
+						<div>
+							<label for="addMem" class="text-content mb-2 block text-sm font-semibold">
+								Email Address
+							</label>
+							<div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
+								<input
+									type="email"
+									name="addMem"
+									id="addMem"
+									class="bg-base-100 border-base-300 focus:ring-primary text-content flex-1 rounded-lg border px-4 py-3 focus:ring-2 focus:outline-none"
+									placeholder="example@gmail.com"
+									bind:value={inviteeEmail}
+								/>
+								<Button
+									type="button"
+									variant="secondary"
+									class="w-full sm:w-40"
+									onclick={addMember}
+									disabled={loading}
+								>
+									Send Invite
+								</Button>
+							</div>
 						</div>
-					</div>
-				</form>
-			</div>
-		</section>
+					</form>
+				</div>
+			</section>
+		{/if}
 
 		<!-- Members Section -->
 		<section class="space-y-4">

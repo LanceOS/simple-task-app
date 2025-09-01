@@ -14,7 +14,7 @@ export const DELETE: RequestHandler = (async ({ request }: RequestEvent) => {
         const user = await GetUser(request);
 
         if(!user) {
-            throw new HttpError("User must be signed in to unassign member from task!", 403);
+            throw new HttpError("User must be signed in to unassign member from task!", 401);
         }
 
         await taskService.unassignUserFromTask(body.taskId, body.memberId);

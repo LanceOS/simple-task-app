@@ -8,7 +8,7 @@ import { HttpError } from "$lib/server/helpers/ResponseHandler.helper";
 
 
 export const load: PageServerLoad = async ({ params, request }) => {
-    const user = GetUser(request);
+    const user = await GetUser(request);
 
     if(!user) {
         throw redirect(308, "/signin")
@@ -26,11 +26,13 @@ export const load: PageServerLoad = async ({ params, request }) => {
 
         const tasks = await taskService.getAllTasks(groupId)
         const groupMembers = await groupService.getAllMembers(groupId);
+		const isUserAdmin = await groupService.isMemberAdmin(user.id, groupId);
 
         return {
             tasks,
             groupMembers,
-            group
+            group,
+            isUserAdmin
         }
 
     }catch(err: any){

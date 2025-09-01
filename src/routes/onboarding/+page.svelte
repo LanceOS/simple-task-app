@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { Toaster } from "$lib/client/components/toaster/Toaster";
 	import Button from "$lib/client/components/ui/Button.svelte";
 	import Input from "$lib/client/components/ui/Input.svelte";
 	import { Onboarding } from "$lib/client/services/Onboarding.clientutil";
@@ -7,7 +8,19 @@
 	let newName: string = $state('');
 
 	const setName = async () => {
-		await Onboarding.setName(newName)
+		try {
+			await Onboarding.setName(newName)
+			Toaster.ejectToast({
+				message: "Successfully set name!",
+				type: "success"
+			})
+		}
+		catch(error: any) {
+			Toaster.ejectToast({
+				message: error.message,
+				type: "error"
+			})
+		}
 	}
 </script>
 

@@ -7,7 +7,7 @@
 	import type { IGroups } from '$lib/server/schemas/task_group.schema';
 	import Icon from '@iconify/svelte';
 	import type { PageProps } from './$types';
-	import { http } from '$lib/client/functions/HttpService';
+	import { http } from '$lib/client/helpers/HttpService';
 
 	const { data }: PageProps = $props();
 	let ownedGroups: IGroups[] = $state(data.ownedGroups);

@@ -12,7 +12,7 @@ export const POST = async ({ request }: RequestEvent) => {
 		const user = await GetUser(request);
 
 		if (!user) {
-			return ResponseHandler.jsonResponse('User must be signed in to join group!', 403);
+			return ResponseHandler.jsonResponse('User must be signed in to join group!', 401);
 		}
 
 		const isCodeValid = await inviteService.getValidCode(user.email, body);

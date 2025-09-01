@@ -21,10 +21,12 @@ export const load: PageServerLoad = async ({ params, request }) => {
 		const isUserAdmin = await groupService.isMemberAdmin(user.id!, groupId);
 
 		const assigneeIds = new Set(assignees.map((a) => a.assigneeId));
-		const filteredMemberArray = groupMembers.filter((member) => !assigneeIds.has(member.userId));
+		const filteredMemberArray = groupMembers.filter(
+			(member) => !assigneeIds.has(member.userId) && member.userId !== user.id
+		);
 
-		if(task === undefined) {
-			return error(500, "Failed to find task")
+		if (task === undefined) {
+			return error(500, 'Failed to find task');
 		}
 
 		return {

@@ -1,11 +1,13 @@
 import type { CreateTaskPayload } from '$lib/@types/Groups.types';
-import { HttpService } from '../functions/HttpService';
+import { HttpService } from '../helpers/HttpService';
 import type { ApiResponse } from '$lib/@types/Responses.types';
+import { validateSessionOrRedirect } from '../helpers/ValidateClientAuth.helper';
 
 const http = HttpService.getInstance();
 
 export class TaskClientService {
 	public static async createTask(data: CreateTaskPayload): Promise<ApiResponse> {
+		await validateSessionOrRedirect()
 		if (!data.groupId || !data.name || !data.description) {
 			throw new Error('Missing info for creating new task!');
 		}
@@ -23,6 +25,7 @@ export class TaskClientService {
 	};
 
 	public static async unassignMemberToTask(memberId: string, taskId: string, groupId: string) {
+		await validateSessionOrRedirect()
 		if (!memberId || !taskId || !groupId) {
 			throw new Error('Missing required data!');
 		}
@@ -36,6 +39,7 @@ export class TaskClientService {
 	};
 
 	public static async deleteCurrentTask(taskId: string, groupId: string) {
+		await validateSessionOrRedirect()
 		if(!taskId || !groupId) {
 			throw new Error("Missing task id!");
 		}
