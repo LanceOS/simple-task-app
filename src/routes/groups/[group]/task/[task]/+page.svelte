@@ -87,7 +87,7 @@
 						variant="custom"
 						aria-label="Return to groups."
 						class="neutral hidden h-full cursor-pointer rounded-lg p-2 sm:flex"
-						onclick={() => history.back()}
+						onclick={() => goto(`/groups/${groupId}`)}
 					>
 						<Icon icon="grommet-icons:return" />
 					</Button>

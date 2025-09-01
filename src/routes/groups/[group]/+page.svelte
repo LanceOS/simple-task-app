@@ -17,6 +17,8 @@
 
 	let createWindow: boolean = $state(false);
 
+	let loading: boolean = $state(false)
+
 	const newTask = $state({
 		name: '',
 		description: '',
@@ -26,6 +28,7 @@
 	let inviteeEmail: string = $state('');
 
 	const createTask = async () => {
+		loading = true;
 		try {
 			const response = await TaskClientService.createTask(newTask);
 			Toaster.ejectToast({
@@ -40,20 +43,28 @@
 				type: 'error'
 			});
 		}
+		finally {
+			loading = false;
+		}
 	};
 
 	const addMember = async () => {
+		loading = true;
 		try {
 			await Inviter.sendUserInvite(groupId, inviteeEmail);
 			Toaster.ejectToast({
 				message: 'Invite sent!',
 				type: 'success'
 			});
+			inviteeEmail = ""
 		} catch (error: any) {
 			Toaster.ejectToast({
 				message: error.message || 'Failed to invite user!',
 				type: 'error'
 			});
+		}
+		finally {
+			loading = false;
 		}
 	};
 </script>
@@ -94,7 +105,7 @@
 						bind:input={newTask.description}
 					/>
 					<div class="flex gap-4">
-						<Button type="button" onclick={createTask}>Create Task</Button>
+						<Button type="button" onclick={createTask} disabled={loading}>Create Task</Button>
 						<Button variant="neutral" type="button" onclick={() => (createWindow = false)}>
 							Cancel
 						</Button>
@@ -112,7 +123,7 @@
 						variant="custom"
 						aria-label="Return to groups."
 						class="neutral hidden h-full cursor-pointer rounded-lg p-2 sm:flex"
-						onclick={() => history.back()}
+						onclick={() => goto("/groups")}
 					>
 						<Icon icon="grommet-icons:return" />
 					</Button>
@@ -186,7 +197,7 @@
 								placeholder="example@gmail.com"
 								bind:value={inviteeEmail}
 							/>
-							<Button type="button" variant="secondary" class="w-full sm:w-40" onclick={addMember}>
+							<Button type="button" variant="secondary" class="w-full sm:w-40" onclick={addMember} disabled={loading}>
 								Send Invite
 							</Button>
 						</div>
