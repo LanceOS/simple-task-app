@@ -1,5 +1,4 @@
 import type { ApiResponse } from '$lib/@types/Responses.types';
-import { HttpError } from '$lib/server/helpers/ResponseHandler.helper';
 import { http } from '../helpers/HttpService';
 import { validateSessionOrRedirect } from '../helpers/ValidateClientAuth.helper';
 
@@ -19,7 +18,7 @@ export class GroupClient {
 
 	public static async deleteGroup(groupIds: string[]): Promise<void> {
 		if (groupIds.length === 0) {
-			throw new HttpError('Must have group IDs to delete!', 400);
+			throw new Error('Must have group IDs to delete!');
 		}
 		await validateSessionOrRedirect()
 		await http.delete<typeof groupIds>('groups/delete_group', groupIds);
@@ -27,7 +26,7 @@ export class GroupClient {
 
 	public static async leaveGroups(groupIds: string[]): Promise<void> {
 		if (!groupIds || groupIds.length === 0) {
-			throw new HttpError('Must provide group IDs to leave!', 400);
+			throw new Error('Must provide group IDs to leave!');
 		}
 		await validateSessionOrRedirect()
 		await http.delete<typeof groupIds>('groups/leave_group', groupIds);

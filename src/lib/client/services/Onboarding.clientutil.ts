@@ -1,4 +1,3 @@
-import { HttpError } from "$lib/server/helpers/ResponseHandler.helper";
 import { validateSessionOrRedirect } from "../helpers/ValidateClientAuth.helper";
 
 export class Onboarding {
@@ -6,7 +5,7 @@ export class Onboarding {
 		await validateSessionOrRedirect()
 
 		if(!name) {
-			throw new HttpError("Missing name!", 400)
+			throw new Error("Missing name!")
 		}
 
 		return await fetch('/onboarding', {
