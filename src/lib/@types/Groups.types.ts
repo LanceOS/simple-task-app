@@ -25,16 +25,16 @@ export interface JoinedGroupsResponse {
 	description: string;
 }
 
-interface EssentialUserData {
+interface EssentialMemberData {
 	id: string;
 	name: string;
 	image: string | null;
 }
 
-export interface AssignedMembers extends ITaskAssignee {
-	assignee: EssentialUserData
+export interface GroupMembers extends IGroupMember {
+	member: EssentialMemberData;
 }
 
-export interface Members extends IGroupMember {
-	user: EssentialUserData;
+export interface TaskAssignees extends ITaskAssignee {
+	member?: EssentialMemberData
 }

@@ -1,4 +1,5 @@
-import type { AssignedMembers, CreateTaskPayload, EssentialUserData } from '$lib/@types/Groups.types';
+import type { CreateTaskPayload, TaskAssignees } from '$lib/@types/Groups.types';
+import { HttpError } from '../helpers/ResponseHandler.helper';
 import { TaskRepository } from '../repositories/TaskRepo.repository';
 import type { ITask } from '../schemas/task.schema';
 
@@ -22,17 +23,21 @@ export class TaskService {
 		return await this.taskRepository.findTasks(groupId);
 	}
 
-	async getTask(taskId: string): Promise<ITask | undefined> {
-		return await this.taskRepository.findSingleTask(taskId);
+	async getTask(taskId: string): Promise<ITask> {
+		const task = await this.taskRepository.findSingleTask(taskId);
+		if(!task) {
+			throw new HttpError("Failed to find task!", 404)
+		}
+		return task
 	}
 
 	async getAssignees(
 		taskId: string
-	): Promise<AssignedMembers[]> {
+	): Promise<TaskAssignees[]> {
 		return await this.taskRepository.findAssignees(taskId);
 	}
 
-	async assignUserToTask(taskId: string, memberId: string): Promise<string> {
+	async assignUserToTask(taskId: string, memberId: string): Promise<TaskAssignees> {
 		return await this.taskRepository.assignUserToTask(taskId, memberId);
 	}
 

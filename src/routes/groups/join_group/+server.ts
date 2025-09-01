@@ -12,7 +12,7 @@ export const POST = async ({ request }: RequestEvent) => {
 		const user = await GetUser(request);
 
 		if (!user) {
-			return ResponseHandler.jsonResponse('User must be signed in to join group!', 401);
+			return ResponseHandler.json('User must be signed in to join group!', 401);
 		}
 
 		const isCodeValid = await inviteService.getValidCode(user.email, body);
@@ -31,12 +31,12 @@ export const POST = async ({ request }: RequestEvent) => {
 			}
 		})
 
-		return ResponseHandler.jsonResponse(isCodeValid.parentGroupId, 200);
+		return ResponseHandler.json(isCodeValid.parentGroupId, 200);
 	} catch (error: any) {
 		if (error instanceof HttpError) {
-			return ResponseHandler.jsonResponse(error.message, error.status);
+			return ResponseHandler.json(error.message, error.status);
 		}
 
-        return ResponseHandler.jsonResponse("Failed to join group!", 500)
+        return ResponseHandler.json("Failed to join group!", 500)
 	}
 };

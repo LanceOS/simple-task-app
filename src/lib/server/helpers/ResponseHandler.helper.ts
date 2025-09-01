@@ -1,15 +1,16 @@
 
-
 export const ResponseHandler = {
-    jsonResponse: (message: string, status: number) => {
-        return new Response(JSON.stringify({message}), {
-            status: status,
-            headers: {
-                "Content-Type": "application/json"
-            }
-        })
+    json: <T>(data: T, status: number, options?: ResponseInit) => {
+        const defaultHeaders = { "Content-Type": "application/json" };
+        const finalHeaders = { ...defaultHeaders, ...options?.headers };
+
+        return new Response(JSON.stringify(data), {
+            status,
+            ...options,
+            headers: finalHeaders
+        });
     }
-}
+};
 
 export class HttpError extends Error {
     public status: number;

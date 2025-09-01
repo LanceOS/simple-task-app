@@ -21,7 +21,7 @@ export class TaskClientService {
 			groupId
 		};
 
-		await http.post<ApiResponse, typeof data>(`groups/${groupId}/task/${taskId}/assign_user`, data);
+		return await http.post<ApiResponse, typeof data>(`groups/${groupId}/task/${taskId}/assign_user`, data);
 	};
 
 	public static async unassignMemberToTask(memberId: string, taskId: string, groupId: string) {

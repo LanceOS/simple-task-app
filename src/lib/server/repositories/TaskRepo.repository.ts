@@ -2,7 +2,7 @@ import { DrizzleDB } from '$lib/Drizzle';
 import { and, eq } from 'drizzle-orm';
 import { task, type ITask } from '../schemas/task.schema';
 import { taskAssignee } from '../schemas/task_assignee.schema';
-import type { AssignedMembers, CreateTaskPayload } from '$lib/@types/Groups.types';
+import type { CreateTaskPayload, TaskAssignees } from '$lib/@types/Groups.types';
 
 export class TaskRepository {
 	private db = DrizzleDB;
@@ -34,11 +34,11 @@ export class TaskRepository {
 
 	async findAssignees(
 		taskId: string
-	): Promise<AssignedMembers[]> {
+	): Promise<TaskAssignees[]> {
 		return await this.db.query.taskAssignee.findMany({
 			where: eq(taskAssignee.parentTaskId, taskId),
 			with: {
-				assignee: {
+				member: {
 					columns: {
 						id: true,
 						name: true,
@@ -49,7 +49,7 @@ export class TaskRepository {
 		});
 	}
 
-	async assignUserToTask(taskId: string, memberId: string): Promise<string> {
+	async assignUserToTask(taskId: string, memberId: string): Promise<TaskAssignees> {
 		const [newAssignee] = await this.db
 			.insert(taskAssignee)
 			.values({
@@ -57,7 +57,7 @@ export class TaskRepository {
 				assigneeId: memberId
 			})
 			.returning();
-		return newAssignee.id;
+		return newAssignee;
 	}
 
 	async unassignUserFromTask(taskId: string, memberId: string): Promise<void> {

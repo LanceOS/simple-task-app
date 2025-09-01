@@ -2,7 +2,7 @@ import { DrizzleDB } from '$lib/Drizzle';
 import { and, eq, inArray, ne } from 'drizzle-orm';
 import { taskGroup, type IGroups } from '../schemas/task_group.schema';
 import { groupMember } from '../schemas/group_members.schema';
-import type { CreateGroupPayload, CreateMemberPayload, JoinedGroupsResponse, Members } from '$lib/@types/Groups.types';
+import type { CreateGroupPayload, CreateMemberPayload, GroupMembers, JoinedGroupsResponse } from '$lib/@types/Groups.types';
 
 export class GroupRepository {
 	private db = DrizzleDB;
@@ -44,11 +44,11 @@ export class GroupRepository {
 		await this.db.delete(groupMember).where(and(inArray(groupMember.parentGroupId, groupIds), eq(groupMember.userId, userId)))
 	}
 
-	async findGroupMembers(groupId: string): Promise<Members<{ id: string, name: string, image: string | null }>[]> {
+	async findGroupMembers(groupId: string): Promise<GroupMembers[]> {
 		return await this.db.query.groupMember.findMany({
 			where: eq(groupMember.parentGroupId, groupId),
 			with: {
-				user: {
+				member: {
 					columns: {
 						id: true,
 						name: true,

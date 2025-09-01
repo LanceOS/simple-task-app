@@ -29,13 +29,13 @@ export const DELETE: RequestHandler = (async ({ request }: RequestEvent) => {
             }
         })
 
-        return ResponseHandler.jsonResponse("Successfully unassigned user!", 200)
+        return ResponseHandler.json("Successfully unassigned user!", 200)
     }
     catch(error: any) {
         if(error instanceof HttpError) {
-            return ResponseHandler.jsonResponse(error.message, error.status)
+            return ResponseHandler.json(error.message, error.status)
         }
 
-        return ResponseHandler.jsonResponse("Failed to unassign member!", 500)
+        return ResponseHandler.json("Failed to unassign member!", 500)
     }
 });

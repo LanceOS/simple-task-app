@@ -43,7 +43,7 @@
 				type: 'success'
 			});
 
-			goto(`/groups/${groupId}/task/${response.message}`);
+			goto(`/groups/${groupId}/task/${response}`);
 		} catch (error: any) {
 			Toaster.ejectToast({
 				message: error.message || 'Failed to create new task!',

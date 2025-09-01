@@ -15,7 +15,7 @@ export const taskRelations = relations(task, ({ many }) => ({
 }));
 
 export const taskAssigneeRelations = relations(taskAssignee, ({ one }) => ({
-    assignee: one(user, {
+    member: one(user, {
         fields: [taskAssignee.assigneeId],
         references: [user.id],
     }),
@@ -32,7 +32,7 @@ export const groupRelations = relations(taskGroup, ({ many }) => ({
 
 
 export const groupMemberRelations = relations(groupMember, ({ one }) => ({
-    user: one(user, {
+    member: one(user, {
         fields: [groupMember.userId],
         references: [user.id]
     }),

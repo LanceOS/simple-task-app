@@ -12,19 +12,19 @@ export const POST = async ({ request }) => {
 		const body = await request.json();
 
 		if (!body.email || !body.groupId) {
-			return ResponseHandler.jsonResponse('Missing required data!', 400);
+			return ResponseHandler.json('Missing required data!', 400);
 		}
 
 		const invitingUser = await GetUser(request);
 
 		if (!invitingUser) {
-			return ResponseHandler.jsonResponse('User must be signed in to invite another member!', 401);
+			return ResponseHandler.json('User must be signed in to invite another member!', 401);
 		}
 		const userExists = await UserServant.findUserByEmail(body.email);
 		if (userExists?.id) {
 			const isInvitedUserMember = await groupService.isMember(body.groupId, userExists.id);
 			if (isInvitedUserMember) {
-				return ResponseHandler.jsonResponse('This user is already a member!', 400);
+				return ResponseHandler.json('This user is already a member!', 400);
 			}
 		}
 
@@ -49,13 +49,13 @@ export const POST = async ({ request }) => {
 			}
 		});
 
-		return ResponseHandler.jsonResponse('Successfully invited user to your group!', 200);
+		return ResponseHandler.json('Successfully invited user to your group!', 200);
 	} catch (error: any) {
 		if (error instanceof HttpError) {
 			console.log(error.message, error.status);
-			return ResponseHandler.jsonResponse(error.message, error.status);
+			return ResponseHandler.json(error.message, error.status);
 		}
 
-		return ResponseHandler.jsonResponse('Failed to join group!', 500);
+		return ResponseHandler.json('Failed to join group!', 500);
 	}
 };

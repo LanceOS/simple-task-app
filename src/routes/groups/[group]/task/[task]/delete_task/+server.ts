@@ -29,13 +29,13 @@ export const DELETE: RequestHandler = (async ({ request }: RequestEvent) => {
             }
         })
 
-        return ResponseHandler.jsonResponse("Successfully deleted task!", 200)
+        return ResponseHandler.json("Successfully deleted task!s", 200)
     }
     catch(error: any) {
         if(error instanceof HttpError) {
-            return ResponseHandler.jsonResponse(error.message, error.status)
+            return ResponseHandler.json(error.message, error.status)
         }
 
-        return ResponseHandler.jsonResponse("Failed to delete task", 500)
+        return ResponseHandler.json("Failed to delete task", 500)
     }
 });

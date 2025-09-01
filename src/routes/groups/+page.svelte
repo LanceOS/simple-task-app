@@ -30,7 +30,7 @@
 				message: 'Created new task group!',
 				type: 'success'
 			});
-			goto(`/groups/${response.message}`);
+			goto(`/groups/${response}`);
 		} catch (error: any) {
 			Toaster.ejectToast({
 				message: error.message || 'Failed to create new group!',
@@ -46,7 +46,7 @@
 				message: 'Successfully joined group!',
 				type: 'success'
 			});
-			goto(`/groups/${response.message}`);
+			goto(`/groups/${response}`);
 		} catch (error: any) {
 			Toaster.ejectToast({
 				message: error.message || 'Failed to join group!',

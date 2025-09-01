@@ -10,8 +10,9 @@
 	const groupId = page.params.group;
 
 	const { data }: PageProps = $props();
-	let { task, assignees, isUserAdmin } = data;
+	let { task, isUserAdmin } = data;
 	let groupMembers = $state(data.groupMembers);
+	let assignees = $state(data.assignees);
 
 	let confirmDelete = $state(false);
 
@@ -25,11 +26,13 @@
 		}
 
 		try {
-			await TaskClientService.assignMemberToTask(memberId, task.id, groupId);
+			const response = await TaskClientService.assignMemberToTask(memberId, task.id, groupId);
 			Toaster.ejectToast({
 				message: 'Assigned member to task!',
 				type: 'success'
 			});
+			groupMembers = groupMembers?.filter((member) => member.userId !== memberId);
+			console.log()
 		} catch (error: any) {
 			Toaster.ejectToast({
 				message: error.message || 'Failed to assign member to task!',
@@ -38,7 +41,28 @@
 		}
 	};
 
-	const unassignMember = async (memberId: string) => {};
+	const unassignMember = async (memberId: string) => {
+		if (!task?.id) {
+			Toaster.ejectToast({
+				message: 'Failed to get taskId!',
+				type: 'error'
+			});
+			return;
+		}
+		try {
+			await TaskClientService.unassignMemberToTask(memberId, task.id, groupId);
+			Toaster.ejectToast({
+				message: 'Successfully unassigned member from task!',
+				type: 'success'
+			});
+		} catch (error: any) {
+			Toaster.ejectToast({
+				message: error.message || 'Failed to remove member from task!',
+				type: 'error'
+			});
+			return;
+		}
+	};
 
 	const handleDelete = async () => {
 		if (!task) {
@@ -52,16 +76,15 @@
 		try {
 			await TaskClientService.deleteCurrentTask(task.id, groupId);
 			Toaster.ejectToast({
-				message: "Successfully delete task!",
-				type: "success"
+				message: 'Successfully delete task!',
+				type: 'success'
 			});
-			goto(`/groups/${groupId}`)
-		}
-		catch(error: any) {
+			goto(`/groups/${groupId}`);
+		} catch (error: any) {
 			Toaster.ejectToast({
-				message: error.message || "Failed to delete task!",
-				type: "error"
-			})
+				message: error.message || 'Failed to delete task!',
+				type: 'error'
+			});
 		}
 	};
 </script>
@@ -112,12 +135,21 @@
 							<div class="bg-base-100 flex items-center gap-4 rounded-lg p-4">
 								<Icon icon="noto:bust-in-silhouette" class="info rounded-md p-2 text-4xl" />
 								<div class="flex-1">
-									<h3 class="text-content font-semibold">{assignee.assignee.name}</h3>
+									<h3 class="text-content font-semibold">{assignee.member?.name}</h3>
 									<p class="text-neutral text-sm">
 										Assigned {assignee.createdAt.toLocaleDateString()}
 									</p>
 								</div>
-								<div class="success rounded-full px-3 py-1 text-xs font-medium">Assigned</div>
+								<div class="flex items-center gap-4">
+									<span class="success rounded-full px-3 py-1 text-xs font-medium">Assigned</span>
+									<Button
+										class="h-6"
+										aria-label="Unassign user from task."
+										onclick={() => unassignMember(assignee.assigneeId)}
+									>
+										Unassign Member
+									</Button>
+								</div>
 							</div>
 						{/each}
 					</div>
@@ -142,7 +174,7 @@
 								<div class="bg-base-100 flex items-center justify-between rounded-lg p-4">
 									<div class="flex items-center gap-3">
 										<Icon icon="noto:bust-in-silhouette" class="info rounded-md p-2 text-3xl" />
-										<p class="text-content font-medium">{member.user.name}</p>
+										<p class="text-content font-medium">{member.member.name}</p>
 									</div>
 									<Button variant="secondary" onclick={() => assignMember(member.userId)}
 										>Assign</Button
