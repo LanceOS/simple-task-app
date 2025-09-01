@@ -1,5 +1,6 @@
 import { ResponseHandler } from '$lib/server/helpers/ResponseHandler.helper'
 import { GetUser } from '$lib/server/helpers/UserCheck.helper.js';
+import { journalService } from '$lib/server/services/Journalist.serverutil.js';
 import { taskService } from '$lib/server/services/Tasker.serverutil.js';
 
 
@@ -7,13 +8,23 @@ export const POST = async ({ request }) => {
     try {
         const body = await request.json();
 
-        const user = GetUser(request)
+        const user = await GetUser(request)
 
         if(!user) {
             return ResponseHandler.jsonResponse("User must be signed in!", 401)
         }
 
         const response = await taskService.createTask(body);
+
+        await journalService.writeJournal({
+            action: "Created task",
+            description: "A new task has been created in database.",
+            metadata: {
+                taskName: body.name,
+                groupId: body.groupId,
+                createdByUserId: user.id
+            }
+        })
 
         return ResponseHandler.jsonResponse(response, 200)
     }

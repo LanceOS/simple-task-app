@@ -1,7 +1,8 @@
 import { HttpError, ResponseHandler } from '$lib/server/helpers/ResponseHandler.helper';
 import { GetUser } from '$lib/server/helpers/UserCheck.helper';
 import { groupService } from '$lib/server/services/Group.serverutil';
-import type { RequestEvent, RequestHandler } from '../$types';
+import { journalService } from '$lib/server/services/Journalist.serverutil';
+import type { RequestEvent, RequestHandler } from './$types';
 
 export const DELETE: RequestHandler = async ({ request }: RequestEvent) => {
 	try {
@@ -10,12 +11,21 @@ export const DELETE: RequestHandler = async ({ request }: RequestEvent) => {
 		const user = await GetUser(request);
 
 		if (!user) {
-			throw new HttpError("User must be signed in to delete group!", 401);
+			throw new HttpError('User must be signed in to delete group!', 401);
 		}
 
-        await groupService.deleteGroup(body, user.id)
+		await groupService.deleteGroup(body, user.id);
 
-        return ResponseHandler.jsonResponse("Successfully deleted groups!", 200)
+		await journalService.writeJournal({
+			action: 'Deleted Group',
+			description: 'A group has been deleted from the database.',
+			metadata: {
+				deletedGroups: body,
+				deletedByUserId: user.id
+			}
+		});
+
+		return ResponseHandler.jsonResponse('Successfully deleted groups!', 200);
 	} catch (error: any) {
 		if (error instanceof HttpError) {
 			return ResponseHandler.jsonResponse(error.message, error.status);

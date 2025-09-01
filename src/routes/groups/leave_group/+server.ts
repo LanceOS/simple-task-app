@@ -1,7 +1,8 @@
 import { HttpError, ResponseHandler } from '$lib/server/helpers/ResponseHandler.helper';
 import { GetUser } from '$lib/server/helpers/UserCheck.helper';
 import { groupService } from '$lib/server/services/Group.serverutil';
-import type { RequestEvent, RequestHandler } from '../$types';
+import { journalService } from '$lib/server/services/Journalist.serverutil';
+import type { RequestEvent, RequestHandler } from './$types';
 
 export const DELETE: RequestHandler = async ({ request }: RequestEvent) => {
     try {
@@ -14,6 +15,15 @@ export const DELETE: RequestHandler = async ({ request }: RequestEvent) => {
         }
 
         await groupService.removeGroupMember(body, user.id)
+
+        await journalService.writeJournal({
+            action: "Left Group",
+            description: "A user has left a group.",
+            metadata: {
+                leftGroups: body,
+                leavingUserId: user.id
+            }
+        })
 
         return ResponseHandler.jsonResponse("Successfully left groups!", 200)
     } catch (error: any) {

@@ -1,5 +1,6 @@
 import { HttpError, ResponseHandler } from '$lib/server/helpers/ResponseHandler.helper'
 import { GetUser } from '$lib/server/helpers/UserCheck.helper.js'
+import { journalService } from '$lib/server/services/Journalist.serverutil.js';
 import { taskService } from '$lib/server/services/Tasker.serverutil.js';
 
 
@@ -15,6 +16,16 @@ export const POST = async ({ request }) => {
         }
 
         const newAssignee = await taskService.assignUserToTask(body.taskId, body.memberId);
+
+        await journalService.writeJournal({
+            action: "Assigned Member",
+            description: "A group member has been assigned to a task.",
+            metadata: {
+                parentGroupId: body.groupId,
+                taskId: body.taskId,
+                assignedMember: body.memberId,
+            }
+        })
 
         return ResponseHandler.jsonResponse(newAssignee, 200)
     }

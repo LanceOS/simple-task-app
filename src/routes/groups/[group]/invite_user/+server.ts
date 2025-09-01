@@ -3,7 +3,7 @@ import { HttpError, ResponseHandler } from '$lib/server/helpers/ResponseHandler.
 import { GetUser } from '$lib/server/helpers/UserCheck.helper.js';
 import { groupService } from '$lib/server/services/Group.serverutil.js';
 import { inviteService } from '$lib/server/services/Inviter.serverutil.js';
-import { Journalist } from '$lib/server/services/Journalist.serverutil.js';
+import { journalService } from '$lib/server/services/Journalist.serverutil.js';
 import { mailerStrategy } from '$lib/server/services/MailMan.js';
 import { UserServant } from '$lib/server/services/User.serverutil.js';
 
@@ -39,7 +39,7 @@ export const POST = async ({ request }) => {
 
 		await mailerStrategy.send(options);
 
-		await Journalist.write({
+		await journalService.writeJournal({
 			action: 'Group Invite',
 			description: 'A user has invited another user to their group.',
 			metadata: {

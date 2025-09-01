@@ -1,6 +1,7 @@
 import { HttpError, ResponseHandler } from '$lib/server/helpers/ResponseHandler.helper';
 import { GetUser } from '$lib/server/helpers/UserCheck.helper.js';
 import { groupService } from '$lib/server/services/Group.serverutil.js';
+import { journalService } from '$lib/server/services/Journalist.serverutil.js';
 
 export const POST = async ({ request }) => {
 	try {
@@ -13,7 +14,17 @@ export const POST = async ({ request }) => {
         }
 		const response = await groupService.createNewGroup(body, user.id);
 
-        return ResponseHandler.jsonResponse(response, 200)
+		await journalService.writeJournal({
+			action: "Created New Group",
+			description: "A new group has been created in the database.",
+			metadata: {
+				groupName: body.name,
+				groupId: response,
+				createdByUserId: user.id
+			}
+		})
+
+        return ResponseHandler.jsonResponse(response, 200);
 	} catch (error: any) {
 		if (error instanceof HttpError) {
 			return ResponseHandler.jsonResponse(error.message, error.status);

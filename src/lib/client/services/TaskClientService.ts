@@ -15,7 +15,8 @@ export class TaskClientService {
 	public static async assignMemberToTask(memberId: string, taskId: string, groupId: string) {
 		const data = {
 			memberId,
-			taskId
+			taskId,
+			groupId
 		};
 
 		await http.post<ApiResponse, typeof data>(`groups/${groupId}/task/${taskId}/assign_user`, data);
@@ -39,6 +40,11 @@ export class TaskClientService {
 			throw new Error("Missing task id!");
 		}
 
-		return await http.delete<typeof taskId>(`groups/${groupId}/task/${taskId}/delete_task`, taskId)
+		const data = {
+			groupId,
+			taskId
+		}
+
+		return await http.delete<typeof data>(`groups/${groupId}/task/${taskId}/delete_task`, data)
 	}
 }

@@ -3,6 +3,7 @@
 
 import { HttpError, ResponseHandler } from '$lib/server/helpers/ResponseHandler.helper';
 import { GetUser } from '$lib/server/helpers/UserCheck.helper';
+import { journalService } from '$lib/server/services/Journalist.serverutil';
 import { taskService } from '$lib/server/services/Tasker.serverutil';
 import type { RequestHandler, RequestEvent } from './$types';
 
@@ -16,9 +17,17 @@ export const DELETE: RequestHandler = (async ({ request }: RequestEvent) => {
             throw new HttpError("User must be signed in to delete task!", 403)
         }
 
-        await taskService.deleteTask(body)
+        await taskService.deleteTask(body.taskId)
         
-
+        await journalService.writeJournal({
+            action: "Deleted task",
+            description: "User deleted a task from their group.",
+            metadata: {
+                parentGroupId: body.groupId,
+                taskId: body.taskId,
+                userId: user.id
+            }
+        })
 
         return ResponseHandler.jsonResponse("Successfully deleted task!", 200)
     }

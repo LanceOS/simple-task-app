@@ -3,6 +3,7 @@
 
 import { HttpError, ResponseHandler } from '$lib/server/helpers/ResponseHandler.helper';
 import { GetUser } from '$lib/server/helpers/UserCheck.helper';
+import { journalService } from '$lib/server/services/Journalist.serverutil';
 import { taskService } from '$lib/server/services/Tasker.serverutil';
 import type { RequestHandler, RequestEvent } from './$types';
 
@@ -16,7 +17,17 @@ export const DELETE: RequestHandler = (async ({ request }: RequestEvent) => {
             throw new HttpError("User must be signed in to unassign member from task!", 403);
         }
 
-        await taskService.unassignUserFromTask(body.taskId, body.groupId)
+        await taskService.unassignUserFromTask(body.taskId, body.memberId);
+
+        await journalService.writeJournal({
+            action: "Removed Member",
+            description: "A member has been removed from a task.",
+            metadata: {
+                parentGroupId: body.groupId,
+                taskId: body.taskId,
+                memberId: body.memberId
+            }
+        })
 
         return ResponseHandler.jsonResponse("Successfully unassigned user!", 200)
     }

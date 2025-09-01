@@ -11,6 +11,7 @@ export class JournalService {
         if(!JournalService.instance) {
             JournalService.instance = new JournalService(journalRepository)
         }
+        return JournalService.instance;
     }
 
     async writeJournal(data: Journalist): Promise<void> {
