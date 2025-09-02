@@ -13,26 +13,26 @@ pipeline {
                 sh 'npm run test'
             }
         }
+    }
            
-        post {
-            always {
-                script {
-                    if (fileExists('playwright-report/index.html')) {
-                        echo 'Publishing Playwright HTML report'
-                        
-                        publishHTML(
-                            target: [
-                                allowMissing: false,
-                                alwaysLinkToLastBuild: true,
-                                keepAll: false,
-                                reportDir: 'playwright-report',
-                                reportFiles: 'index.html',
-                                reportName: 'Playwright Test Report'
-                            ]
-                        )
-                    } else {
-                        echo 'Playwright HTML report not found.'
-                    }
+    post {
+        always {
+            script {
+                if (fileExists('playwright-report/index.html')) {
+                    echo 'Publishing Playwright HTML report'
+                    
+                    publishHTML(
+                        target: [
+                            allowMissing: false,
+                            alwaysLinkToLastBuild: true,
+                            keepAll: false,
+                            reportDir: 'playwright-report',
+                            reportFiles: 'index.html',
+                            reportName: 'Playwright Test Report'
+                        ]
+                    )
+                } else {
+                    echo 'Playwright HTML report not found.'
                 }
             }
         }
