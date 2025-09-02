@@ -36,5 +36,5 @@ export interface GroupMembers extends IGroupMember {
 }
 
 export interface TaskAssignees extends ITaskAssignee {
-	member?: EssentialMemberData
+	member: EssentialMemberData
 }

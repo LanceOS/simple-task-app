@@ -231,7 +231,7 @@
 							<div class="bg-base-100 flex items-center gap-4 rounded-lg p-4">
 								<Icon icon="noto:bust-in-silhouette" class="info rounded-md p-2 text-4xl" />
 								<div class="flex-1">
-									<h3 class="text-content font-semibold">{member.user.name}</h3>
+									<h3 class="text-content font-semibold">{member.member.name}</h3>
 									<p class="text-neutral text-sm">Joined {member.createdAt.toLocaleDateString()}</p>
 								</div>
 								<div class="info rounded-full px-3 py-1 text-xs font-medium">Member</div>

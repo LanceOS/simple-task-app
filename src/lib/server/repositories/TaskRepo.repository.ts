@@ -32,9 +32,7 @@ export class TaskRepository {
 		});
 	}
 
-	async findAssignees(
-		taskId: string
-	): Promise<TaskAssignees[]> {
+	async findAllAssignees(taskId: string): Promise<TaskAssignees[]> {
 		return await this.db.query.taskAssignee.findMany({
 			where: eq(taskAssignee.parentTaskId, taskId),
 			with: {
@@ -49,7 +47,25 @@ export class TaskRepository {
 		});
 	}
 
-	async assignUserToTask(taskId: string, memberId: string): Promise<TaskAssignees> {
+	async findAssigneeById(
+		taskAssigneeEntryId: string,
+		taskId: string
+	): Promise<TaskAssignees | undefined> {
+		return this.db.query.taskAssignee.findFirst({
+			where: and(eq(taskAssignee.id, taskAssigneeEntryId), eq(taskAssignee.parentTaskId, taskId)),
+			with: {
+				member: {
+					columns: {
+						id: true,
+						name: true,
+						image: true
+					}
+				}
+			}
+		});
+	}
+
+	async assignUserToTask(taskId: string, memberId: string): Promise<string> {
 		const [newAssignee] = await this.db
 			.insert(taskAssignee)
 			.values({
@@ -57,14 +73,16 @@ export class TaskRepository {
 				assigneeId: memberId
 			})
 			.returning();
-		return newAssignee;
+		return newAssignee.id;
 	}
 
 	async unassignUserFromTask(taskId: string, memberId: string): Promise<void> {
-		await this.db.delete(taskAssignee).where(and(eq(taskAssignee.parentTaskId, taskId), eq(taskAssignee.assigneeId, memberId)))
+		await this.db
+			.delete(taskAssignee)
+			.where(and(eq(taskAssignee.parentTaskId, taskId), eq(taskAssignee.assigneeId, memberId)));
 	}
 
 	async deleteTask(taskId: string) {
-		await this.db.delete(task).where(eq(task.id, taskId))
+		await this.db.delete(task).where(eq(task.id, taskId));
 	}
 }

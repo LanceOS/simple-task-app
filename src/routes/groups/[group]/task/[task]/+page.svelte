@@ -11,8 +11,11 @@
 
 	const { data }: PageProps = $props();
 	let { task, isUserAdmin } = data;
-	let groupMembers = $state(data.groupMembers);
-	let assignees = $state(data.assignees);
+	let groupMembers = $state(data.groupMembers || []);
+	let assignees = $state(data.assignees || []);
+	let originalMembersArr = $state(data.groupMembers || []);
+
+	let loading: boolean = $state(false);
 
 	let confirmDelete = $state(false);
 
@@ -24,6 +27,7 @@
 			});
 			return;
 		}
+		loading = true;
 
 		try {
 			const response = await TaskClientService.assignMemberToTask(memberId, task.id, groupId);
@@ -31,13 +35,21 @@
 				message: 'Assigned member to task!',
 				type: 'success'
 			});
-			groupMembers = groupMembers?.filter((member) => member.userId !== memberId);
-			console.log()
+
+			const normalizedResponse = {
+				...response,
+				createdAt: new Date(response.createdAt)
+			};
+			groupMembers = groupMembers.filter((member) => member.userId !== memberId);
+			assignees = [...assignees, normalizedResponse];
 		} catch (error: any) {
 			Toaster.ejectToast({
 				message: error.message || 'Failed to assign member to task!',
 				type: 'error'
 			});
+		}
+		finally {
+			loading = false;
 		}
 	};
 
@@ -49,18 +61,27 @@
 			});
 			return;
 		}
+
+		loading = true;
 		try {
 			await TaskClientService.unassignMemberToTask(memberId, task.id, groupId);
 			Toaster.ejectToast({
 				message: 'Successfully unassigned member from task!',
 				type: 'success'
 			});
+
+			assignees = (assignees || []).filter((assignee) => assignee.assigneeId !== memberId);
+			const filteredMembers = originalMembersArr.filter((member) => member.userId === memberId);
+			groupMembers = [...groupMembers.filter((m) => m.userId !== memberId), ...filteredMembers];
 		} catch (error: any) {
 			Toaster.ejectToast({
 				message: error.message || 'Failed to remove member from task!',
 				type: 'error'
 			});
 			return;
+		}
+		finally {
+			loading = false;
 		}
 	};
 
@@ -73,6 +94,7 @@
 			return;
 		}
 
+		loading = true;
 		try {
 			await TaskClientService.deleteCurrentTask(task.id, groupId);
 			Toaster.ejectToast({
@@ -85,6 +107,9 @@
 				message: error.message || 'Failed to delete task!',
 				type: 'error'
 			});
+		}
+		finally {
+			loading = false;
 		}
 	};
 </script>
@@ -108,6 +133,7 @@
 					<Button
 						type="button"
 						variant="custom"
+						disabled={loading}
 						aria-label="Return to groups."
 						class="neutral hidden h-full cursor-pointer rounded-lg p-2 sm:flex"
 						onclick={() => goto(`/groups/${groupId}`)}
@@ -120,11 +146,11 @@
 				<!-- Delete Task Button -->
 				{#if confirmDelete}
 					<div class="flex items-center gap-2">
-						<Button variant="danger" onclick={handleDelete}>Confirm Delete</Button>
-						<Button variant="neutral" onclick={() => (confirmDelete = false)}>Cancel</Button>
+						<Button variant="danger" onclick={handleDelete} disabled={loading} aria-label="Confirm task deletion">Confirm Delete</Button>
+						<Button variant="neutral" onclick={() => (confirmDelete = false)} aria-label="Cancel task deletion">Cancel</Button>
 					</div>
 				{:else}
-					<Button variant="danger" onclick={() => (confirmDelete = true)}>Delete Task</Button>
+					<Button variant="danger" onclick={() => (confirmDelete = true)} aria-label="Delete current task.">Delete Task</Button>
 				{/if}
 			</div>
 
@@ -145,6 +171,7 @@
 									<Button
 										class="h-6"
 										aria-label="Unassign user from task."
+										disabled={loading}
 										onclick={() => unassignMember(assignee.assigneeId)}
 									>
 										Unassign Member
@@ -176,7 +203,7 @@
 										<Icon icon="noto:bust-in-silhouette" class="info rounded-md p-2 text-3xl" />
 										<p class="text-content font-medium">{member.member.name}</p>
 									</div>
-									<Button variant="secondary" onclick={() => assignMember(member.userId)}
+									<Button variant="secondary" onclick={() => assignMember(member.userId)} disabled={loading}
 										>Assign</Button
 									>
 								</div>

@@ -13,7 +13,13 @@ export const POST = async ({ request }) => {
 			return ResponseHandler.json('User must be signed in to appoint tasks!', 401)
 		}
 
-		const newAssignee = await taskService.assignUserToTask(body.taskId, body.memberId);
+		const newAssigneeEntryId = await taskService.assignUserToTask(body.taskId, body.memberId);
+
+		const findNewAssignee = await taskService.getAssigneeByEntryId(newAssigneeEntryId, body.taskId);
+
+		if(!findNewAssignee) {
+            throw new HttpError("Assignee was assigned but system failed to get their data!", 500);
+		}
 
 		await journalService.writeJournal({
 			action: 'Assigned Member',
@@ -25,7 +31,7 @@ export const POST = async ({ request }) => {
 			}
 		});
 
-		return ResponseHandler.json(newAssignee, 200);
+		return ResponseHandler.json(findNewAssignee, 200);
 	} catch (error: any) {
 		if (error instanceof HttpError) {
 			return ResponseHandler.json( error.message, error.status);

@@ -25,28 +25,30 @@ export class TaskService {
 
 	async getTask(taskId: string): Promise<ITask> {
 		const task = await this.taskRepository.findSingleTask(taskId);
-		if(!task) {
-			throw new HttpError("Failed to find task!", 404)
+		if (!task) {
+			throw new HttpError('Failed to find task!', 404);
 		}
-		return task
+		return task;
 	}
 
-	async getAssignees(
-		taskId: string
-	): Promise<TaskAssignees[]> {
-		return await this.taskRepository.findAssignees(taskId);
+	async getAllAssignees(taskId: string): Promise<TaskAssignees[]> {
+		return await this.taskRepository.findAllAssignees(taskId);
 	}
 
-	async assignUserToTask(taskId: string, memberId: string): Promise<TaskAssignees> {
+	async getAssigneeByEntryId(entryId: string, taskId: string): Promise<TaskAssignees | undefined> {
+		return await this.taskRepository.findAssigneeById(entryId, taskId)
+	}
+
+	async assignUserToTask(taskId: string, memberId: string): Promise<string> {
 		return await this.taskRepository.assignUserToTask(taskId, memberId);
 	}
 
 	async unassignUserFromTask(taskId: string, memberId: string): Promise<void> {
-		await this.taskRepository.unassignUserFromTask(taskId, memberId)
+		await this.taskRepository.unassignUserFromTask(taskId, memberId);
 	}
 
 	async deleteTask(taskId: string) {
-		await this.taskRepository.deleteTask(taskId)
+		await this.taskRepository.deleteTask(taskId);
 	}
 }
 

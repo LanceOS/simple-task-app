@@ -2,7 +2,7 @@ import type {
 	CreateGroupPayload,
 	CreateMemberPayload,
 	JoinedGroupsResponse,
-	Members
+	GroupMembers
 } from '$lib/@types/Groups.types';
 import { HttpError } from '../helpers/ResponseHandler.helper';
 import { GroupRepository } from '../repositories/GroupRepo.repository';
@@ -49,7 +49,7 @@ export class GroupService {
 
 	async getAllMembers(
 		groupId: string
-	): Promise<Members[]> {
+	): Promise<GroupMembers[]> {
 		return this.groupRepository.findGroupMembers(groupId);
 	}
 

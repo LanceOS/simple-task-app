@@ -1,4 +1,4 @@
-import type { CreateTaskPayload } from '$lib/@types/Groups.types';
+import type { CreateTaskPayload, TaskAssignees } from '$lib/@types/Groups.types';
 import { HttpService } from '../helpers/HttpService';
 import type { ApiResponse } from '$lib/@types/Responses.types';
 import { validateSessionOrRedirect } from '../helpers/ValidateClientAuth.helper';
@@ -21,7 +21,7 @@ export class TaskClientService {
 			groupId
 		};
 
-		return await http.post<ApiResponse, typeof data>(`groups/${groupId}/task/${taskId}/assign_user`, data);
+		return await http.post<TaskAssignees, typeof data>(`groups/${groupId}/task/${taskId}/assign_user`, data);
 	};
 
 	public static async unassignMemberToTask(memberId: string, taskId: string, groupId: string) {

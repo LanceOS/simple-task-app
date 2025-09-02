@@ -16,7 +16,7 @@ export const load: PageServerLoad = async ({ params, request }) => {
 		const groupId = params.group;
 
 		const task = await taskService.getTask(taskId);
-		const assignees = await taskService.getAssignees(taskId);
+		const assignees = await taskService.getAllAssignees(taskId);
 		const groupMembers = await groupService.getAllMembers(groupId);
 		const isUserAdmin = await groupService.isMemberAdmin(user.id!, groupId);
 
