@@ -6,8 +6,8 @@ import { groupMember } from "./group_members.schema";
 
 
 export const taskAssignee = pgTable("task_assignee", {
-    parentTaskId: uuid("parent_task_id").references(() => task.id, { onDelete: 'cascade' }).notNull(),
-    assigneeId: text("assignee_id").references(() => groupMember.userId, { onDelete: 'cascade' }).notNull(),
+    parentTaskId: uuid("parent_task_id").references(() => task.id).notNull(),
+    assigneeId: text("assignee_id").references(() => groupMember.userId).notNull(),
     ...base("task_assignee")
 })
 

@@ -15,13 +15,13 @@
 </script>
 
 {#if route !== '/onboarding'}
-    <nav class="fixed w-full bg-white p-4 z-10">
-        <ul class="mx-auto flex max-w-7xl items-center justify-end gap-4">
+    <nav class="relative w-full bg-primary px-2 h-[40px] z-10">
+        <ul class="mx-auto flex items-center justify-end gap-4 h-full">
             <li>
                 <a
                     href="/"
                     aria-label="Navigate Home"
-                    class="rounded-md p-2 text-base font-medium transition-colors duration-200 hover:bg-[var(--color-base-300)]"
+                    class="p-2 font-medium duration-300 hover:underline underline-offset-4"
                 >
                     Home
                 </a>
@@ -31,7 +31,7 @@
                 <a
                     href="/groups"
                     aria-label="Navigate to Groups"
-                    class="rounded-md px-3 py-2 text-base font-medium transition-colors duration-200 hover:bg-[var(--color-base-300)]"
+                    class="px-3 py-2 font-medium duration-300 hover:underline underline-offset-4"
                 >
                     Groups
                 </a>
@@ -39,24 +39,24 @@
 
             <li class="bg-white">
                 {#if $session?.data?.user}
-                    <Button type="button" aria-label="Sign Out" onclick={signOut}
-                        >Sign Out</Button
+                    <button type="button" aria-label="Sign Out" onclick={signOut} class="cursor-pointer font-bold hover:underline underline-offset-4 bg-primary"
+                        >Sign Out</button
                     >
                 {:else}
                     <Button
                         type="button"
                         aria-label="Sign In"
                         onclick={() => goto('/signin')}
-                        class="primary shadown-md active:transition-y-[1px] rounded-lg px-4 py-2 duration-200 hover:scale-[0.98]"
+                        variant="neutral"
                         >Sign In</Button
                     >
                 {/if}
             </li>
 
             <li class="flex items-center">
-                <Button aria-label="Toggle dark mode" variant="custom" class="cursor-pointer">
-                    <Icon icon="noto:full-moon" class="text-2xl" />
-                </Button>
+                <button aria-label="Toggle dark mode" class="cursor-pointer font-bold hover:underline underline-offset-4 bg-primary">
+                    <Icon icon="gg:dark-mode" class="text-2xl" />
+                </button>
             </li>
         </ul>
     </nav>

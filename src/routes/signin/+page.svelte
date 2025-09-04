@@ -11,6 +11,8 @@
 
 	let signInState: SignInState = $state('idle');
 
+	let loading: boolean = $state(false);
+
 	type SignInState =
 		| 'idle'
 		| 'sending-otp'
@@ -28,6 +30,8 @@
 			return;
 		}
 
+		loading = true;
+
 		try {
 			signInState = 'sending-otp';
 			await SignInService.sendEmailOTP(email);
@@ -39,10 +43,13 @@
 				message: 'Failed to send sign in code!',
 				type: 'error'
 			});
+		} finally {
+			loading = false;
 		}
 	};
 
 	const confirmCode = () => {
+		loading = true;
 		try {
 			SignInService.confirmCode(email, code);
 
@@ -59,57 +66,49 @@
 				message: 'Failed to sign in with provided code!',
 				type: 'error'
 			});
+		} finally {
+			loading = false;
 		}
 	};
 </script>
 
-<main class="flex">
-	<div
-		class="bg-primary hidden h-screen w-full flex-col items-center justify-center gap-4 text-center md:flex"
-	>
-		<h1 class="text-6xl">Welcome to<br />Greater Task</h1>
-		<p class="text-2xl">The easy to use collaboration tool for everyone!</p>
-		<Icon icon="unjs:fs-memo" class="text-7xl" />
-	</div>
-	<div class="flex h-screen w-full items-center justify-center">
-		{#if signInState === 'otp-sent'}
-			<form class="w-3/4 lg:w-1/2 space-y-8 p-6">
-				<h1 class="w-full text-center text-2xl sm:text-5xl">Enter Code:</h1>
-				<Input title="" bind:input={code}/>
-				<Button
-					variant="primary"
-					type="button"
-					aria-label="Confirm Sign In"
-					onclick={confirmCode}
-					placeholder="example@gmail.com"
-					class="w-full justify-center text-lg"
-				>
-					<Icon icon="material-symbols:lock" />
-					Confirm
-				</Button>
-			</form>
-		{:else if signInState === 'idle'}
-			<form class="w-3/4 lg:w-1/2 space-y-8 p-6">
-				<h1 class="w-full text-center text-2xl sm:text-5xl">Sign In</h1>
-				<Input bind:input={email} title="Email" type={"email"}/>
-				<Button
-					variant="primary"
-					type="button"
-					aria-label="Confirm Sign In"
-					onclick={sendEmailOTP}
-					placeholder="example@gmail.com"
-					class="w-full justify-center text-lg"
-				>
-					<Icon icon="material-symbols:mail" />
-					Confirm
-				</Button>
-			</form>
-		{:else if signInState === 'confirming-code'}
+<main class="flex h-screen items-center justify-center px-4">
+	{#if signInState === 'otp-sent'}
+		<form class="max-w-4xl w-full space-y-8 p-6">
+			<h1 class="w-full text-center text-2xl sm:text-5xl">Enter Code:</h1>
+			<Input title="" bind:input={code} />
+			<Button
+				variant="primary"
+				type="button"
+				aria-label="Confirm Sign In"
+				onclick={confirmCode}
+				placeholder="example@gmail.com"
+				class="w-full justify-center text-lg"
+			>
+				<Icon icon="material-symbols:lock" />
+				Confirm
+			</Button>
+		</form>
+	{:else if signInState === 'idle'}
+		<form class="max-w-xl w-full space-y-8 p-6">
+			<h1 class="w-full text-center text-2xl sm:text-5xl">Sign In</h1>
+			<Input bind:input={email} title="Email" type={'email'} />
+			<Button
+				variant="primary"
+				type="button"
+				aria-label="Confirm Sign In"
+				onclick={sendEmailOTP}
+				placeholder="example@gmail.com"
+				class="w-full justify-center text-lg"
+			>
+				<Icon icon="material-symbols:mail" />
+				Confirm
+			</Button>
+		</form>
+	{:else if signInState === 'confirming-code'}
 		<div class="flex items-center gap-4">
-
 			<h1 class="text-5xl">Signing In</h1>
-			<Icon icon="svg-spinners:eclipse" class="text-5xl"/>
+			<Icon icon="svg-spinners:eclipse" class="text-5xl" />
 		</div>
-		{/if}
-	</div>
+	{/if}
 </main>
