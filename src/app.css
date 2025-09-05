@@ -1,16 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
-<<<<<<< HEAD
-@import 'tailwindcss/base';
-@import 'tailwindcss/components';
-@import 'tailwindcss/utilities';
-=======
 @import 'tailwindcss';
 @plugin "daisyui" {
 	themes:
 		light --default,
 		dark;
 }
->>>>>>> defca4a (added daisyui, replaced buttons removed button component, added winston-loki)
 
 * {
     box-sizing: border-box;
@@ -19,57 +13,6 @@
     font-style: normal;
 }
 
-<<<<<<< HEAD
-:root {
-    --color-base-100: oklch(100% 0 0);
-    --color-base-200: oklch(98% 0 0);
-    --color-base-300: oklch(95% 0 0);
-    --color-base-content: oklch(21% 0.006 285.885);
-
-    --color-primary: oklch(57.878% 0.23169 259.655);
-    --color-primary-dark: oklch(43.431% 0.19223 262.763);
-    --color-primary-content: oklch(93% 0.034 272.788);
-
-    --color-secondary: oklch(66% 0.295 322.15);
-    --color-secondary-dark: oklch(56.078% 0.22805 322.682);
-    --color-secondary-content: oklch(94% 0.028 342.258);
-
-    --color-accent: oklch(77% 0.152 181.912);
-    --color-accent-dark: oklch(70% 0.125 183.15);
-    --color-accent-content: oklch(38% 0.063 188.416);
-
-    --color-neutral: oklch(14% 0.005 285.823);
-    --color-neutral-dark: oklch(0% 0 0);
-    --color-neutral-content: oklch(92% 0.004 286.32);
-
-    --color-info: oklch(74% 0.16 232.661);
-    --color-info-dark: oklch(67.662% 0.13985 233.381);
-    --color-info-content: oklch(29% 0.066 243.157);
-
-    --color-success: oklch(76% 0.177 163.223);
-    --color-success-dark: oklch(68.5% 0.15 163.5);
-    --color-success-content: oklch(37% 0.077 168.94);
-
-    --color-warning: oklch(82% 0.189 84.429);
-    --color-warning-dark: oklch(72.359% 0.14885 82.591);
-    --color-warning-content: oklch(41% 0.112 45.904);
-
-    --color-error: oklch(71% 0.194 13.428);
-    --color-error-dark: oklch(60.068% 0.19068 15.635);
-    --color-error-content: oklch(27% 0.105 12.094);
-
-    --radius-selector: 0.5rem;
-    --radius-field: 0.25rem;
-    --radius-box: 0.5rem;
-    --size-selector: 0.25rem;
-    --size-field: 0.25rem;
-    --border: 1px;
-    --depth: 1;
-    --noise: 0;
-}
-
-=======
->>>>>>> defca4a (added daisyui, replaced buttons removed button component, added winston-loki)
 p {
     font-weight: 300;
 }
@@ -80,10 +23,5 @@ h3,
 h4,
 h5,
 h6 {
-<<<<<<< HEAD
-    font-weight: 700;
-}
-=======
 	font-weight: bold;
 }
->>>>>>> defca4a (added daisyui, replaced buttons removed button component, added winston-loki)

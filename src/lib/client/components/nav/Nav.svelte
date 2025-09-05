@@ -14,53 +14,6 @@
 </script>
 
 {#if route !== '/onboarding'}
-<<<<<<< HEAD
-    <nav class="relative w-full bg-primary px-2 h-[40px] z-10">
-        <ul class="mx-auto flex items-center justify-end gap-4 h-full">
-            <li>
-                <a
-                    href="/"
-                    aria-label="Navigate Home"
-                    class="p-2 font-medium duration-300 hover:underline underline-offset-4"
-                >
-                    Home
-                </a>
-            </li>
-
-            <li>
-                <a
-                    href="/groups"
-                    aria-label="Navigate to Groups"
-                    class="px-3 py-2 font-medium duration-300 hover:underline underline-offset-4"
-                >
-                    Groups
-                </a>
-            </li>
-
-            <li class="bg-white">
-                {#if $session?.data?.user}
-                    <button type="button" aria-label="Sign Out" onclick={signOut} class="cursor-pointer font-bold hover:underline underline-offset-4 bg-primary"
-                        >Sign Out</button
-                    >
-                {:else}
-                    <Button
-                        type="button"
-                        aria-label="Sign In"
-                        onclick={() => goto('/signin')}
-                        variant="neutral"
-                        >Sign In</Button
-                    >
-                {/if}
-            </li>
-
-            <li class="flex items-center">
-                <button aria-label="Toggle dark mode" class="cursor-pointer font-bold hover:underline underline-offset-4 bg-primary">
-                    <Icon icon="gg:dark-mode" class="text-2xl" />
-                </button>
-            </li>
-        </ul>
-    </nav>
-=======
 	<nav class="fixed z-10 w-full p-4">
 		<ul class="mx-auto flex max-w-7xl items-center justify-end gap-4">
 			<li>
@@ -111,5 +64,4 @@
 			</li>
 		</ul>
 	</nav>
->>>>>>> defca4a (added daisyui, replaced buttons removed button component, added winston-loki)
 {/if}

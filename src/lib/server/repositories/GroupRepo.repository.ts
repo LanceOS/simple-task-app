@@ -80,6 +80,6 @@ export class GroupRepository {
 	}
 
 	async deleteGroup(groupIds: string[], userId: string): Promise<void> {
-		await this.db.delete(taskGroup).where(and(inArray(taskGroup.id, groupIds), eq(taskGroup.ownerId, userId)))
+		await this.db.update(taskGroup).set({ isDeleted: true }).where(and(inArray(taskGroup, groupIds), eq(taskGroup.ownerId, userId)))
 	}
 }

@@ -7,25 +7,29 @@ import { journalService } from '$lib/server/services/Journalist.serverutil';
 import { taskService } from '$lib/server/services/Tasker.serverutil';
 import type { RequestHandler, RequestEvent } from './$types';
 
-export const DELETE: RequestHandler = (async ({ request }: RequestEvent) => {
+export const DELETE: RequestHandler = (async (event: RequestEvent) => {
     try {
+        const { request } = event;
         const body = await request.json();
 
         const user = await GetUser(request);
+
+        const clientIpAddress = event.getClientAddress()
 
         if(!user) {
             throw new HttpError("User must be signed in to delete task!", 401)
         }
 
         await taskService.deleteTask(body.taskId)
-        
+
         await journalService.writeJournal({
             action: "Deleted task",
             description: "User deleted a task from their group.",
             metadata: {
                 parentGroupId: body.groupId,
                 taskId: body.taskId,
-                userId: user.id
+                userId: user.id,
+                deletedFromAddress: clientIpAddress
             }
         })
 
