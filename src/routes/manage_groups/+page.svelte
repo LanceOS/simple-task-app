@@ -2,7 +2,6 @@
 	import type { JoinedGroupsResponse } from '$lib/@types/Groups.types';
 	import { authClient } from '$lib/auth-client';
 	import { Toaster } from '$lib/client/components/toaster/Toaster';
-	import Button from '$lib/client/components/ui/Button.svelte';
 	import { GroupClient } from '$lib/client/services/GroupClient.clientutil';
 	import type { IGroups } from '$lib/server/schemas/task_group.schema';
 	import Icon from '@iconify/svelte';
@@ -139,13 +138,13 @@
 					{#each ownedGroups as owned}
 						<div class="bg-base-100 flex items-center justify-between rounded-lg p-4">
 							<div class="flex items-center gap-3">
-								<Icon icon="mdi:folder-outline" class="info rounded-md p-2 text-3xl" />
+								<Icon icon="unjs:unbuild" class="bg-info rounded-md p-2 text-4xl" />
 								<p class="text-content font-medium">{owned.name}</p>
 							</div>
 							<div class="flex gap-2">
 								<a
 									href={`/groups/${owned.id}`}
-									class="primary rounded-md px-4 py-2 text-sm font-bold"
+									class="btn btn-primary btn-sm"
 									aria-label={`Go to ${owned.name}`}
 								>
 									View
@@ -153,8 +152,8 @@
 								<button
 									type="button"
 									aria-label="Select group"
-									class={`rounded-md px-4 py-2 text-sm font-bold duration-200 cursor-pointer
-										${ownedGroupMap.get(owned.id) ? 'danger' : 'btn-warning'}`}
+									class={`btn btn-sm
+										${ownedGroupMap.get(owned.id) ? 'btn-error' : 'btn-warning'}`}
 									onclick={() => selectOwnedGroup(owned.id)}
 								>
 									{ownedGroupMap.get(owned.id) ? 'Selected' : 'Select'}
@@ -163,25 +162,24 @@
 						</div>
 					{/each}
 
-					<!-- Delete Button (only visible when at least one selected) -->
 					{#if ownedGroupDeleteButtonVisible}
 						<div class="flex justify-end pt-4">
 							{#if !confirmingDelete}
-								<Button
+								<button
 									onclick={() => (confirmingDelete = true)}
 									disabled={disableActionButtons}
-									variant="danger"
+									class="btn btn-error"
 								>
 									Delete Selected
-								</Button>
+								</button>
 							{:else}
 								<div class="flex gap-3">
-									<Button onclick={deleteGroup} disabled={disableActionButtons} variant="danger">
+									<button onclick={deleteGroup} disabled={disableActionButtons} class="btn btn-error">
 										Confirm Delete
-									</Button>
-									<Button onclick={() => (confirmingDelete = false)} variant="neutral">
+									</button>
+									<button onclick={() => (confirmingDelete = false)} class="btn btn-neutral">
 										Cancel
-									</Button>
+									</button>
 								</div>
 							{/if}
 						</div>
@@ -206,7 +204,7 @@
 							<div class="flex gap-2">
 								<a
 									href={`/groups/${joined.id}`}
-									class="primary rounded-md px-4 py-2 text-sm font-bold"
+									class="btn btn-primary btn-sm"
 									aria-label={`Go to ${joined.name}`}
 								>
 									View
@@ -214,8 +212,8 @@
 								<button
 									type="button"
 									aria-label="Select group"
-									class={`rounded-md px-4 py-2 text-sm font-bold duration-200
-										${joinedGroupMap.get(joined.id) ? 'danger' : 'btn-warning'}`}
+									class={`btn
+										${joinedGroupMap.get(joined.id) ? 'btn-error' : 'btn-warning'}`}
 									onclick={() => selectJoinedGroup(joined.id)}
 								>
 									{joinedGroupMap.get(joined.id) ? 'Selected' : 'Select'}
@@ -228,25 +226,25 @@
 					{#if joinedGroupLeaveButtonVisible}
 						<div class="flex justify-end pt-4">
 							{#if !confirmingLeave}
-								<Button
+								<button
 									onclick={() => (confirmingLeave = true)}
 									disabled={disableActionButtons}
-									variant="danger"
+									class="btn btn-error"
 								>
 									Leave Selected
-								</Button>
+								</button>
 							{:else}
 								<div class="flex gap-3">
-									<Button
+									<button
 										onclick={leaveJoinedGroup}
 										disabled={disableActionButtons}
-										variant="danger"
+										class="btn btn-error"
 									>
 										Confirm Leave
-									</Button>
-									<Button onclick={() => (confirmingLeave = false)} variant="neutral">
+									</button>
+									<button onclick={() => (confirmingLeave = false)} class="btn btn-neutral">
 										Cancel
-									</Button>
+									</button>
 								</div>
 							{/if}
 						</div>

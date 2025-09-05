@@ -26,7 +26,7 @@
 		name={title}
 		id={title}
 		{maxlength}
-		class="bg-base-100 border-base-300 focus:ring-primary text-content w-full resize-none rounded-lg border p-3 focus:ring-2 focus:outline-none"
+		class="bg-base-100 focus:ring-neutral text-content border-neutral w-full resize-none rounded-lg border p-3 focus:ring-2 focus:outline-none"
 		bind:value={input}
 		{...rest}
 	></textarea>

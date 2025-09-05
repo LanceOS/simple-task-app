@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { Toaster } from '$lib/client/components/toaster/Toaster';
-	import Button from '$lib/client/components/ui/Button.svelte';
 	import Input from '$lib/client/components/ui/Input.svelte';
 	import { SignInService } from '$lib/client/services/SigninService.clientutil';
 	import Icon from '@iconify/svelte';
@@ -72,6 +71,7 @@
 	};
 </script>
 
+<<<<<<< HEAD
 <main class="flex h-screen items-center justify-center px-4">
 	{#if signInState === 'otp-sent'}
 		<form class="max-w-4xl w-full space-y-8 p-6">
@@ -106,6 +106,48 @@
 			</Button>
 		</form>
 	{:else if signInState === 'confirming-code'}
+=======
+<main class="flex">
+	<div
+		class="bg-primary hidden h-screen w-full flex-col items-center justify-center gap-4 text-center text-base-100 md:flex"
+	>
+		<h1 class="text-6xl">Welcome to<br />Greater Task</h1>
+		<p class="text-2xl">The easy to use collaboration tool for everyone!</p>
+		<Icon icon="unjs:fs-memo" class="text-7xl" />
+	</div>
+	<div class="flex h-screen w-full items-center justify-center">
+		{#if signInState === 'otp-sent'}
+			<form class="w-3/4 lg:w-1/2 space-y-8 p-6">
+				<h1 class="w-full text-center text-2xl sm:text-5xl">Enter Code:</h1>
+				<Input title="" bind:input={code}/>
+				<button
+					type="button"
+					aria-label="Confirm Sign In"
+					onclick={confirmCode}
+					placeholder="example@gmail.com"
+					class="btn btn-primary w-full"
+				>
+					<Icon icon="material-symbols:lock" />
+					Confirm
+				</button>
+			</form>
+		{:else if signInState === 'idle'}
+			<form class="w-3/4 lg:w-1/2 space-y-8 p-6">
+				<h1 class="w-full text-center text-2xl sm:text-5xl">Sign In</h1>
+				<Input bind:input={email} title="Email" type={"email"}/>
+				<button
+					type="button"
+					aria-label="Confirm Sign In"
+					onclick={sendEmailOTP}
+					placeholder="example@gmail.com"
+					class="btn btn-primary w-full"
+				>
+					<Icon icon="material-symbols:mail" />
+					Confirm
+				</button>
+			</form>
+		{:else if signInState === 'confirming-code'}
+>>>>>>> defca4a (added daisyui, replaced buttons removed button component, added winston-loki)
 		<div class="flex items-center gap-4">
 			<h1 class="text-5xl">Signing In</h1>
 			<Icon icon="svg-spinners:eclipse" class="text-5xl" />

@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import Button from '$lib/client/components/ui/Button.svelte';
 	import Input from '$lib/client/components/ui/Input.svelte';
 	import Textarea from '$lib/client/components/ui/Textarea.svelte';
 	import { Inviter } from '$lib/client/services/Inviter.clientutil';
@@ -110,10 +109,10 @@
 						bind:input={newTask.description}
 					/>
 					<div class="flex gap-4">
-						<Button type="button" onclick={createTask} disabled={loading}>Create Task</Button>
-						<Button variant="neutral" type="button" onclick={() => (createWindow = false)}>
+						<button type="button" onclick={createTask} disabled={loading} class="btn btn-primary">Create Task</button>
+						<button class="btn btn-neutral" type="button" onclick={() => (createWindow = false)}>
 							Cancel
-						</Button>
+						</button>
 					</div>
 				</form>
 			</section>
@@ -123,21 +122,20 @@
 		<section class="space-y-6">
 			<div class="flex items-center justify-between">
 				<div class="flex items-center gap-2">
-					<Button
+					<button
 						type="button"
-						variant="custom"
 						aria-label="Return to groups."
-						class="neutral hidden h-full cursor-pointer rounded-lg p-2 sm:flex"
+						class="btn btn-neutral"
 						onclick={() => goto('/groups')}
 					>
 						<Icon icon="grommet-icons:return" />
-					</Button>
+					</button>
 					<h2 class="text-content text-2xl font-bold">Tasks</h2>
 				</div>
 				{#if isUserAdmin}
-					<Button type="button" onclick={() => (createWindow = !createWindow)}>
+					<button class="btn btn-primary" type="button" onclick={() => (createWindow = !createWindow)}>
 						+ Create New Task
-					</Button>
+					</button>
 				{/if}
 			</div>
 
@@ -165,8 +163,8 @@
 							<div class="flex items-center justify-between">
 								<span
 									class={task.completed
-										? 'success rounded-full px-3 py-1 text-xs font-medium'
-										: 'warning rounded-full px-3 py-1 text-xs font-medium'}
+										? 'bg-success rounded-full px-3 py-1 text-xs font-medium'
+										: 'bg-warning rounded-full px-3 py-1 text-xs font-medium'}
 								>
 									{task.completed ? 'Completed' : 'In Progress'}
 								</span>
@@ -178,10 +176,10 @@
 					{/each}
 				</div>
 			{:else}
-				<div class="bg-base-200 rounded-xl p-12 text-center">
-					<Icon icon="noto:writing-hand" class="mb-4 w-full text-7xl" />
-					<h3 class="text-content mb-2 text-xl font-bold">No Tasks Yet</h3>
-					<p class="text-neutral mb-6">Get started by creating your first task!</p>
+				<div class="bg-base-200 rounded-xl p-12 text-center space-y-4">
+					<Icon icon="noto:writing-hand" class=" w-full text-7xl" />
+					<h3 class="text-content text-xl font-bold">No Tasks Yet</h3>
+					<p>Get started by creating your first task!</p>
 				</div>
 			{/if}
 		</section>
@@ -205,15 +203,14 @@
 									placeholder="example@gmail.com"
 									bind:value={inviteeEmail}
 								/>
-								<Button
+								<button
 									type="button"
-									variant="secondary"
-									class="w-full sm:w-40"
+									class="btn btn-primary"
 									onclick={addMember}
 									disabled={loading}
 								>
 									Send Invite
-								</Button>
+								</button>
 							</div>
 						</div>
 					</form>
@@ -229,7 +226,7 @@
 					<div class="space-y-4">
 						{#each groupMembers as member}
 							<div class="bg-base-100 flex items-center gap-4 rounded-lg p-4">
-								<Icon icon="noto:bust-in-silhouette" class="info rounded-md p-2 text-4xl" />
+								<Icon icon="noto:bust-in-silhouette" class="bg-info rounded-md p-2 text-4xl" />
 								<div class="flex-1">
 									<h3 class="text-content font-semibold">{member.member.name}</h3>
 									<p class="text-neutral text-sm">Joined {member.createdAt.toLocaleDateString()}</p>
@@ -240,7 +237,7 @@
 					</div>
 				{:else}
 					<div class="space-y-2 py-8 text-center">
-						<Icon icon="noto:busts-in-silhouette" class="info rounded-md p-2 text-4xl" />
+						<Icon icon="noto:busts-in-silhouette" class="bg-info rounded-md p-2 text-4xl" />
 						<h3 class="text-content text-lg font-semibold">No Members Yet</h3>
 						<p class="text-neutral">Invite people to start collaborating!</p>
 					</div>

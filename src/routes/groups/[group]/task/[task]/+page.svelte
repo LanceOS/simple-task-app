@@ -1,6 +1,5 @@
 <script lang="ts">
 	import type { PageProps } from './$types';
-	import Button from '$lib/client/components/ui/Button.svelte';
 	import Icon from '@iconify/svelte';
 	import { Toaster } from '$lib/client/components/toaster/Toaster';
 	import { page } from '$app/state';
@@ -130,27 +129,26 @@
 		<section class="space-y-6">
 			<div class="flex items-center justify-between gap-4">
 				<div class="flex items-center gap-2">
-					<Button
+					<button
 						type="button"
-						variant="custom"
 						disabled={loading}
 						aria-label="Return to groups."
-						class="neutral hidden h-full cursor-pointer rounded-lg p-2 sm:flex"
+						class="btn btn-neutral"
 						onclick={() => goto(`/groups/${groupId}`)}
 					>
 						<Icon icon="grommet-icons:return" />
-					</Button>
+					</button>
 					<h2 class="text-content text-2xl font-bold">Assignees</h2>
 				</div>
 
 				<!-- Delete Task Button -->
 				{#if confirmDelete}
 					<div class="flex items-center gap-2">
-						<Button variant="danger" onclick={handleDelete} disabled={loading} aria-label="Confirm task deletion">Confirm Delete</Button>
-						<Button variant="neutral" onclick={() => (confirmDelete = false)} aria-label="Cancel task deletion">Cancel</Button>
+						<button class="btn btn-error" onclick={handleDelete} disabled={loading} aria-label="Confirm task deletion">Confirm Delete</button>
+						<button class="btn btn-neutral" onclick={() => (confirmDelete = false)} aria-label="Cancel task deletion">Cancel</button>
 					</div>
 				{:else}
-					<Button variant="danger" onclick={() => (confirmDelete = true)} aria-label="Delete current task.">Delete Task</Button>
+					<button class="btn btn-error" onclick={() => (confirmDelete = true)} aria-label="Delete current task.">Delete Task</button>
 				{/if}
 			</div>
 
@@ -168,14 +166,14 @@
 								</div>
 								<div class="flex items-center gap-4">
 									<span class="success rounded-full px-3 py-1 text-xs font-medium">Assigned</span>
-									<Button
-										class="h-6"
+									<button
+										class="btn btn-primary btn-sm"
 										aria-label="Unassign user from task."
 										disabled={loading}
 										onclick={() => unassignMember(assignee.assigneeId)}
 									>
 										Unassign Member
-									</Button>
+									</button>
 								</div>
 							</div>
 						{/each}
@@ -203,8 +201,8 @@
 										<Icon icon="noto:bust-in-silhouette" class="info rounded-md p-2 text-3xl" />
 										<p class="text-content font-medium">{member.member.name}</p>
 									</div>
-									<Button variant="secondary" onclick={() => assignMember(member.userId)} disabled={loading}
-										>Assign</Button
+									<button class="btn btn-secondary" onclick={() => assignMember(member.userId)} disabled={loading}
+										>Assign</button
 									>
 								</div>
 							{/each}

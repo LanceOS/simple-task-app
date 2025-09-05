@@ -1,7 +1,16 @@
 @import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
+<<<<<<< HEAD
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
+=======
+@import 'tailwindcss';
+@plugin "daisyui" {
+	themes:
+		light --default,
+		dark;
+}
+>>>>>>> defca4a (added daisyui, replaced buttons removed button component, added winston-loki)
 
 * {
     box-sizing: border-box;
@@ -10,6 +19,7 @@
     font-style: normal;
 }
 
+<<<<<<< HEAD
 :root {
     --color-base-100: oklch(100% 0 0);
     --color-base-200: oklch(98% 0 0);
@@ -58,6 +68,8 @@
     --noise: 0;
 }
 
+=======
+>>>>>>> defca4a (added daisyui, replaced buttons removed button component, added winston-loki)
 p {
     font-weight: 300;
 }
@@ -68,5 +80,10 @@ h3,
 h4,
 h5,
 h6 {
+<<<<<<< HEAD
     font-weight: 700;
 }
+=======
+	font-weight: bold;
+}
+>>>>>>> defca4a (added daisyui, replaced buttons removed button component, added winston-loki)
