@@ -20,7 +20,7 @@ export const load: PageServerLoad = async ({ params, request }) => {
 
         const group = await groupService.getGroupById(groupId)
 
-        if(!group) {
+        if(!group || group.isDeleted === true) {
             throw new HttpError("Failed to find group!", 404)
         }
 

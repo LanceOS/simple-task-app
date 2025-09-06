@@ -15,6 +15,12 @@ export const load: PageServerLoad = async ({ params, request }) => {
 		const taskId = params.task;
 		const groupId = params.group;
 
+		const group = await groupService.getGroupById(groupId);
+
+		if(!group || group.isDeleted === true) {
+			throw redirect(404, '/groups')
+		}	
+
 		const task = await taskService.getTask(taskId);
 		const assignees = await taskService.getAllAssignees(taskId);
 		const groupMembers = await groupService.getAllMembers(groupId);
