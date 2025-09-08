@@ -1,6 +1,7 @@
 // consumer.js
 
 import amqp from "amqplib";
+import { DrizzleDB } from "./database/Drizzle.ts";
 
 async function consumeMessages() {
     try {
@@ -13,12 +14,10 @@ async function consumeMessages() {
         console.log("Consumer is waiting for messages...");
         
         channel.consume('deleteque', async (msg) => {
-            console.log("Raw message: ", msg)
             if (msg !== null) {
                 const content = JSON.parse(msg.content.toString());
-
                 try {
-                    console.log(content)
+
                     channel.ack(msg);
                 } catch (error) {
                     console.error(`Error processing message for parent ID ${content}:`, error);

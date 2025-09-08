@@ -1,11 +1,11 @@
-import "dotenv"
+import "dotenv/config"
 
 // Import core Drizzle ORM and node-postgres functionality
 import { drizzle } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";
 
 // Import database schemas
-import * as schema from "./schemas/barrel/SchemaBarrel"
+import * as schema from "./schemas/barrel/SchemaBarrel.ts"
 
 // Construct the database connection URL
 const databaseUrl = `postgresql://${process.env.PRIVATE_POSTGRES_USER}:${process.env.PRIVATE_POSTGRES_PASSWORD}@${process.env.PRIVATE_POSTGRES_URL}/${process.env.PRIVATE_POSTGRES_DB}`;

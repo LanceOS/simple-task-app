@@ -1,8 +1,8 @@
 import { pgTable, text, uuid } from "drizzle-orm/pg-core";
-import { task } from "./task.schema";
-import { base } from "./structures/SchemaBase.schema";
+import { task } from "./task.schema.ts";
+import { base } from "./structures/SchemaBase.schema.ts";
 import type { InferSelectModel } from "drizzle-orm";
-import { groupMember } from "./group_members.schema";
+import { groupMember } from "./group_members.schema.ts";
 
 
 export const taskAssignee = pgTable("task_assignee", {

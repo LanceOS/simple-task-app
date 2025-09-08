@@ -1,9 +1,9 @@
 import { relations } from "drizzle-orm";
-import { user } from "./authentication";
-import { taskAssignee } from "./task_assignee.schema";
-import { task } from "./task.schema";
-import { groupMember } from "./group_members.schema";
-import { taskGroup } from "./task_group.schema";
+import { user } from "./authentication.ts";
+import { taskAssignee } from "./task_assignee.schema.ts";
+import { task } from "./task.schema.ts";
+import { groupMember } from "./group_members.schema.ts";
+import { taskGroup } from "./task_group.schema.ts";
 
 export const userRelations = relations(user, ({ many }) => ({
     taskAssignees: many(taskAssignee),

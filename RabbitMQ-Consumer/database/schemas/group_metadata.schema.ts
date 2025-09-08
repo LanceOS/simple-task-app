@@ -1,5 +1,5 @@
 import { integer, pgTable, uuid } from "drizzle-orm/pg-core";
-import { taskGroup } from "./task_group.schema";
+import { taskGroup } from "./task_group.schema.ts";
 
 
 

@@ -1,6 +1,6 @@
 import { pgTable, text } from "drizzle-orm/pg-core";
-import { base } from "./structures/SchemaBase.schema";
-import { user } from "./authentication";
+import { base } from "./structures/SchemaBase.schema.ts";
+import { user } from "./authentication.ts";
 import type { InferSelectModel } from "drizzle-orm";
 
 

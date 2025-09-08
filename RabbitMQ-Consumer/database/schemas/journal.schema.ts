@@ -1,5 +1,5 @@
 import { json, pgTable, text } from "drizzle-orm/pg-core";
-import { base } from "./structures/SchemaBase.schema";
+import { base } from "./structures/SchemaBase.schema.ts";
 
 
 

@@ -1,6 +1,6 @@
 import { boolean, pgTable, text, uuid } from "drizzle-orm/pg-core";
-import { base } from "./structures/SchemaBase.schema";
-import { taskGroup } from "./task_group.schema";
+import { base } from "./structures/SchemaBase.schema.ts";
+import { taskGroup } from "./task_group.schema.ts";
 import type { InferSelectModel } from "drizzle-orm";
 
 

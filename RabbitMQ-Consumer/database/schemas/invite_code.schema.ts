@@ -1,7 +1,7 @@
 import { pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
-import { base } from './structures/SchemaBase.schema';
-import { taskGroup } from './task_group.schema';
-import { user } from './authentication';
+import { base } from './structures/SchemaBase.schema.ts';
+import { taskGroup } from './task_group.schema.ts';
+import { user } from './authentication.ts';
 import type { InferSelectModel } from 'drizzle-orm';
 
 export const inviteCode = pgTable('invite_code', {
