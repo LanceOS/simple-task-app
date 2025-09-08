@@ -1,15 +1,17 @@
 import { HttpError, ResponseHandler } from '$lib/server/helpers/ResponseHandler.helper';
 import { GetUser } from '$lib/server/helpers/UserCheck.helper';
+import { rabbitMQClient } from '$lib/server/providers/RabbitSender';
 import { groupService } from '$lib/server/services/Group.serverutil';
 import { journalService } from '$lib/server/services/Journalist.serverutil';
 import type { RequestEvent, RequestHandler } from './$types';
 
 export const DELETE: RequestHandler = async ({ request }: RequestEvent) => {
+	
 	try {
 		const body = await request.json();
-
+		
 		const user = await GetUser(request);
-
+	
 		if (!user) {
 			throw new HttpError('User must be signed in to delete group!', 401);
 		}
@@ -24,6 +26,8 @@ export const DELETE: RequestHandler = async ({ request }: RequestEvent) => {
 				deletedByUserId: user.id
 			}
 		});
+
+		await rabbitMQClient.send({ groupIds: body})
 
 		return ResponseHandler.json('Successfully deleted groups!', 200);
 	} catch (error: any) {

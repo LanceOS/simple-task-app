@@ -13,16 +13,15 @@ async function consumeMessages() {
         console.log("Consumer is waiting for messages...");
         
         channel.consume('deleteque', async (msg) => {
+            console.log("Raw message: ", msg)
             if (msg !== null) {
-                const parentId = JSON.parse(msg.content.toString()).parentId;
-                console.log(`Received message to delete children of parent ID: ${parentId}`);
+                const content = JSON.parse(msg.content.toString());
 
                 try {
-
+                    console.log(content)
                     channel.ack(msg);
-                    console.log(`Successfully processed and acknowledged message for parent ID: ${parentId}`);
                 } catch (error) {
-                    console.error(`Error processing message for parent ID ${parentId}:`, error);
+                    console.error(`Error processing message for parent ID ${content}:`, error);
                     channel.nack(msg); 
                 }
             }

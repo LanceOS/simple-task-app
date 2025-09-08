@@ -2,23 +2,28 @@ import { DrizzleDB } from '$lib/Drizzle';
 import { and, eq, inArray, ne } from 'drizzle-orm';
 import { taskGroup, type IGroups } from '../schemas/task_group.schema';
 import { groupMember } from '../schemas/group_members.schema';
-import type { CreateGroupPayload, CreateMemberPayload, GroupMembers, JoinedGroupsResponse } from '$lib/@types/Groups.types';
+import type {
+	CreateGroupPayload,
+	CreateMemberPayload,
+	GroupMembers,
+	JoinedGroupsResponse
+} from '$lib/@types/Groups.types';
 
 export class GroupRepository {
 	private db = DrizzleDB;
 
 	async findGroupById(groupId: string): Promise<IGroups | undefined> {
 		return await this.db.query.taskGroup.findFirst({
-			where: eq(taskGroup.id, groupId)
-		})
+			where: and(eq(taskGroup.id, groupId), eq(taskGroup.isDeleted, false))
+		});
 	}
 
 	async findGroupsByOwnerId(userId: string) {
 		return await this.db.query.taskGroup.findMany({
-			where: eq(taskGroup.ownerId, userId)
+			where: and(eq(taskGroup.ownerId, userId), eq(taskGroup.isDeleted, false))
 		});
 	}
-	
+
 	async findJoinedGroups(userId: string): Promise<JoinedGroupsResponse[]> {
 		return await this.db
 			.select({
@@ -28,12 +33,18 @@ export class GroupRepository {
 			})
 			.from(taskGroup)
 			.innerJoin(groupMember, eq(taskGroup.id, groupMember.parentGroupId))
-			.where(and(eq(groupMember.userId, userId), ne(taskGroup.ownerId, userId)));
+			.where(
+				and(
+					eq(groupMember.userId, userId),
+					ne(taskGroup.ownerId, userId),
+					eq(groupMember.isDeleted, false)
+				)
+			);
 	}
 
 	async create(groupData: CreateGroupPayload): Promise<IGroups> {
 		const [group] = await this.db.insert(taskGroup).values(groupData).returning();
-		return group
+		return group;
 	}
 
 	async addMember(memberData: CreateMemberPayload): Promise<void> {
@@ -41,12 +52,21 @@ export class GroupRepository {
 	}
 
 	async removeMember(groupIds: string[], userId: string): Promise<void> {
-		await this.db.delete(groupMember).where(and(inArray(groupMember.parentGroupId, groupIds), eq(groupMember.userId, userId)))
+		await this.db
+			.update(groupMember)
+			.set({ isDeleted: true })
+			.where(
+				and(
+					inArray(groupMember.parentGroupId, groupIds),
+					eq(groupMember.userId, userId),
+					eq(groupMember.isDeleted, false)
+				)
+			);
 	}
 
 	async findGroupMembers(groupId: string): Promise<GroupMembers[]> {
 		return await this.db.query.groupMember.findMany({
-			where: eq(groupMember.parentGroupId, groupId),
+			where: and(eq(groupMember.parentGroupId, groupId), eq(groupMember.isDeleted, false)),
 			with: {
 				member: {
 					columns: {
@@ -55,24 +75,32 @@ export class GroupRepository {
 						image: true
 					}
 				}
-			},
+			}
 		});
 	}
 
 	async isCurrentUserAdmin(userId: string, groupId: string): Promise<boolean> {
 		const member = await this.db.query.groupMember.findFirst({
-			where: and(eq(groupMember.parentGroupId, groupId), eq(groupMember.userId, userId)),
+			where: and(
+				eq(groupMember.parentGroupId, groupId),
+				eq(groupMember.userId, userId),
+				eq(groupMember.isDeleted, false)
+			),
 			columns: {
 				isAdmin: true
 			}
 		});
 
-		return !!member?.isAdmin
+		return !!member?.isAdmin;
 	}
 
 	async isUserMember(groupId: string, userId: string): Promise<boolean> {
 		const result = await this.db.query.groupMember.findFirst({
-			where: and(eq(groupMember.userId, userId), eq(groupMember.parentGroupId, groupId)),
+			where: and(
+				eq(groupMember.userId, userId),
+				eq(groupMember.parentGroupId, groupId),
+				eq(groupMember.isDeleted, false)
+			),
 			columns: { id: true }
 		});
 
@@ -80,6 +108,15 @@ export class GroupRepository {
 	}
 
 	async deleteGroup(groupIds: string[], userId: string): Promise<void> {
-		await this.db.update(taskGroup).set({ isDeleted: true }).where(and(inArray(taskGroup, groupIds), eq(taskGroup.ownerId, userId)))
+		await this.db
+			.update(taskGroup)
+			.set({ isDeleted: true })
+			.where(
+				and(
+					inArray(taskGroup.id, groupIds),
+					eq(taskGroup.ownerId, userId),
+					eq(taskGroup.isDeleted, false)
+				)
+			);
 	}
 }

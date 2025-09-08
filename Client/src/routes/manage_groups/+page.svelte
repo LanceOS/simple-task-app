@@ -6,16 +6,12 @@
 	import type { IGroups } from '$lib/server/schemas/task_group.schema';
 	import Icon from '@iconify/svelte';
 	import type { PageProps } from './$types';
-	import { http } from '$lib/client/helpers/HttpService';
 
 	const { data }: PageProps = $props();
 	let ownedGroups: IGroups[] = $state(data.ownedGroups);
 	let joinedGroups: JoinedGroupsResponse[] = $state(data.joinedGroups);
 
 	let disableActionButtons: boolean = $state(false);
-
-	const session = authClient.useSession();
-	const user = $session.data?.user;
 
 	let ownedGroupDeleteButtonVisible: boolean = $state(false);
 	let joinedGroupLeaveButtonVisible: boolean = $state(false);
@@ -50,28 +46,20 @@
 	 * saved in an array. Then the array is passed to the delete group endpoint.
 	 */
 	const deleteGroup = async () => {
-		if (!user) {
-			Toaster.ejectToast({
-				message: 'Must be signed in to delete posts!',
-				type: 'info'
-			});
-			return;
-		}
 		disableActionButtons = true;
 		const arr: string[] = [];
 		for (const [key, value] of ownedGroupMap) {
 			const [group] = ownedGroups.filter((group) => group.id === key);
-			if (value === true && group.ownerId === user?.id) {
+			if (value === true) {
 				arr.push(key);
 			}
 		}
+		console.log(arr)
 		try {
 			await GroupClient.deleteGroup(arr);
 			ownedGroups = ownedGroups.filter((group) => !arr.includes(group.id));
-			ownedGroupMap.clear();
+			ownedGroupMap = new Map();
 			ownedGroupDeleteButtonVisible = false;
-			disableActionButtons = false;
-
 			Toaster.ejectToast({
 				message: 'Successfully deleted group!',
 				type: 'success'
@@ -81,17 +69,12 @@
 				message: error.message || 'Failed to delete group!',
 				type: 'error'
 			});
+		} finally {
+			disableActionButtons = false;
 		}
 	};
 
 	const leaveJoinedGroup = async () => {
-		if (!user) {
-			Toaster.ejectToast({
-				message: 'Must be signed in to leave a group!',
-				type: 'info'
-			});
-			return;
-		}
 		disableActionButtons = true;
 		const arr: string[] = [];
 		for (const [key, value] of joinedGroupMap) {
@@ -102,7 +85,7 @@
 		try {
 			await GroupClient.leaveGroups(arr);
 			joinedGroups = joinedGroups.filter((group) => !arr.includes(group.id));
-			joinedGroupMap.clear();
+			joinedGroupMap = new Map();
 			joinedGroupLeaveButtonVisible = false;
 			disableActionButtons = false;
 
@@ -115,6 +98,8 @@
 				message: error.message || 'Failed to leave group!',
 				type: 'error'
 			});
+		} finally {
+			disableActionButtons = false;
 		}
 	};
 </script>
@@ -174,7 +159,11 @@
 								</button>
 							{:else}
 								<div class="flex gap-3">
-									<button onclick={deleteGroup} disabled={disableActionButtons} class="btn btn-error">
+									<button
+										onclick={deleteGroup}
+										disabled={disableActionButtons}
+										class="btn btn-error"
+									>
 										Confirm Delete
 									</button>
 									<button onclick={() => (confirmingDelete = false)} class="btn btn-neutral">
