@@ -36,6 +36,10 @@
 			await SignInService.sendEmailOTP(email);
 
 			signInState = 'otp-sent';
+			Toaster.ejectToast({
+				message: 'OTP sent! Check your inbox.',
+				type: 'success'
+			});
 		} catch (error) {
 			signInState = 'error';
 			Toaster.ejectToast({
@@ -47,20 +51,20 @@
 		}
 	};
 
-	const confirmCode = () => {
+	const confirmCode = async () => {
 		loading = true;
 		try {
-			SignInService.confirmCode(email, code);
-
 			signInState = 'confirming-code';
-			setTimeout(() => {
-				Toaster.ejectToast({
-					message: 'Signed In!',
-					type: 'success'
-				});
-				goto('/');
-			}, 1500);
+			await SignInService.confirmCode(email, code);
+
+			signInState = 'signed-in';
+			Toaster.ejectToast({
+				message: 'Signed In!',
+				type: 'success'
+			});
+			setTimeout(() => goto('/'), 1000);
 		} catch (error) {
+			signInState = 'error';
 			Toaster.ejectToast({
 				message: 'Failed to sign in with provided code!',
 				type: 'error'
@@ -71,43 +75,8 @@
 	};
 </script>
 
-<<<<<<< HEAD
-<main class="flex h-screen items-center justify-center px-4">
-	{#if signInState === 'otp-sent'}
-		<form class="max-w-4xl w-full space-y-8 p-6">
-			<h1 class="w-full text-center text-2xl sm:text-5xl">Enter Code:</h1>
-			<Input title="" bind:input={code} />
-			<Button
-				variant="primary"
-				type="button"
-				aria-label="Confirm Sign In"
-				onclick={confirmCode}
-				placeholder="example@gmail.com"
-				class="w-full justify-center text-lg"
-			>
-				<Icon icon="material-symbols:lock" />
-				Confirm
-			</Button>
-		</form>
-	{:else if signInState === 'idle'}
-		<form class="max-w-xl w-full space-y-8 p-6">
-			<h1 class="w-full text-center text-2xl sm:text-5xl">Sign In</h1>
-			<Input bind:input={email} title="Email" type={'email'} />
-			<Button
-				variant="primary"
-				type="button"
-				aria-label="Confirm Sign In"
-				onclick={sendEmailOTP}
-				placeholder="example@gmail.com"
-				class="w-full justify-center text-lg"
-			>
-				<Icon icon="material-symbols:mail" />
-				Confirm
-			</Button>
-		</form>
-	{:else if signInState === 'confirming-code'}
-=======
 <main class="flex">
+	<!-- Left panel -->
 	<div
 		class="bg-primary hidden h-screen w-full flex-col items-center justify-center gap-4 text-center text-base-100 md:flex"
 	>
@@ -115,42 +84,78 @@
 		<p class="text-2xl">The easy to use collaboration tool for everyone!</p>
 		<Icon icon="unjs:fs-memo" class="text-7xl" />
 	</div>
+
+	<!-- Right panel -->
 	<div class="flex h-screen w-full items-center justify-center">
-		{#if signInState === 'otp-sent'}
+		{#if signInState === 'idle'}
+			<form class="w-3/4 lg:w-1/2 space-y-8 p-6">
+				<h1 class="w-full text-center text-2xl sm:text-5xl">Sign In</h1>
+				<Input bind:input={email} title="Email" type="email" />
+				<button
+					type="button"
+					aria-label="Send OTP"
+					onclick={sendEmailOTP}
+					class="btn btn-primary w-full"
+					disabled={loading}
+				>
+					{#if loading}
+						<Icon icon="svg-spinners:eclipse" />
+					{:else}
+						<Icon icon="material-symbols:mail" />
+					{/if}
+					Send Code
+				</button>
+			</form>
+
+		{:else if signInState === 'sending-otp'}
+			<div class="flex items-center gap-4">
+				<h1 class="text-5xl">Sending Code…</h1>
+				<Icon icon="svg-spinners:eclipse" class="text-5xl" />
+			</div>
+
+		{:else if signInState === 'otp-sent'}
 			<form class="w-3/4 lg:w-1/2 space-y-8 p-6">
 				<h1 class="w-full text-center text-2xl sm:text-5xl">Enter Code:</h1>
-				<Input title="" bind:input={code}/>
+				<Input title="Code" bind:input={code} />
 				<button
 					type="button"
 					aria-label="Confirm Sign In"
 					onclick={confirmCode}
-					placeholder="example@gmail.com"
 					class="btn btn-primary w-full"
+					disabled={loading}
 				>
-					<Icon icon="material-symbols:lock" />
+					{#if loading}
+						<Icon icon="svg-spinners:eclipse" />
+					{:else}
+						<Icon icon="material-symbols:lock" />
+					{/if}
 					Confirm
 				</button>
 			</form>
-		{:else if signInState === 'idle'}
-			<form class="w-3/4 lg:w-1/2 space-y-8 p-6">
-				<h1 class="w-full text-center text-2xl sm:text-5xl">Sign In</h1>
-				<Input bind:input={email} title="Email" type={"email"}/>
-				<button
-					type="button"
-					aria-label="Confirm Sign In"
-					onclick={sendEmailOTP}
-					placeholder="example@gmail.com"
-					class="btn btn-primary w-full"
-				>
-					<Icon icon="material-symbols:mail" />
-					Confirm
-				</button>
-			</form>
+
 		{:else if signInState === 'confirming-code'}
->>>>>>> defca4a (added daisyui, replaced buttons removed button component, added winston-loki)
-		<div class="flex items-center gap-4">
-			<h1 class="text-5xl">Signing In</h1>
-			<Icon icon="svg-spinners:eclipse" class="text-5xl" />
-		</div>
-	{/if}
+			<div class="flex items-center gap-4">
+				<h1 class="text-5xl">Signing In…</h1>
+				<Icon icon="svg-spinners:eclipse" class="text-5xl" />
+			</div>
+
+		{:else if signInState === 'signed-in'}
+			<div class="flex flex-col items-center gap-4 text-center">
+				<h1 class="text-5xl">Welcome Back!</h1>
+				<Icon icon="mdi:check-circle" class="text-green-500 text-7xl" />
+			</div>
+
+		{:else if signInState === 'error'}
+			<div class="flex flex-col items-center gap-6 text-center">
+				<Icon icon="mdi:alert-circle" class="text-red-500 text-7xl" />
+				<h1 class="text-4xl">Something went wrong</h1>
+				<button
+					class="btn btn-primary"
+					onclick={() => (signInState = 'idle')}
+				>
+					Try Again
+				</button>
+			</div>
+		{/if}
+	</div>
 </main>
