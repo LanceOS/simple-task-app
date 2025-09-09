@@ -1,1 +1,0 @@
-ALTER TABLE "invite_code" ADD COLUMN "expires_at" timestamp;

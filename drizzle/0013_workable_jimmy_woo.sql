@@ -1,1 +1,0 @@
-ALTER TABLE "task_group" ALTER COLUMN "owner_id" SET NOT NULL;
