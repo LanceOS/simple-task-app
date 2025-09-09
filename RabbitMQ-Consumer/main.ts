@@ -2,6 +2,7 @@
 
 import amqp from "amqplib";
 import { DrizzleDB } from "./database/Drizzle.ts";
+import { deleter } from "./classes/Deleter.ts";
 
 async function consumeMessages() {
     try {
@@ -17,14 +18,16 @@ async function consumeMessages() {
             if (msg !== null) {
                 const content = JSON.parse(msg.content.toString());
                 try {
-
+                    await deleter.determineRelations(content)
                     channel.ack(msg);
                 } catch (error) {
                     console.error(`Error processing message for parent ID ${content}:`, error);
                     channel.nack(msg); 
                 }
             }
-        });
+
+            
+        }, { noAck: false });
 
     } catch (error) {
         console.error("Failed to start consumer:", error);
