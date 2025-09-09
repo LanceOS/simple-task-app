@@ -15,7 +15,7 @@ export const DELETE: RequestHandler = async ({ request }: RequestEvent) => {
         }
 
         await groupService.removeGroupMember(body, user.id)
-        
+
         await journalService.writeJournal({
             action: "Left Group",
             description: "A user has left a group.",
