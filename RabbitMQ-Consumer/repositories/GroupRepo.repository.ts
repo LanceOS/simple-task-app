@@ -7,27 +7,25 @@ import { taskGroup } from '../database/schemas/task_group.schema';
 export class GroupRepository {
 	private db = DrizzleDB;
 
-	async removeMember(groupIds: string[], userId: string): Promise<void> {
+	async removeMember(groupIds: string[]): Promise<void> {
 		await this.db
 			.update(groupMember)
 			.set({ isDeleted: true })
 			.where(
 				and(
 					inArray(groupMember.parentGroupId, groupIds),
-					eq(groupMember.userId, userId),
 					eq(groupMember.isDeleted, false)
 				)
 			);
 	}
 
-	async deleteGroup(groupIds: string[], userId: string): Promise<void> {
+	async deleteGroup(groupIds: string[]): Promise<void> {
 		await this.db
 			.update(taskGroup)
 			.set({ isDeleted: true })
 			.where(
 				and(
 					inArray(taskGroup.id, groupIds),
-					eq(taskGroup.ownerId, userId),
 					eq(taskGroup.isDeleted, false)
 				)
 			);

@@ -27,7 +27,7 @@ class RabbitMQ {
 		return this.channel;
 	}
 
-	async send(payload: any): Promise<boolean> {
+	async send({ tableName, rowId }: { tableName: string, rowId: string }): Promise<boolean> {
 		
 		try {
 			const ch = await this.getChannel()
@@ -35,6 +35,7 @@ class RabbitMQ {
 				console.error('RabbitMQ channel not initialized.');
 				return false;
 			}
+			const payload = { tableName, rowId }
 
 			const data = JSON.stringify(payload);
 			const success = ch.sendToQueue(queue, Buffer.from(data), {

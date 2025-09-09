@@ -1,10 +1,28 @@
 
 
-class Deleter {
 
+
+class DeleteAndLog {
     async determineRelations(payload: any) {
-        console.log(payload)
+        const { tableName, rowId } = payload;
+
+        switch (tableName) {
+            case tableName === "user":
+                // call here
+                break;
+            case tableName === "taskGroup":
+                
+                break;
+            case tableName === "groupMembers":
+                break;
+            case tableName === "task":
+                break;
+            case tableName === "taskAssignee":
+                break;
+        }
     }
+
+    
 }
 
-export const deleter = new Deleter()
+export const deleteAndLog = new DeleteAndLog();

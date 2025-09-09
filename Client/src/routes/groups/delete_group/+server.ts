@@ -2,7 +2,6 @@ import { HttpError, ResponseHandler } from '$lib/server/helpers/ResponseHandler.
 import { GetUser } from '$lib/server/helpers/UserCheck.helper';
 import { rabbitMQClient } from '$lib/server/providers/RabbitSender';
 import { groupService } from '$lib/server/services/Group.serverutil';
-import { journalService } from '$lib/server/services/Journalist.serverutil';
 import type { RequestEvent, RequestHandler } from './$types';
 
 export const DELETE: RequestHandler = async ({ request }: RequestEvent) => {
@@ -18,16 +17,7 @@ export const DELETE: RequestHandler = async ({ request }: RequestEvent) => {
 
 		await groupService.deleteGroup(body, user.id);
 
-		await journalService.writeJournal({
-			action: 'Deleted Group',
-			description: 'A group has been deleted from the database.',
-			metadata: {
-				deletedGroups: body,
-				deletedByUserId: user.id
-			}
-		});
-
-		await rabbitMQClient.send({ groupIds: body})
+		await rabbitMQClient.send({ tableName: "taskGroup", rowId: body})
 
 		return ResponseHandler.json('Successfully deleted groups!', 200);
 	} catch (error: any) {
