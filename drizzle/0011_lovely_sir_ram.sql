@@ -1,2 +1,0 @@
-ALTER TABLE "invite_code" ADD COLUMN "sent_to" text NOT NULL;--> statement-breakpoint
-ALTER TABLE "invite_code" ADD CONSTRAINT "invite_code_sent_to_user_id_fk" FOREIGN KEY ("sent_to") REFERENCES "public"."user"("id") ON DELETE no action ON UPDATE no action;

@@ -1,1 +1,0 @@
-ALTER TABLE "task" ALTER COLUMN "completed" SET DEFAULT false;

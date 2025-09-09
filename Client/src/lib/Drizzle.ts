@@ -1,17 +1,12 @@
-// Import private environment variables for database credentials
 import { PRIVATE_POSTGRES_DB, PRIVATE_POSTGRES_PASSWORD, PRIVATE_POSTGRES_URL, PRIVATE_POSTGRES_USER } from "$env/static/private";
 
-// Import core Drizzle ORM and node-postgres functionality
 import { drizzle } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";
 
-// Import database schemas
 import * as schema from "./server/schemas/barrel/SchemaBarrel"
 
-// Construct the database connection URL
 const databaseUrl = `postgresql://${PRIVATE_POSTGRES_USER}:${PRIVATE_POSTGRES_PASSWORD}@${PRIVATE_POSTGRES_URL}/${PRIVATE_POSTGRES_DB}`;
 
-// Create a new database connection pool
 const pool = new Pool({
     connectionString: databaseUrl,
     max: 20, // Max number of connections
@@ -30,9 +25,6 @@ const testConnection = async () => {
         console.error("Failed to connect to the database:", error);
     }
 }
-
-// Run the connection test on startup
 testConnection();
 
-// Initialize and export the Drizzle ORM database client
 export const DrizzleDB = drizzle(pool, { schema });

@@ -1,8 +1,10 @@
 // consumer.js
 
 import amqp from "amqplib";
-import { DrizzleDB } from "./database/Drizzle.ts";
-import { deleter } from "./classes/Deleter.ts";
+import { deletionCascade } from "./services/SoftDeleteCascade";
+import { DrizzleDB } from "./database/Drizzle";
+import { task } from "./database/schemas/task.schema";
+import { eq } from "drizzle-orm";
 
 async function consumeMessages() {
     try {
@@ -18,7 +20,7 @@ async function consumeMessages() {
             if (msg !== null) {
                 const content = JSON.parse(msg.content.toString());
                 try {
-                    await deleter.determineRelations(content)
+                    await DrizzleDB.update(task).set({ isDeleted: true }).where(eq(task.parentGroupId, content.rowId))
                     channel.ack(msg);
                 } catch (error) {
                     console.error(`Error processing message for parent ID ${content}:`, error);

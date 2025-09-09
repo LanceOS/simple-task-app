@@ -5,106 +5,15 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1751252217126,
-      "tag": "0000_adorable_mysterio",
+      "when": 1757442890132,
+      "tag": "0000_cloudy_deathstrike",
       "breakpoints": true
     },
     {
       "idx": 1,
       "version": "7",
-      "when": 1755637859139,
-      "tag": "0001_useful_jigsaw",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1755706805325,
-      "tag": "0002_bumpy_killraven",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "7",
-      "when": 1755732707760,
-      "tag": "0003_bouncy_marvex",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "7",
-      "when": 1755732760392,
-      "tag": "0004_warm_clint_barton",
-      "breakpoints": true
-    },
-    {
-      "idx": 5,
-      "version": "7",
-      "when": 1755740862390,
-      "tag": "0005_demonic_boomerang",
-      "breakpoints": true
-    },
-    {
-      "idx": 6,
-      "version": "7",
-      "when": 1755820393202,
-      "tag": "0006_silky_secret_warriors",
-      "breakpoints": true
-    },
-    {
-      "idx": 7,
-      "version": "7",
-      "when": 1755828372799,
-      "tag": "0007_short_saracen",
-      "breakpoints": true
-    },
-    {
-      "idx": 8,
-      "version": "7",
-      "when": 1756080811741,
-      "tag": "0008_right_grey_gargoyle",
-      "breakpoints": true
-    },
-    {
-      "idx": 9,
-      "version": "7",
-      "when": 1756081699594,
-      "tag": "0009_secret_starjammers",
-      "breakpoints": true
-    },
-    {
-      "idx": 10,
-      "version": "7",
-      "when": 1756132864758,
-      "tag": "0010_fast_runaways",
-      "breakpoints": true
-    },
-    {
-      "idx": 11,
-      "version": "7",
-      "when": 1756133507214,
-      "tag": "0011_lovely_sir_ram",
-      "breakpoints": true
-    },
-    {
-      "idx": 12,
-      "version": "7",
-      "when": 1756136437050,
-      "tag": "0012_strong_justin_hammer",
-      "breakpoints": true
-    },
-    {
-      "idx": 13,
-      "version": "7",
-      "when": 1756322272919,
-      "tag": "0013_workable_jimmy_woo",
-      "breakpoints": true
-    },
-    {
-      "idx": 14,
-      "version": "7",
-      "when": 1756597008699,
-      "tag": "0014_living_amphibian",
+      "when": 1757443521119,
+      "tag": "0001_mute_eternity",
       "breakpoints": true
     }
   ]
