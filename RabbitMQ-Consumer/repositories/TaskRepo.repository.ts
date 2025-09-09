@@ -1,20 +1,48 @@
-import { and, eq } from 'drizzle-orm';
-import { DrizzleDB } from '../database/Drizzle';
-import { task } from '../database/schemas/task.schema';
-import { taskAssignee } from '../database/schemas/task_assignee.schema';
-
+import { eq } from "drizzle-orm";
+import { DrizzleDB } from "../Drizzle";
+import { ITask, task } from "../schemas/task.schema";
+import { ITaskAssignee, taskAssignee } from "../schemas/task_assignee.schema";
 
 export class TaskRepository {
-	private db = DrizzleDB;
+    private db = DrizzleDB;
 
+    async findTask(groupId: string): Promise<ITask[]> {
+        const tasksInGroup = await this.db.query.task.findMany({
+            where: eq(task.parentGroupId, groupId),
+        });
+        return tasksInGroup;
+    }
 
-	async unassignUserFromTask(taskId: string, memberId: string): Promise<void> {
-		await this.db
-			.delete(taskAssignee)
-			.where(and(eq(taskAssignee.parentTaskId, taskId), eq(taskAssignee.assigneeId, memberId)));
-	}
+    async removeTaskAssignees(groupId: string): Promise<ITaskAssignee | null> {
+        try {
+            const [removedAssignee] = await this.db.transaction(async (tx) => {
+                const foundTask = await tx.query.task.findFirst({
+                    where: eq(task.parentGroupId, groupId),
+                });
 
-	async deleteTask(taskId: string) {
-		await this.db.delete(task).where(eq(task.id, taskId));
-	}
+                if (!foundTask) {
+                    return [];
+                }
+
+                return await tx
+                    .update(taskAssignee)
+                    .set({ isDeleted: true })
+                    .where(eq(taskAssignee.parentTaskId, foundTask.id))
+                    .returning();
+            });
+
+            return removedAssignee || null;
+        } catch (error) {
+            return null;
+        }
+    }
+
+    async deleteTask(groupId: string): Promise<ITask> {
+        const [removedTask] = await this.db
+            .update(task)
+            .set({ isDeleted: true })
+            .where(eq(task.parentGroupId, groupId))
+            .returning();
+        return removedTask;
+    }
 }

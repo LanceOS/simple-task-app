@@ -1,8 +1,7 @@
 // consumer.js
 
 import amqp from "amqplib";
-import { DrizzleDB } from "./database/Drizzle.ts";
-import { deleter } from "./classes/Deleter.ts";
+import { deletionCascade } from "./services/SoftCascadeDelete.ts";
 
 async function consumeMessages() {
     try {
@@ -18,7 +17,8 @@ async function consumeMessages() {
             if (msg !== null) {
                 const content = JSON.parse(msg.content.toString());
                 try {
-                    await deleter.determineRelations(content)
+                    console.log("Cascade deleting")
+                    await deletionCascade.groupCascadeSoftDelete(content.rowId)
                     channel.ack(msg);
                 } catch (error) {
                     console.error(`Error processing message for parent ID ${content}:`, error);

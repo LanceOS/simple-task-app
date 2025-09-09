@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { goto } from "$app/navigation";
 	import { Toaster } from "$lib/client/components/toaster/Toaster";
 	import Button from "$lib/client/components/ui/Button.svelte";
 	import Input from "$lib/client/components/ui/Input.svelte";
@@ -14,6 +15,7 @@
 				message: "Successfully set name!",
 				type: "success"
 			})
+			goto("/")
 		}
 		catch(error: any) {
 			Toaster.ejectToast({
