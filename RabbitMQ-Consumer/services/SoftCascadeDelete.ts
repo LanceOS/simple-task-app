@@ -1,14 +1,15 @@
+
 import { GroupRepository } from "../repositories/GroupRepo.repository";
 import { JournalRepository } from "../repositories/JournalRepository";
 import { TaskRepository } from "../repositories/TaskRepo.repository";
 
 class SoftDeleteCascadeAndJournal {
-    private instance: SoftDeleteCascadeAndJournal;
+    private processedTables = new Map();
 
     constructor(
         private groupRepository: GroupRepository,
         private journalRepository: JournalRepository,
-        private taskRepository: TaskRepository
+        private taskRepository: TaskRepository,
     ) {}
 
     async groupCascadeSoftDelete(groupIds: string[]): Promise<void> {
@@ -69,3 +70,4 @@ export const deletionCascade = new SoftDeleteCascadeAndJournal(
     new JournalRepository(),
     new TaskRepository()
 );
+

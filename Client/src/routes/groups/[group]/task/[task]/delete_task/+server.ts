@@ -3,6 +3,7 @@
 
 import { HttpError, ResponseHandler } from '$lib/server/helpers/ResponseHandler.helper';
 import { GetUser } from '$lib/server/helpers/UserCheck.helper';
+import { rabbitMQClient } from '$lib/server/providers/RabbitSender';
 import { journalService } from '$lib/server/services/Journalist.serverutil';
 import { taskService } from '$lib/server/services/Tasker.serverutil';
 import type { RequestHandler, RequestEvent } from './$types';
@@ -32,6 +33,7 @@ export const DELETE: RequestHandler = (async (event: RequestEvent) => {
                 deletedFromAddress: clientIpAddress
             }
         })
+
 
         return ResponseHandler.json("Successfully deleted task!s", 200)
     }
