@@ -1,22 +1,278 @@
 {
     "navigation": {
         "home": "Inicio",
-        "pricing": "Precios",
-        "myWorkspace": "Mi Espacio de Trabajo",
-        "taskManager": "Administrador de Tareas",
-        "myTasks": "Mis Tareas",
-        "inbox": "Bandeja de Entrada",
-        "login": "Iniciar Sesión",
-        "profile": "Perfil",
-        "logout": "Cerrar Sesión",
-        "language": "Idiomas",
-        "languages": {
-            "en": "Inglés",
-            "es": "Español"
-        }
+        "groups": "Grupos",
+        "languages": "Idiomas",
+        "signin": "Iniciar Sesión",
+        "signout": "Cerrar Sesión"
     },
     "home": {
-        "title": "Sirve Esa Tarea",
-        "subtitle": "¡La aplicación de mensajería y tareas para empleados fácil y sin complicaciones!"
+        "hero": {
+            "title": "Greater Task",
+            "subtitle": "Una aplicación simple y colaborativa de seguimiento de tareas para grupos de cualquier tamaño.",
+            "getStarted": "Comenzar"
+        },
+        "howItWorks": {
+            "title": "¿Cómo funciona?",
+            "description": "Crea grupos para ti mismo o para otros con Greater Task. En estos grupos, puedes crear y compartir tareas que todos pueden abordar juntos.",
+            "steps": {
+                "step1": {
+                    "title": "1. Crea un Grupo",
+                    "description": "Configura grupos privados o públicos adaptados a tu equipo, amigos o comunidad."
+                },
+                "step2": {
+                    "title": "2. Agrega Tareas",
+                    "description": "Crea tareas rápidamente, asigna responsabilidades y establece plazos."
+                },
+                "step3": {
+                    "title": "3. Colabora",
+                    "description": "Todos en el grupo pueden contribuir y seguir el progreso juntos."
+                }
+            }
+        },
+        "whyChoose": {
+            "title": "¿Por qué elegir Greater Task?",
+            "description": "Diseñado para la simplicidad sin sacrificar la funcionalidad. Perfecto para equipos de cualquier tamaño.",
+            "features": {
+                "simpleAndFast": {
+                    "title": "Simple y Rápido",
+                    "description": "Sin configuraciones complejas ni funciones abrumadoras. Solo crea un grupo y comienza a colaborar."
+                },
+                "privacyFirst": {
+                    "title": "Privacidad Ante Todo",
+                    "description": "Tus datos se mantienen seguros con controles de privacidad flexibles para cada grupo."
+                },
+                "worksEverywhere": {
+                    "title": "Funciona en Todas Partes",
+                    "description": "Accede a tus tareas desde cualquier dispositivo, en cualquier lugar y en cualquier momento."
+                },
+                "realtimeUpdates": {
+                    "title": "Actualizaciones en Tiempo Real",
+                    "description": "Observa los cambios al instante mientras tu equipo actualiza las tareas y avanza."
+                }
+            }
+        },
+        "callToAction": {
+            "title": "¿Listo para organizarte?",
+            "description": "Únete a miles de equipos que ya usan Greater Task para ser productivos y colaborar de manera efectiva.",
+            "button": "Comienza Tu Primer Grupo"
+        }
+    },
+    "mainGroupsDashboard": {
+        "header": {
+            "title": "Panel de Grupos",
+            "subtitle": "¡Gestiona tus grupos propios y a los que te has unido en un solo lugar!"
+        },
+        "ownedGroups": {
+            "header": {
+                "title": "Grupos de Tu Propiedad",
+                "createButton": "+ Crear Nuevo Grupo",
+                "manageButton": "Gestionar Grupos"
+            },
+            "createForm": {
+                "title": "Crear Nuevo Grupo de Tareas",
+                "nameInput": {
+                    "title": "Nombre",
+                    "placeholder": "Ingresa el nombre del grupo..."
+                },
+                "descriptionInput": {
+                    "title": "Descripción del Grupo",
+                    "placeholder": "Describe el propósito de tu grupo..."
+                },
+                "createButton": "Crear Grupo",
+                "cancelButton": "Cancelar"
+            },
+            "emptyState": {
+                "title": "Aún No Hay Grupos",
+                "message": "¡Crea tu primer grupo para comenzar a colaborar con otros!"
+            },
+            "card": {
+                "badge": "Propietario"
+            }
+        },
+        "joinedGroups": {
+            "header": {
+                "title": "Grupos a los que Te Has Unido"
+            },
+            "joinForm": {
+                "title": "Unirse a un Nuevo Grupo",
+                "inputPlaceholder": "Ingresa el código del grupo...",
+                "joinButton": "Unirse al Grupo"
+            },
+            "emptyState": {
+                "title": "No Hay Grupos Unidos",
+                "message": "¡Ingresa un código de grupo arriba para unirte a tu primer grupo!"
+            },
+            "card": {
+                "badge": "Miembro"
+            }
+        }
+    },
+    "groupDashboard": {
+        "header": {
+            "title": "Panel del Grupo",
+            "subtitle": "Gestiona tareas y colabora con tu equipo"
+        },
+        "details": {
+            "noDescription": "No se ha proporcionado una descripción para este grupo."
+        },
+        "createTask": {
+            "title": "Crear Nueva Tarea",
+            "nameInput": {
+                "title": "Nombre de la Tarea",
+                "placeholder": "Nombra tu tarea..."
+            },
+            "descriptionInput": {
+                "title": "Descripción de la Tarea",
+                "placeholder": "Describe tu tarea..."
+            },
+            "createButton": "Crear Tarea",
+            "cancelButton": "Cancelar"
+        },
+        "tasks": {
+            "header": {
+                "title": "Tareas",
+                "createButton": "+ Crear Nueva Tarea"
+            },
+            "card": {
+                "completed": "Completada",
+                "inProgress": "En Progreso"
+            },
+            "emptyState": {
+                "title": "Aún No Hay Tareas",
+                "message": "¡Comienza creando tu primera tarea!"
+            }
+        },
+        "invite": {
+            "title": "Invitar Miembros",
+            "input": {
+                "title": "Dirección de Correo Electrónico",
+                "placeholder": "ejemplo@gmail.com"
+            },
+            "button": "Enviar Invitación"
+        },
+        "members": {
+            "title": "Miembros",
+            "card": {
+                "joined": "Unido",
+                "badge": "Miembro"
+            },
+            "emptyState": {
+                "title": "Aún No Hay Miembros",
+                "message": "¡Invita a personas para empezar a colaborar!"
+            }
+        }
+    },
+    "taskDashboard": {
+        "header": {
+            "noDescription": "No se ha proporcionado una descripción para esta tarea."
+        },
+        "assignees": {
+            "header": {
+                "title": "Asignados",
+                "deleteButton": "Eliminar Tarea",
+                "confirmButton": "Confirmar Eliminación",
+                "cancelButton": "Cancelar"
+            },
+            "card": {
+                "assigned": "Asignado",
+                "badge": "Asignado",
+                "unassignButton": "Desasignar Miembro"
+            },
+            "emptyState": {
+                "title": "No Hay Asignados",
+                "message": "No hay miembros del grupo asignados actualmente a esta tarea."
+            }
+        },
+        "assignMembers": {
+            "header": {
+                "title": "Asignar Miembros"
+            },
+            "card": {
+                "assignButton": "Asignar"
+            },
+            "emptyState": "No hay miembros del grupo disponibles para asignar."
+        }
+    },
+    "manageGroups": {
+        "header": {
+            "title": "Gestiona Tus Grupos",
+            "subtitle": "Selecciona los grupos que posees para eliminarlos, o los grupos a los que te has unido para abandonarlos. Ten cuidado, estas acciones no se pueden deshacer."
+        },
+        "owned": {
+            "title": "Grupos de Tu Propiedad",
+            "emptyState": "Aún no tienes grupos propios.",
+            "card": {
+                "viewButton": "Ver",
+                "selectButton": "Seleccionar",
+                "selectedButton": "Seleccionado"
+            },
+            "actions": {
+                "deleteSelected": "Eliminar Seleccionados",
+                "confirmDelete": "Confirmar Eliminación",
+                "cancel": "Cancelar"
+            }
+        },
+        "joined": {
+            "title": "Grupos Unidos",
+            "emptyState": "Aún no te has unido a ningún grupo.",
+            "card": {
+                "viewButton": "Ver",
+                "selectButton": "Seleccionar",
+                "selectedButton": "Seleccionado"
+            },
+            "actions": {
+                "leaveSelected": "Abandonar Seleccionados",
+                "confirmLeave": "Confirmar Abandono",
+                "cancel": "Cancelar"
+            }
+        }
+    },
+    "onboarding": {
+        "heading": "¡Tu usuario no tiene nombre!",
+        "message": "Por favor, ingresa tu nombre para continuar.",
+        "input": {
+            "title": "Nombre"
+        },
+        "confirmButton": "Confirmar"
+    },
+    "languages": {
+        "title": "Las traducciones son realizadas por IA y pueden no ser precisas.",
+        "english": "Inglés",
+        "spanish": "Español"
+    },
+    "signin": {
+        "welcome": {
+            "title": "Bienvenido a Greater Task",
+            "subtitle": "¡La herramienta de colaboración fácil de usar para todos!"
+        },
+        "idle": {
+            "title": "Iniciar Sesión",
+            "emailInput": {
+                "title": "Correo Electrónico"
+            },
+            "sendCodeButton": "Enviar Código"
+        },
+        "sendingOtp": {
+            "title": "Enviando Código…",
+            "subtitle": "Por favor, espera un momento mientras enviamos una contraseña de un solo uso a tu correo electrónico."
+        },
+        "otpSent": {
+            "title": "Ingresa el Código:",
+            "codeInput": {
+                "title": "Código"
+            },
+            "confirmButton": "Confirmar"
+        },
+        "confirmingCode": {
+            "title": "Iniciando Sesión…"
+        },
+        "signedIn": {
+            "title": "¡Bienvenido!"
+        },
+        "error": {
+            "title": "Algo salió mal",
+            "tryAgainButton": "Intentar de Nuevo"
+        }
     }
 }

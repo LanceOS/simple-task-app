@@ -152,9 +152,9 @@
             "button": "Send Invite"
         },
         "members": {
-            "title": "Members ({count})",
+            "title": "Members",
             "card": {
-                "joined": "Joined {date}",
+                "joined": "Joined",
                 "badge": "Member"
             },
             "emptyState": {
@@ -175,7 +175,7 @@
                 "cancelButton": "Cancel"
             },
             "card": {
-                "assigned": "Assigned {date}",
+                "assigned": "Assigned",
                 "badge": "Assigned",
                 "unassignButton": "Unassign Member"
             },
@@ -237,6 +237,7 @@
         "confirmButton": "Confirm"
     },
     "languages": {
+        "title": "Translations are done by AI and may not be accurate.",
         "english": "English",
         "spanish": "Spanish"
     },

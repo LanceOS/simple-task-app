@@ -1,248 +1,261 @@
 <script lang="ts">
-	import { page } from '$app/state';
-	import Input from '$lib/client/components/ui/Input.svelte';
-	import Textarea from '$lib/client/components/ui/Textarea.svelte';
-	import { Inviter } from '$lib/client/services/Inviter.clientutil';
-	import { TaskClientService } from '$lib/client/services/TaskClientService';
-	import Icon from '@iconify/svelte';
-	import type { PageProps } from './$types';
-	import { Toaster } from '$lib/client/components/toaster/Toaster';
-	import { goto } from '$app/navigation';
+    import { page } from '$app/state';
+    import Input from '$lib/client/components/ui/Input.svelte';
+    import Textarea from '$lib/client/components/ui/Textarea.svelte';
+    import { Inviter } from '$lib/client/services/Inviter.clientutil';
+    import { TaskClientService } from '$lib/client/services/TaskClientService';
+    import Icon from '@iconify/svelte';
+    import type { PageProps } from './$types';
+    import { Toaster } from '$lib/client/components/toaster/Toaster';
+    import { goto } from '$app/navigation';
+    import { i18n } from '$lib/stores/Translation.store';
 
-	const { data }: PageProps = $props();
-	const { tasks, groupMembers, group, isUserAdmin } = data;
+    const { data }: PageProps = $props();
+    const { tasks, groupMembers, group, isUserAdmin } = data;
 
-	const groupId = page.params.group;
+    const groupId = page.params.group;
 
-	let createWindow: boolean = $state(false);
+    let createWindow: boolean = $state(false);
 
-	let loading: boolean = $state(false);
+    let loading: boolean = $state(false);
 
-	const newTask = $state({
-		name: '',
-		description: '',
-		groupId: groupId
-	});
+    const newTask = $state({
+        name: '',
+        description: '',
+        groupId: groupId
+    });
 
-	let inviteeEmail: string = $state('');
+    let inviteeEmail: string = $state('');
 
-	const createTask = async () => {
-		if (!isUserAdmin) {
-			Toaster.ejectToast({
-				message: 'Member must be owner or admin to create a group task!',
-				type: 'error'
-			});
-			return;
-		}
-		loading = true;
-		try {
-			const response = await TaskClientService.createTask(newTask);
-			Toaster.ejectToast({
-				message: 'Created Task!',
-				type: 'success'
-			});
+    const createTask = async () => {
+        if (!isUserAdmin) {
+            Toaster.ejectToast({
+                message: 'Member must be owner or admin to create a group task!',
+                type: 'error'
+            });
+            return;
+        }
+        loading = true;
+        try {
+            const response = await TaskClientService.createTask(newTask);
+            Toaster.ejectToast({
+                message: 'Created Task!',
+                type: 'success'
+            });
 
-			goto(`/groups/${groupId}/task/${response}`);
-		} catch (error: any) {
-			Toaster.ejectToast({
-				message: error.message || 'Failed to create new task!',
-				type: 'error'
-			});
-		} finally {
-			loading = false;
-		}
-	};
+            goto(`/groups/${groupId}/task/${response}`);
+        } catch (error: any) {
+            Toaster.ejectToast({
+                message: error.message || 'Failed to create new task!',
+                type: 'error'
+            });
+        } finally {
+            loading = false;
+        }
+    };
 
-	const addMember = async () => {
-		loading = true;
-		try {
-			await Inviter.sendUserInvite(groupId, inviteeEmail);
-			Toaster.ejectToast({
-				message: 'Invite sent!',
-				type: 'success'
-			});
-			inviteeEmail = '';
-		} catch (error: any) {
-			Toaster.ejectToast({
-				message: error.message || 'Failed to invite user!',
-				type: 'error'
-			});
-		} finally {
-			loading = false;
-		}
-	};
+    const addMember = async () => {
+        loading = true;
+        try {
+            await Inviter.sendUserInvite(groupId, inviteeEmail);
+            Toaster.ejectToast({
+                message: 'Invite sent!',
+                type: 'success'
+            });
+            inviteeEmail = '';
+        } catch (error: any) {
+            Toaster.ejectToast({
+                message: error.message || 'Failed to invite user!',
+                type: 'error'
+            });
+        } finally {
+            loading = false;
+        }
+    };
 </script>
 
 <main class="bg-base-100 min-h-screen px-4 py-24">
-	<div class="mx-auto max-w-7xl space-y-12">
-		<!-- Header -->
-		<div class="mb-12 text-center">
-			<h1 class="text-content mb-4 text-4xl font-bold">Group Dashboard</h1>
-			<p class="text-neutral text-lg">Manage tasks and collaborate with your team</p>
-		</div>
+    <div class="mx-auto max-w-7xl space-y-12">
+        <div class="mb-12 text-center">
+            <h1 class="text-content mb-4 text-4xl font-bold">{$i18n.t('groupDashboard.header.title')}</h1>
+            <p class="text-neutral text-lg">{$i18n.t('groupDashboard.header.subtitle')}</p>
+        </div>
 
-		<!-- Group Details -->
-		<section class="bg-base-200 space-y-4 rounded-xl p-8 text-center shadow-md">
-			<h2 class="text-content text-3xl font-bold">{group.name}</h2>
-			<p class="text-neutral mx-auto max-w-2xl text-lg leading-relaxed">
-				{group.description || 'No description provided for this group.'}
-			</p>
-		</section>
+        <section class="bg-base-200 space-y-4 rounded-xl p-8 text-center shadow-md">
+            <h2 class="text-content text-3xl font-bold">{group.name}</h2>
+            <p class="text-neutral mx-auto max-w-2xl text-lg leading-relaxed">
+                {group.description || $i18n.t('groupDashboard.details.noDescription')}
+            </p>
+        </section>
 
-		<!-- Create Task Form -->
-		{#if createWindow}
-			<section class="bg-base-200 rounded-xl p-8 shadow-lg">
-				<h3 class="text-content mb-6 text-2xl font-bold">Create New Task</h3>
-				<form class="space-y-6">
-					<Input
-						bind:input={newTask.name}
-						maxlength={80}
-						title="Task Name"
-						type="text"
-						placeholder="Name your task..."
-					/>
-					<Textarea
-						title="Task Description"
-						placeholder="Describe your task..."
-						rows={4}
-						maxlength={300}
-						bind:input={newTask.description}
-					/>
-					<div class="flex gap-4">
-						<button type="button" onclick={createTask} disabled={loading} class="btn btn-primary">Create Task</button>
-						<button class="btn btn-neutral" type="button" onclick={() => (createWindow = false)}>
-							Cancel
-						</button>
-					</div>
-				</form>
-			</section>
-		{/if}
+        {#if createWindow}
+            <section class="bg-base-200 rounded-xl p-8 shadow-lg">
+                <h3 class="text-content mb-6 text-2xl font-bold">
+                    {$i18n.t('groupDashboard.createTask.title')}
+                </h3>
+                <form class="space-y-6">
+                    <Input
+                        bind:input={newTask.name}
+                        maxlength={80}
+                        title={$i18n.t('groupDashboard.createTask.nameInput.title')}
+                        type="text"
+                        placeholder={$i18n.t('groupDashboard.createTask.nameInput.placeholder')}
+                    />
+                    <Textarea
+                        title={$i18n.t('groupDashboard.createTask.descriptionInput.title')}
+                        placeholder={$i18n.t('groupDashboard.createTask.descriptionInput.placeholder')}
+                        rows={4}
+                        maxlength={300}
+                        bind:input={newTask.description}
+                    />
+                    <div class="flex gap-4">
+                        <button type="button" onclick={createTask} disabled={loading} class="btn btn-primary">
+                            {$i18n.t('groupDashboard.createTask.createButton')}
+                        </button>
+                        <button class="btn btn-neutral" type="button" onclick={() => (createWindow = false)}>
+                            {$i18n.t('groupDashboard.createTask.cancelButton')}
+                        </button>
+                    </div>
+                </form>
+            </section>
+        {/if}
 
-		<!-- Tasks Section -->
-		<section class="space-y-6">
-			<div class="flex items-center justify-between">
-				<div class="flex items-center gap-2">
-					<button
-						type="button"
-						aria-label="Return to groups."
-						class="btn btn-neutral"
-						onclick={() => goto('/groups')}
-					>
-						<Icon icon="grommet-icons:return" />
-					</button>
-					<h2 class="text-content text-2xl font-bold">Tasks</h2>
-				</div>
-				{#if isUserAdmin}
-					<button class="btn btn-primary" type="button" onclick={() => (createWindow = !createWindow)}>
-						+ Create New Task
-					</button>
-				{/if}
-			</div>
+        <section class="space-y-6">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <button
+                        type="button"
+                        aria-label="Return to groups."
+                        class="btn btn-neutral"
+                        onclick={() => goto('/groups')}
+                    >
+                        <Icon icon="grommet-icons:return" />
+                    </button>
+                    <h2 class="text-content text-2xl font-bold">
+                        {$i18n.t('groupDashboard.tasks.header.title')}
+                    </h2>
+                </div>
+                {#if isUserAdmin}
+                    <button class="btn btn-primary" type="button" onclick={() => (createWindow = !createWindow)}>
+                        {$i18n.t('groupDashboard.tasks.header.createButton')}
+                    </button>
+                {/if}
+            </div>
 
-			{#if tasks.length > 0}
-				<div class="grid gap-6 lg:grid-cols-2 xl:grid-cols-3">
-					{#each tasks as task}
-						<a
-							href={`/groups/${groupId}/task/${task.id}`}
-							class="bg-base-200 block rounded-xl p-6 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
-						>
-							<div class="mb-4 flex items-start justify-between">
-								<div class="flex-1">
-									<h3 class="text-content mb-2 line-clamp-2 text-xl font-bold">{task.taskName}</h3>
-									<p class="text-neutral mb-4 line-clamp-3 leading-relaxed">{task.description}</p>
-								</div>
-								<div class="ml-4 flex-shrink-0">
-									{#if task.completed}
-										<div class="success h-3 w-3 rounded-full"></div>
-									{:else}
-										<div class="warning h-3 w-3 rounded-full"></div>
-									{/if}
-								</div>
-							</div>
+            {#if tasks.length > 0}
+                <div class="grid gap-6 lg:grid-cols-2 xl:grid-cols-3">
+                    {#each tasks as task}
+                        <a
+                            href={`/groups/${groupId}/task/${task.id}`}
+                            class="bg-base-200 block rounded-xl p-6 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+                        >
+                            <div class="mb-4 flex items-start justify-between">
+                                <div class="flex-1">
+                                    <h3 class="text-content mb-2 line-clamp-2 text-xl font-bold">{task.taskName}</h3>
+                                    <p class="text-neutral mb-4 line-clamp-3 leading-relaxed">{task.description}</p>
+                                </div>
+                                <div class="ml-4 flex-shrink-0">
+                                    {#if task.completed}
+                                        <div class="success h-3 w-3 rounded-full"></div>
+                                    {:else}
+                                        <div class="warning h-3 w-3 rounded-full"></div>
+                                    {/if}
+                                </div>
+                            </div>
 
-							<div class="flex items-center justify-between">
-								<span
-									class={task.completed
-										? 'bg-success rounded-full px-3 py-1 text-xs font-medium'
-										: 'bg-warning rounded-full px-3 py-1 text-xs font-medium'}
-								>
-									{task.completed ? 'Completed' : 'In Progress'}
-								</span>
-								<span class="text-neutral text-sm">
-									{task.createdAt.toLocaleDateString()}
-								</span>
-							</div>
-						</a>
-					{/each}
-				</div>
-			{:else}
-				<div class="bg-base-200 rounded-xl p-12 text-center space-y-4">
-					<Icon icon="noto:writing-hand" class=" w-full text-7xl" />
-					<h3 class="text-content text-xl font-bold">No Tasks Yet</h3>
-					<p>Get started by creating your first task!</p>
-				</div>
-			{/if}
-		</section>
+                            <div class="flex items-center justify-between">
+                                <span
+                                    class={task.completed
+                                        ? 'bg-success rounded-full px-3 py-1 text-xs font-medium'
+                                        : 'bg-warning rounded-full px-3 py-1 text-xs font-medium'}
+                                >
+                                    {task.completed
+                                        ? $i18n.t('groupDashboard.tasks.card.completed')
+                                        : $i18n.t('groupDashboard.tasks.card.inProgress')}
+                                </span>
+                                <span class="text-neutral text-sm">
+                                    {task.createdAt.toLocaleDateString()}
+                                </span>
+                            </div>
+                        </a>
+                    {/each}
+                </div>
+            {:else}
+                <div class="bg-base-200 rounded-xl p-12 text-center space-y-4">
+                    <Icon icon="noto:writing-hand" class=" w-full text-7xl" />
+                    <h3 class="text-content text-xl font-bold">
+                        {$i18n.t('groupDashboard.tasks.emptyState.title')}
+                    </h3>
+                    <p>{$i18n.t('groupDashboard.tasks.emptyState.message')}</p>
+                </div>
+            {/if}
+        </section>
 
-		{#if isUserAdmin}
-			<!-- Invite Members -->
-			<section class="space-y-6">
-				<h2 class="text-content text-2xl font-bold">Invite Members</h2>
-				<div class="bg-base-200 h-fit rounded-xl p-6">
-					<form class="space-y-4">
-						<div>
-							<label for="addMem" class="text-content mb-2 block text-sm font-semibold">
-								Email Address
-							</label>
-							<div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
-								<input
-									type="email"
-									name="addMem"
-									id="addMem"
-									class="bg-base-100 border-base-300 focus:ring-primary text-content flex-1 rounded-lg border px-4 py-3 focus:ring-2 focus:outline-none"
-									placeholder="example@gmail.com"
-									bind:value={inviteeEmail}
-								/>
-								<button
-									type="button"
-									class="btn btn-primary"
-									onclick={addMember}
-									disabled={loading}
-								>
-									Send Invite
-								</button>
-							</div>
-						</div>
-					</form>
-				</div>
-			</section>
-		{/if}
+        {#if isUserAdmin}
+            <section class="space-y-6">
+                <h2 class="text-content text-2xl font-bold">{$i18n.t('groupDashboard.invite.title')}</h2>
+                <div class="bg-base-200 h-fit rounded-xl p-6">
+                    <form class="space-y-4">
+                        <div>
+                            <label for="addMem" class="text-content mb-2 block text-sm font-semibold">
+                                {$i18n.t('groupDashboard.invite.input.title')}
+                            </label>
+                            <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
+                                <input
+                                    type="email"
+                                    name="addMem"
+                                    id="addMem"
+                                    class="bg-base-100 border-base-300 focus:ring-primary text-content flex-1 rounded-lg border px-4 py-3 focus:ring-2 focus:outline-none"
+                                    placeholder={$i18n.t('groupDashboard.invite.input.placeholder')}
+                                    bind:value={inviteeEmail}
+                                />
+                                <button
+                                    type="button"
+                                    class="btn btn-primary"
+                                    onclick={addMember}
+                                    disabled={loading}
+                                >
+                                    {$i18n.t('groupDashboard.invite.button')}
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </section>
+        {/if}
 
-		<!-- Members Section -->
-		<section class="space-y-4">
-			<h2 class="text-content text-2xl font-bold">Members ({groupMembers.length})</h2>
-			<div class="bg-base-200 flex flex-col rounded-xl p-6 sm:flex-row sm:flex-wrap">
-				{#if groupMembers.length > 0}
-					<div class="space-y-4">
-						{#each groupMembers as member}
-							<div class="bg-base-100 flex items-center gap-4 rounded-lg p-4">
-								<Icon icon="noto:bust-in-silhouette" class="bg-info rounded-md p-2 text-4xl" />
-								<div class="flex-1">
-									<h3 class="text-content font-semibold">{member.member.name}</h3>
-									<p class="text-neutral text-sm">Joined {member.createdAt.toLocaleDateString()}</p>
-								</div>
-								<div class="info rounded-full px-3 py-1 text-xs font-medium">Member</div>
-							</div>
-						{/each}
-					</div>
-				{:else}
-					<div class="space-y-2 py-8 text-center">
-						<Icon icon="noto:busts-in-silhouette" class="bg-info rounded-md p-2 text-4xl" />
-						<h3 class="text-content text-lg font-semibold">No Members Yet</h3>
-						<p class="text-neutral">Invite people to start collaborating!</p>
-					</div>
-				{/if}
-			</div>
-		</section>
-	</div>
+        <section class="space-y-4">
+            <h2 class="text-content text-2xl font-bold">
+                {$i18n.t('groupDashboard.members.title')} {groupMembers.length}
+            </h2>
+            <div class="bg-base-200 flex flex-col rounded-xl p-6 sm:flex-row sm:flex-wrap">
+                {#if groupMembers.length > 0}
+                    <div class="space-y-4">
+                        {#each groupMembers as member}
+                            <div class="bg-base-100 flex items-center gap-4 rounded-lg p-4">
+                                <Icon icon="noto:bust-in-silhouette" class="bg-info rounded-md p-2 text-4xl" />
+                                <div class="flex-1">
+                                    <h3 class="text-content font-semibold">{member.member.name}</h3>
+                                    <p class="text-neutral text-sm">
+                                        {$i18n.t('groupDashboard.members.card.joined')}{member.createdAt.toLocaleDateString()}
+                                    </p>
+                                </div>
+                                <div class="info rounded-full px-3 py-1 text-xs font-medium">
+                                    {$i18n.t('groupDashboard.members.card.badge')}
+                                </div>
+                            </div>
+                        {/each}
+                    </div>
+                {:else}
+                    <div class="space-y-2 py-8 text-center">
+                        <Icon icon="noto:busts-in-silhouette" class="bg-info rounded-md p-2 text-4xl" />
+                        <h3 class="text-content text-lg font-semibold">
+                            {$i18n.t('groupDashboard.members.emptyState.title')}
+                        </h3>
+                        <p class="text-neutral">{$i18n.t('groupDashboard.members.emptyState.message')}</p>
+                    </div>
+                {/if}
+            </div>
+        </section>
+    </div>
 </main>

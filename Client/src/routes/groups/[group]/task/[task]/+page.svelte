@@ -5,6 +5,7 @@
 	import { page } from '$app/state';
 	import { TaskClientService } from '$lib/client/services/TaskClientService';
 	import { goto } from '$app/navigation';
+	import { i18n } from '$lib/stores/Translation.store';
 
 	const groupId = page.params.group;
 
@@ -46,8 +47,7 @@
 				message: error.message || 'Failed to assign member to task!',
 				type: 'error'
 			});
-		}
-		finally {
+		} finally {
 			loading = false;
 		}
 	};
@@ -78,8 +78,7 @@
 				type: 'error'
 			});
 			return;
-		}
-		finally {
+		} finally {
 			loading = false;
 		}
 	};
@@ -106,8 +105,7 @@
 				message: error.message || 'Failed to delete task!',
 				type: 'error'
 			});
-		}
-		finally {
+		} finally {
 			loading = false;
 		}
 	};
@@ -115,17 +113,15 @@
 
 <main class="bg-base-100 min-h-screen px-4 py-24">
 	<div class="mx-auto max-w-7xl space-y-12">
-		<!-- Task Header -->
 		{#if task}
 			<section class="space-y-4 text-center">
 				<h1 class="text-content text-4xl font-bold">{task.taskName}</h1>
 				<p class="text-neutral mx-auto max-w-2xl leading-relaxed">
-					{task.description || 'No description provided for this task.'}
+					{task.description || $i18n.t('taskDashboard.header.noDescription')}
 				</p>
 			</section>
 		{/if}
 
-		<!-- Assignees Section -->
 		<section class="space-y-6">
 			<div class="flex items-center justify-between gap-4">
 				<div class="flex items-center gap-2">
@@ -138,17 +134,37 @@
 					>
 						<Icon icon="grommet-icons:return" />
 					</button>
-					<h2 class="text-content text-2xl font-bold">Assignees</h2>
+					<h2 class="text-content text-2xl font-bold">
+						{$i18n.t('taskDashboard.assignees.header.title')}
+					</h2>
 				</div>
 
-				<!-- Delete Task Button -->
 				{#if confirmDelete}
 					<div class="flex items-center gap-2">
-						<button class="btn btn-error" onclick={handleDelete} disabled={loading} aria-label="Confirm task deletion">Confirm Delete</button>
-						<button class="btn btn-neutral" onclick={() => (confirmDelete = false)} aria-label="Cancel task deletion">Cancel</button>
+						<button
+							class="btn btn-error"
+							onclick={handleDelete}
+							disabled={loading}
+							aria-label="Confirm task deletion"
+						>
+							{$i18n.t('taskDashboard.assignees.header.confirmButton')}
+						</button>
+						<button
+							class="btn btn-neutral"
+							onclick={() => (confirmDelete = false)}
+							aria-label="Cancel task deletion"
+						>
+							{$i18n.t('taskDashboard.assignees.header.cancelButton')}
+						</button>
 					</div>
 				{:else}
-					<button class="btn btn-error" onclick={() => (confirmDelete = true)} aria-label="Delete current task.">Delete Task</button>
+					<button
+						class="btn btn-error"
+						onclick={() => (confirmDelete = true)}
+						aria-label="Delete current task."
+					>
+						{$i18n.t('taskDashboard.assignees.header.deleteButton')}
+					</button>
 				{/if}
 			</div>
 
@@ -161,18 +177,21 @@
 								<div class="flex-1">
 									<h3 class="text-content font-semibold">{assignee.member?.name}</h3>
 									<p class="text-neutral text-sm">
-										Assigned {assignee.createdAt.toLocaleDateString()}
+										{$i18n.t('taskDashboard.assignees.card.assigned')}
+										{assignee.createdAt.toLocaleDateString()}
 									</p>
 								</div>
 								<div class="flex items-center gap-4">
-									<span class="success rounded-full px-3 py-1 text-xs font-medium">Assigned</span>
+									<span class="success rounded-full px-3 py-1 text-xs font-medium">
+										{$i18n.t('taskDashboard.assignees.card.badge')}
+									</span>
 									<button
 										class="btn btn-primary btn-sm"
 										aria-label="Unassign user from task."
 										disabled={loading}
 										onclick={() => unassignMember(assignee.assigneeId)}
 									>
-										Unassign Member
+										{$i18n.t('taskDashboard.assignees.card.unassignButton')}
 									</button>
 								</div>
 							</div>
@@ -181,17 +200,22 @@
 				{:else}
 					<div class="py-8 text-center">
 						<Icon icon="noto:warning" class="text-neutral mx-auto mb-4 text-5xl" />
-						<h3 class="text-content mb-2 text-lg font-semibold">No Assignees</h3>
-						<p class="text-neutral">No group members are currently assigned to this task.</p>
+						<h3 class="text-content mb-2 text-lg font-semibold">
+							{$i18n.t('taskDashboard.assignees.emptyState.title')}
+						</h3>
+						<p class="text-neutral">
+							{$i18n.t('taskDashboard.assignees.emptyState.message')}
+						</p>
 					</div>
 				{/if}
 			</div>
 		</section>
 
-		<!-- Assign Members Section (Admins only) -->
 		{#if isUserAdmin}
 			<section class="space-y-6">
-				<h2 class="text-content text-2xl font-bold">Assign Members</h2>
+				<h2 class="text-content text-2xl font-bold">
+					{$i18n.t('taskDashboard.assignMembers.header.title')}
+				</h2>
 				<div class="bg-base-200 space-y-4 rounded-xl p-6 shadow-md">
 					{#if groupMembers && groupMembers.length > 0}
 						<div class="grid gap-4 sm:grid-cols-2">
@@ -201,14 +225,18 @@
 										<Icon icon="noto:bust-in-silhouette" class="info rounded-md p-2 text-3xl" />
 										<p class="text-content font-medium">{member.member.name}</p>
 									</div>
-									<button class="btn btn-secondary" onclick={() => assignMember(member.userId)} disabled={loading}
-										>Assign</button
+									<button
+										class="btn btn-secondary"
+										onclick={() => assignMember(member.userId)}
+										disabled={loading}
 									>
+										{$i18n.t('taskDashboard.assignMembers.card.assignButton')}
+									</button>
 								</div>
 							{/each}
 						</div>
 					{:else}
-						<p class="text-neutral">No group members available to assign.</p>
+						<p class="text-neutral">{$i18n.t('taskDashboard.assignMembers.emptyState')}</p>
 					{/if}
 				</div>
 			</section>
