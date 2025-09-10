@@ -2,6 +2,7 @@
 	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
 	import { authClient } from '$lib/auth-client';
+	import { i18n } from '$lib/stores/Translation.store';
 	import Icon from '@iconify/svelte';
 
 	const session = authClient.useSession();
@@ -22,7 +23,7 @@
 					aria-label="Navigate Home"
 					class="rounded-md p-2 text-base font-medium transition-colors duration-200 hover:bg-[var(--color-base-300)]"
 				>
-					Home
+					{$i18n.t("navigation.home")}
 				</a>
 			</li>
 
@@ -32,7 +33,7 @@
 					aria-label="Navigate to Groups"
 					class="rounded-md px-3 py-2 text-base font-medium transition-colors duration-200 hover:bg-[var(--color-base-300)]"
 				>
-					Groups
+					{$i18n.t("navigation.groups")}
 				</a>
 			</li>
 			<li>
@@ -41,20 +42,20 @@
 					aria-label="Navigate to Languages"
 					class="rounded-md px-3 py-2 text-base font-medium transition-colors duration-200 hover:bg-[var(--color-base-300)]"
 				>
-					Languages
+					{$i18n.t("navigation.languages")}
 				</a>
 			</li>
 			<li class="">
 				{#if $session?.data?.user}
 					<button type="button" aria-label="Sign Out" onclick={signOut} class="btn btn-primary"
-						>Sign Out</button
+						>{$i18n.t("navigation.signout")}</button
 					>
 				{:else}
 					<button
 						type="button"
 						aria-label="Sign In"
 						onclick={() => goto('/signin')}
-						class="btn btn-primary">Sign In</button
+						class="btn btn-primary">{$i18n.t("navigation.signin")}</button
 					>
 				{/if}
 			</li>

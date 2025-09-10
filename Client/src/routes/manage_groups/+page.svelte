@@ -6,6 +6,7 @@
 	import type { IGroups } from '$lib/server/schemas/task_group.schema';
 	import Icon from '@iconify/svelte';
 	import type { PageProps } from './$types';
+	import { i18n } from '$lib/stores/Translation.store';
 
 	const { data }: PageProps = $props();
 	let ownedGroups: IGroups[] = $state(data.ownedGroups);
@@ -54,7 +55,7 @@
 				arr.push(key);
 			}
 		}
-		console.log(arr)
+		console.log(arr);
 		try {
 			await GroupClient.deleteGroup(arr);
 			ownedGroups = ownedGroups.filter((group) => !arr.includes(group.id));
@@ -108,16 +109,15 @@
 	<div class="mx-auto max-w-7xl space-y-12">
 		<!-- Page Header -->
 		<section class="space-y-4 text-center">
-			<h1 class="text-content text-4xl font-bold">Manage Your Groups</h1>
+			<h1 class="text-content text-4xl font-bold">{$i18n.t('manageGroups.header.title')}</h1>
 			<p class="text-neutral mx-auto max-w-2xl">
-				Select groups you own to delete, or groups you’ve joined to leave. Be careful—these actions
-				cannot be undone.
+				{$i18n.t('manageGroups.header.subtitle')}
 			</p>
 		</section>
 
 		<!-- Owned Groups -->
 		<section class="space-y-6">
-			<h2 class="text-content text-2xl font-bold">Owned Groups</h2>
+			<h2 class="text-content text-2xl font-bold">{$i18n.t('manageGroups.owned.title')}</h2>
 			<div class="bg-base-200 space-y-4 rounded-xl p-6 shadow-md">
 				{#if ownedGroups.length > 0}
 					{#each ownedGroups as owned}
@@ -132,7 +132,7 @@
 									class="btn btn-primary btn-sm"
 									aria-label={`Go to ${owned.name}`}
 								>
-									View
+									{$i18n.t('manageGroups.owned.card.viewButton')}
 								</a>
 								<button
 									type="button"
@@ -141,7 +141,9 @@
 										${ownedGroupMap.get(owned.id) ? 'btn-error' : 'btn-warning'}`}
 									onclick={() => selectOwnedGroup(owned.id)}
 								>
-									{ownedGroupMap.get(owned.id) ? 'Selected' : 'Select'}
+									{ownedGroupMap.get(owned.id)
+										? $i18n.t('manageGroups.owned.card.selectedButton')
+										: $i18n.t('manageGroups.owned.card.selectButton')}
 								</button>
 							</div>
 						</div>
@@ -155,7 +157,7 @@
 									disabled={disableActionButtons}
 									class="btn btn-error"
 								>
-									Delete Selected
+									{$i18n.t('manageGroups.owned.actions.deleteSelected')}
 								</button>
 							{:else}
 								<div class="flex gap-3">
@@ -164,24 +166,28 @@
 										disabled={disableActionButtons}
 										class="btn btn-error"
 									>
-										Confirm Delete
+										{$i18n.t('manageGroups.owned.actions.confirmDelete')}
 									</button>
 									<button onclick={() => (confirmingDelete = false)} class="btn btn-neutral">
-										Cancel
+										{$i18n.t('manageGroups.owned.actions.cancel')}
 									</button>
 								</div>
 							{/if}
 						</div>
 					{/if}
 				{:else}
-					<p class="text-neutral">You don’t own any groups yet.</p>
+					<p class="text-neutral">
+						{$i18n.t('manageGroups.owned.emptyState')}
+					</p>
 				{/if}
 			</div>
 		</section>
 
 		<!-- Joined Groups -->
 		<section class="space-y-6">
-			<h2 class="text-content text-2xl font-bold">Joined Groups</h2>
+			<h2 class="text-content text-2xl font-bold">
+				{$i18n.t('manageGroups.joined.title')}
+			</h2>
 			<div class="bg-base-200 space-y-4 rounded-xl p-6 shadow-md">
 				{#if joinedGroups.length > 0}
 					{#each joinedGroups as joined}
@@ -196,7 +202,7 @@
 									class="btn btn-primary btn-sm"
 									aria-label={`Go to ${joined.name}`}
 								>
-									View
+									{$i18n.t('manageGroups.joined.card.viewButton')}
 								</a>
 								<button
 									type="button"
@@ -205,7 +211,9 @@
 										${joinedGroupMap.get(joined.id) ? 'btn-error' : 'btn-warning'}`}
 									onclick={() => selectJoinedGroup(joined.id)}
 								>
-									{joinedGroupMap.get(joined.id) ? 'Selected' : 'Select'}
+									{joinedGroupMap.get(joined.id)
+										? $i18n.t('manageGroups.joined.card.selectedButton')
+										: $i18n.t('manageGroups.owned.actions.selectButton')}
 								</button>
 							</div>
 						</div>
@@ -220,7 +228,7 @@
 									disabled={disableActionButtons}
 									class="btn btn-error"
 								>
-									Leave Selected
+									{$i18n.t('manageGroups.joined.actions.leaveSelected')}
 								</button>
 							{:else}
 								<div class="flex gap-3">
@@ -229,17 +237,17 @@
 										disabled={disableActionButtons}
 										class="btn btn-error"
 									>
-										Confirm Leave
+										{$i18n.t('manageGroups.joined.actions.confirmLeave')}
 									</button>
 									<button onclick={() => (confirmingLeave = false)} class="btn btn-neutral">
-										Cancel
+										{$i18n.t('manageGroups.joined.actions.cancel')}
 									</button>
 								</div>
 							{/if}
 						</div>
 					{/if}
 				{:else}
-					<p class="text-neutral">You haven’t joined any groups yet.</p>
+					<p class="text-neutral">{$i18n.t('manageGroups.joined.emptyState')}</p>
 				{/if}
 			</div>
 		</section>
