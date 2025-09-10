@@ -35,7 +35,15 @@
 					Groups
 				</a>
 			</li>
-
+			<li>
+				<a
+					href="/languages"
+					aria-label="Navigate to Languages"
+					class="rounded-md px-3 py-2 text-base font-medium transition-colors duration-200 hover:bg-[var(--color-base-300)]"
+				>
+					Languages
+				</a>
+			</li>
 			<li class="">
 				{#if $session?.data?.user}
 					<button type="button" aria-label="Sign Out" onclick={signOut} class="btn btn-primary"
@@ -54,12 +62,12 @@
 			<li class="flex items-center">
 				<label class="swap swap-rotate">
 					<!-- this hidden checkbox controls the state -->
-					<input type="checkbox" class="theme-controller" value="dark" aria-label="Swap Theme"/>
+					<input type="checkbox" class="theme-controller" value="dark" aria-label="Swap Theme" />
 
-					<Icon icon="noto:full-moon" class="swap-off text-3xl fill-current"/>
+					<Icon icon="noto:full-moon" class="swap-off fill-current text-3xl" />
 
 					<!-- moon icon -->
-					<Icon icon="noto:new-moon" class="swap-on text-3xl fill-current"/>
+					<Icon icon="noto:new-moon" class="swap-on fill-current text-3xl" />
 				</label>
 			</li>
 		</ul>

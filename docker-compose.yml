@@ -14,8 +14,24 @@ services:
     networks:
       - project_network
 
+  rabbitmq:
+    image: rabbitmq:4-management
+    container_name: rabbitmq
+    volumes:
+      - rabbitmq:/var/lib/rabbitmq/mnesia
+      - rabbitmq-log:/var/log/rabbitmq	
+    ports:
+      - '5672:5672'
+      - '15672:15672'
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
+    networks:
+      - project_network
+
 volumes:
   postgres_data:
+  rabbitmq:
 
 networks:
   project_network:

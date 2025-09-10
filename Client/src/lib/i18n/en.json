@@ -1,0 +1,277 @@
+{
+    "navigation": {
+        "home": "Home",
+        "groups": "Groups",
+        "languages": "Languages",
+        "signin": "Sign In",
+        "signout": "Sign Out"
+    },
+    "home": {
+        "hero": {
+            "title": "Greater Task",
+            "subtitle": "A simple, collaborative task tracking app for groups of any size.",
+            "getStarted": "Get Started"
+        },
+        "howItWorks": {
+            "title": "How does it work?",
+            "description": "Create groups for yourself or others with Greater Task. In these groups, you can create and share tasks that everyone can tackle together.",
+            "steps": {
+                "step1": {
+                    "title": "1. Create a Group",
+                    "description": "Set up private or public groups tailored to your team, friends, or community."
+                },
+                "step2": {
+                    "title": "2. Add Tasks",
+                    "description": "Quickly create tasks, assign responsibilities, and set deadlines."
+                },
+                "step3": {
+                    "title": "3. Collaborate",
+                    "description": "Everyone in the group can contribute and track progress together."
+                }
+            }
+        },
+        "whyChoose": {
+            "title": "Why Choose Greater Task?",
+            "description": "Built for simplicity without sacrificing functionality. Perfect for teams of any size.",
+            "features": {
+                "simpleAndFast": {
+                    "title": "Simple & Fast",
+                    "description": "No complex setup or overwhelming features. Just create a group and start collaborating."
+                },
+                "privacyFirst": {
+                    "title": "Privacy First",
+                    "description": "Your data stays secure with flexible privacy controls for every group."
+                },
+                "worksEverywhere": {
+                    "title": "Works Everywhere",
+                    "description": "Access your tasks from any device, anywhere, anytime."
+                },
+                "realtimeUpdates": {
+                    "title": "Real-time Updates",
+                    "description": "See changes instantly as your team updates tasks and makes progress."
+                }
+            }
+        },
+        "callToAction": {
+            "title": "Ready to get organized?",
+            "description": "Join thousands of teams already using Greater Task to stay productive and collaborate effectively.",
+            "button": "Start Your First Group"
+        }
+    },
+    "mainGroupsDashboard": {
+        "header": {
+            "title": "Group Dashboard",
+            "subtitle": "Manage your owned and joined groups in one place!"
+        },
+        "ownedGroups": {
+            "header": {
+                "title": "Groups You Own",
+                "createButton": "+ Create New Group",
+                "manageButton": "Manage Groups"
+            },
+            "createForm": {
+                "title": "Create New Task Group",
+                "nameInput": {
+                    "title": "Name",
+                    "placeholder": "Enter group name..."
+                },
+                "descriptionInput": {
+                    "title": "Group Description",
+                    "placeholder": "Describe your group's purpose..."
+                },
+                "createButton": "Create Group",
+                "cancelButton": "Cancel"
+            },
+            "emptyState": {
+                "title": "No Groups Yet",
+                "message": "Create your first group to start collaborating with others!"
+            },
+            "card": {
+                "badge": "Owner"
+            }
+        },
+        "joinedGroups": {
+            "header": {
+                "title": "Groups You've Joined"
+            },
+            "joinForm": {
+                "title": "Join a New Group",
+                "inputPlaceholder": "Enter group code...",
+                "joinButton": "Join Group"
+            },
+            "emptyState": {
+                "title": "No Joined Groups",
+                "message": "Enter a group code above to join your first group!"
+            },
+            "card": {
+                "badge": "Member"
+            }
+        }
+    },
+    "groupDashboard": {
+        "header": {
+            "title": "Group Dashboard",
+            "subtitle": "Manage tasks and collaborate with your team"
+        },
+        "details": {
+            "noDescription": "No description provided for this group."
+        },
+        "createTask": {
+            "title": "Create New Task",
+            "nameInput": {
+                "title": "Task Name",
+                "placeholder": "Name your task..."
+            },
+            "descriptionInput": {
+                "title": "Task Description",
+                "placeholder": "Describe your task..."
+            },
+            "createButton": "Create Task",
+            "cancelButton": "Cancel"
+        },
+        "tasks": {
+            "header": {
+                "title": "Tasks",
+                "createButton": "+ Create New Task"
+            },
+            "card": {
+                "completed": "Completed",
+                "inProgress": "In Progress"
+            },
+            "emptyState": {
+                "title": "No Tasks Yet",
+                "message": "Get started by creating your first task!"
+            }
+        },
+        "invite": {
+            "title": "Invite Members",
+            "input": {
+                "title": "Email Address",
+                "placeholder": "example@gmail.com"
+            },
+            "button": "Send Invite"
+        },
+        "members": {
+            "title": "Members ({count})",
+            "card": {
+                "joined": "Joined {date}",
+                "badge": "Member"
+            },
+            "emptyState": {
+                "title": "No Members Yet",
+                "message": "Invite people to start collaborating!"
+            }
+        }
+    },
+    "taskDashboard": {
+        "header": {
+            "noDescription": "No description provided for this task."
+        },
+        "assignees": {
+            "header": {
+                "title": "Assignees",
+                "deleteButton": "Delete Task",
+                "confirmButton": "Confirm Delete",
+                "cancelButton": "Cancel"
+            },
+            "card": {
+                "assigned": "Assigned {date}",
+                "badge": "Assigned",
+                "unassignButton": "Unassign Member"
+            },
+            "emptyState": {
+                "title": "No Assignees",
+                "message": "No group members are currently assigned to this task."
+            }
+        },
+        "assignMembers": {
+            "header": {
+                "title": "Assign Members"
+            },
+            "card": {
+                "assignButton": "Assign"
+            },
+            "emptyState": "No group members available to assign."
+        }
+    },
+    "manageGroups": {
+        "header": {
+            "title": "Manage Your Groups",
+            "subtitle": "Select groups you own to delete, or groups you’ve joined to leave. Be careful—these actions cannot be undone."
+        },
+        "owned": {
+            "title": "Owned Groups",
+            "emptyState": "You don’t own any groups yet.",
+            "card": {
+                "viewButton": "View",
+                "selectButton": "Select",
+                "selectedButton": "Selected"
+            },
+            "actions": {
+                "deleteSelected": "Delete Selected",
+                "confirmDelete": "Confirm Delete",
+                "cancel": "Cancel"
+            }
+        },
+        "joined": {
+            "title": "Joined Groups",
+            "emptyState": "You haven’t joined any groups yet.",
+            "card": {
+                "viewButton": "View",
+                "selectButton": "Select",
+                "selectedButton": "Selected"
+            },
+            "actions": {
+                "leaveSelected": "Leave Selected",
+                "confirmLeave": "Confirm Leave",
+                "cancel": "Cancel"
+            }
+        }
+    },
+    "onboarding": {
+        "heading": "Your user have no name!",
+        "message": "Please enter your name to continue.",
+        "input": {
+            "title": "Name"
+        },
+        "confirmButton": "Confirm"
+    },
+    "languages": {
+        "english": "English",
+        "spanish": "Spanish"
+    },
+    "signin": {
+        "welcome": {
+            "title": "Welcome to Greater Task",
+            "subtitle": "The easy to use collaboration tool for everyone!"
+        },
+        "idle": {
+            "title": "Sign In",
+            "emailInput": {
+                "title": "Email"
+            },
+            "sendCodeButton": "Send Code"
+        },
+        "sendingOtp": {
+            "title": "Sending Code…",
+            "subtitle": "Please wait a moment while we send a one-time password to your email."
+        },
+        "otpSent": {
+            "title": "Enter Code:",
+            "codeInput": {
+                "title": "Code"
+            },
+            "confirmButton": "Confirm"
+        },
+        "confirmingCode": {
+            "title": "Signing In…"
+        },
+        "signedIn": {
+            "title": "Welcome!"
+        },
+        "error": {
+            "title": "Something went wrong",
+            "tryAgainButton": "Try Again"
+        }
+    }
+}

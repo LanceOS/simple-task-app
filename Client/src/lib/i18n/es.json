@@ -1,0 +1,22 @@
+{
+    "navigation": {
+        "home": "Inicio",
+        "pricing": "Precios",
+        "myWorkspace": "Mi Espacio de Trabajo",
+        "taskManager": "Administrador de Tareas",
+        "myTasks": "Mis Tareas",
+        "inbox": "Bandeja de Entrada",
+        "login": "Iniciar Sesión",
+        "profile": "Perfil",
+        "logout": "Cerrar Sesión",
+        "language": "Idiomas",
+        "languages": {
+            "en": "Inglés",
+            "es": "Español"
+        }
+    },
+    "home": {
+        "title": "Sirve Esa Tarea",
+        "subtitle": "¡La aplicación de mensajería y tareas para empleados fácil y sin complicaciones!"
+    }
+}
